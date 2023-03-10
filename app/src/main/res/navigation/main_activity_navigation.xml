@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main_activity_navigation"
+    app:startDestination="@id/projectFragment">
+
+    <fragment
+        android:id="@+id/projectOverviewFragment"
+        android:name="com.ganeshgfx.projectmanagement.views.ProjectOverviewFragment"
+        android:label="Project Overview"
+        tools:layout="@layout/fragment_project_overview">
+        <action
+            android:id="@+id/action_taskProjectFragment_to_manageFragment"
+            app:destination="@id/manageProjectFragment"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim"
+            />
+        <action
+            android:id="@+id/action_projectOverviewFragment_to_tasksListsFragment3"
+            app:destination="@id/tasksListsFragment"
+            app:popUpToInclusive="false" />
+    </fragment>
+    <fragment
+        android:id="@+id/tasksListsFragment"
+        android:name="com.ganeshgfx.projectmanagement.views.TasksListsFragment"
+        android:label="Tasks Lists"
+        tools:layout="@layout/fragment_tasks_lists">
+        <action
+            android:id="@+id/action_tasksListsFragment_to_projectOverviewFragment3"
+            app:destination="@id/projectOverviewFragment"
+            app:popUpToInclusive="false" />
+    </fragment>
+    <fragment
+        android:id="@+id/projectFragment"
+        android:name="com.ganeshgfx.projectmanagement.views.ProjectFragment"
+        android:label="Projects"
+        tools:layout="@layout/fragment_project">
+        <action
+            android:id="@+id/action_projectFragment_to_taskOverviewFragment"
+            app:destination="@id/projectOverviewFragment"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim"
+            app:popUpToInclusive="false" />
+        <action
+            android:id="@+id/action_projectFragment_to_loginFragment"
+            app:destination="@id/loginFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/manageProjectFragment"
+        android:name="com.ganeshgfx.projectmanagement.views.ManageProjectFragment"
+        android:label="Manage Project"
+        tools:layout="@layout/fragment_project_manage" />
+    <fragment
+        android:id="@+id/loginFragment"
+        android:name="com.ganeshgfx.projectmanagement.views.LoginFragment"
+        android:label="fragment_login"
+        tools:layout="@layout/fragment_login" >
+        <action
+            android:id="@+id/action_loginFragment_to_projectFragment"
+            app:destination="@id/projectFragment"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim"
+            app:popUpTo="@id/loginFragment"
+            app:popUpToInclusive="true" />
+    </fragment>
+</navigation>
