@@ -8,13 +8,13 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
 
-    <color name="control">#D61355</color>
+    <color name="control">#E96479</color>
     <color name="controlBack">#00E96479</color>
 
-    <color name="taskDone">#F0EEED</color>
-    <color name="taskDoneBack">#019267</color>
-    <color name="taskIn">#F8F5E4</color>
-    <color name="taskInBack">#F7C04A</color>
+    <color name="taskDone">#064635</color>
+    <color name="taskDoneBack">#65C18C</color>
+    <color name="taskIn">#61481C</color>
+    <color name="taskInBack">#E7B10A</color>
     <color name="taskPending">#F0EEED</color>
     <color name="taskPendingBack">#F0EEED</color>
 </resources>

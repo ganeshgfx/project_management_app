@@ -11,11 +11,13 @@
 
     <com.google.android.material.card.MaterialCardView
         android:layout_width="match_parent"
-        android:layout_marginTop="5dp"
-        android:layout_marginBottom="5dp"
-        android:layout_marginStart="10dp"
-        android:layout_marginEnd="10dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
         android:id="@+id/card"
+        app:cardElevation="5dp"
+        style="@style/Widget.Material3.CardView.Elevated"
         android:layout_height="wrap_content">
 
         <LinearLayout

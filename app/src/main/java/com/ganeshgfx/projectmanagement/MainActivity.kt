@@ -12,6 +12,7 @@ import androidx.navigation.ui.setupWithNavController
 import com.ganeshgfx.projectmanagement.databinding.ActivityMainBinding
 import com.ganeshgfx.projectmanagement.di.AppContainer
 import com.ganeshgfx.projectmanagement.di.ProjectContainer
+import com.ganeshgfx.projectmanagement.di.TaskListContainer
 import com.ganeshgfx.projectmanagement.models.Project
 import com.ganeshgfx.projectmanagement.viewModels.MainActivityViewModel
 import com.google.android.material.elevation.SurfaceColors
@@ -35,6 +36,7 @@ class MainActivity : AppCompatActivity() {
         appContainer = app.appContainer
 
         appContainer.projectContainer = ProjectContainer(appContainer.projectRepository)
+        appContainer.taskListContainer = TaskListContainer(appContainer.taskListRepository)
 
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
         viewModel = ViewModelProvider(
@@ -43,7 +45,6 @@ class MainActivity : AppCompatActivity() {
         )[MainActivityViewModel::class.java]
         binding.data = viewModel
         binding.lifecycleOwner = this
-
 
         //setting color for appbar and statusbar
         val color = SurfaceColors.SURFACE_2.getColor(this)
