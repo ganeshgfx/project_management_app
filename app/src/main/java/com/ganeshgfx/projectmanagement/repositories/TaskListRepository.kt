@@ -1,7 +1,9 @@
 package com.ganeshgfx.projectmanagement.repositories
 
 
+import android.util.Log
 import androidx.lifecycle.MutableLiveData
+import com.ganeshgfx.projectmanagement.Utils.log
 import com.ganeshgfx.projectmanagement.Utils.randomString
 import com.ganeshgfx.projectmanagement.database.ProjectDatabase
 import com.ganeshgfx.projectmanagement.models.Status
@@ -9,26 +11,23 @@ import com.ganeshgfx.projectmanagement.models.Task
 import kotlinx.coroutines.GlobalScope
 
 class TaskListRepository(
-
-) {
+    private val db: ProjectDatabase
+){
     val tasks = MutableLiveData<List<Task>>()
-    init {
-        getTasks(1)
+
+    suspend fun getTasks(projectId : Long){
+        val taskList = db.projectDao().getAllTasks(projectId)
+        tasks.postValue(taskList)
     }
-    fun getTasks(size:Int) : List<Task>{
-        val status = listOf(Status.IN_PROGRESS, Status.DONE, Status.PENDING)
-        val temp = mutableListOf<Task>()
-        for (i in 0..size) {
-            temp.add(
-                Task(
-                    id = i.toLong(),
-                    title = randomString(10),
-                    description = randomString(10),
-                    status = status.random()
-                )
-            )
-        }
-        tasks.postValue(temp)
-        return temp
+
+    suspend fun addTask(task: Task){
+        db.projectDao().insertTask(task)
+        getTasks(task.projectId)
+    }
+
+    suspend fun updateTask(task: Task):Int{
+        val result = db.projectDao().updateTask(task)
+        //getTasks(task.projectId)
+        return result
     }
 }

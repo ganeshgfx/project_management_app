@@ -19,9 +19,15 @@
             app:popExitAnim="@anim/nav_default_pop_exit_anim"
             />
         <action
-            android:id="@+id/action_projectOverviewFragment_to_tasksListsFragment3"
+            android:id="@+id/action_projectOverviewFragment_to_tasksListsFragment"
             app:destination="@id/tasksListsFragment"
-            app:popUpToInclusive="false" />
+            app:popUpToInclusive="false" >
+
+        </action>
+        <argument
+            android:name="project_id"
+            app:argType="long"
+            android:defaultValue="-1L" />
     </fragment>
     <fragment
         android:id="@+id/tasksListsFragment"
@@ -29,9 +35,13 @@
         android:label="Tasks Lists"
         tools:layout="@layout/fragment_tasks_lists">
         <action
-            android:id="@+id/action_tasksListsFragment_to_projectOverviewFragment3"
+            android:id="@+id/action_tasksListsFragment_to_projectOverviewFragment"
             app:destination="@id/projectOverviewFragment"
             app:popUpToInclusive="false" />
+        <argument
+            android:name="project_id"
+            app:argType="long"
+            android:defaultValue="-1L" />
     </fragment>
     <fragment
         android:id="@+id/projectFragment"
@@ -45,7 +55,8 @@
             app:exitAnim="@anim/nav_default_exit_anim"
             app:popEnterAnim="@anim/nav_default_pop_enter_anim"
             app:popExitAnim="@anim/nav_default_pop_exit_anim"
-            app:popUpToInclusive="false" />
+            app:popUpToInclusive="false" >
+        </action>
         <action
             android:id="@+id/action_projectFragment_to_loginFragment"
             app:destination="@id/loginFragment" />

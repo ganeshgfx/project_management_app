@@ -3,6 +3,7 @@ package com.ganeshgfx.projectmanagement.repositories
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.ganeshgfx.projectmanagement.Utils.log
 import com.ganeshgfx.projectmanagement.database.ProjectDatabase
 import com.ganeshgfx.projectmanagement.models.Project
 
@@ -16,6 +17,7 @@ class ProjectRepository(
         val allProjects = projectDatabase.projectDao().getAllProjects()
         //Log.d("TAG", "getAllProjects: ${allProjects}")
         projects.postValue(allProjects)
+        log(projectDatabase.projectDao().getTasksCounts(36))
         return allProjects
     }
 

@@ -13,7 +13,6 @@ class ProjectViewModel(private val projectRepository: ProjectRepository) : ViewM
 
     init {
         getProjects()
-        Log.d("TAG", " new view model ")
     }
 
     val projects :LiveData<List<Project>> get() = projectRepository.projects
@@ -33,8 +32,8 @@ class ProjectViewModel(private val projectRepository: ProjectRepository) : ViewM
         getProjects()
     }
     fun deleteAllProjects() = viewModelScope.launch{
-        projectRepository.deleteAllProjects()
-        getProjects()
+//        projectRepository.deleteAllProjects()
+//        getProjects()
     }
     fun viewForm(){
         showForm.postValue(!showForm.value!!)

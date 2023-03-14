@@ -5,8 +5,13 @@ import androidx.room.PrimaryKey
 
 @Entity
 data class Project(
-    @PrimaryKey(autoGenerate = false)
-    val id : Long,
-    val title : String,
-    val description : String,
+    @PrimaryKey(autoGenerate = true)
+    val id: Long? = null,
+    val title: String,
+    val description: String,
+)
+
+data class ProjectTaskCount(
+    val status: Status,
+    val count: Int
 )

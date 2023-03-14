@@ -25,7 +25,7 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
 
-    private lateinit var viewModel : MainActivityViewModel
+    lateinit var viewModel : MainActivityViewModel
 
 
     override fun onCreate(savedInstanceState: Bundle?) {

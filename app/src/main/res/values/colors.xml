@@ -10,6 +10,7 @@
 
     <color name="control">#D61355</color>
     <color name="controlBack">#00E96479</color>
+    <color name="controlAlt">#F0EEED</color>
 
     <color name="taskDone">#F0EEED</color>
     <color name="taskDoneBack">#019267</color>

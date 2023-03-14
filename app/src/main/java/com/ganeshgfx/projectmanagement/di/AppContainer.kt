@@ -7,7 +7,7 @@ import com.ganeshgfx.projectmanagement.repositories.TaskListRepository
 
 class AppContainer(context: Context) {
     val projectRepository = ProjectRepository(ProjectDatabase.getDatabase(context))
-    val taskListRepository = TaskListRepository()
+    val taskListRepository = TaskListRepository(ProjectDatabase.getDatabase(context))
 
     var projectContainer : ProjectContainer? = null
     var taskListContainer : TaskListContainer?=null

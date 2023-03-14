@@ -23,7 +23,9 @@ class MainApplication : Application() {
             ProjectDatabase.getDatabase(applicationContext)
         )
 
-        taskListRepository = TaskListRepository()
+        taskListRepository = TaskListRepository(
+            ProjectDatabase.getDatabase(applicationContext)
+        )
 
         appContainer = AppContainer(this)
     }

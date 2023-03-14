@@ -1,7 +1,6 @@
 package com.ganeshgfx.projectmanagement.Utils
 
 import androidx.recyclerview.widget.DiffUtil
-import com.ganeshgfx.projectmanagement.models.Project
 import com.ganeshgfx.projectmanagement.models.Task
 
 class TaskListDiffUtil(
@@ -12,15 +11,22 @@ class TaskListDiffUtil(
 
     override fun getNewListSize(): Int = newList.size
 
-    override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean =
-        oldList[oldItemPosition].id == newList[newItemPosition].id
+    override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
+        val result = oldList[oldItemPosition].id == newList[newItemPosition].id
+//        log("areItemsTheSame $result")
+        return result
+    }
 
-    override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean =
-        when {
+    override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
+        val result = when {
+            oldList[oldItemPosition].status != newList[newItemPosition].status -> false
             oldList[oldItemPosition].id != newList[newItemPosition].id -> false
+            oldList[oldItemPosition].projectId != newList[newItemPosition].projectId -> false
             oldList[oldItemPosition].title != newList[newItemPosition].title -> false
             oldList[oldItemPosition].description != newList[newItemPosition].description -> false
-            oldList[oldItemPosition].status != newList[newItemPosition].status -> false
             else -> true
         }
+       // log("areContentsTheSame $result")
+        return result
+    }
 }

@@ -2,15 +2,13 @@ package com.ganeshgfx.projectmanagement.adapters
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.navigation.findNavController
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
-import com.ganeshgfx.projectmanagement.R
 import com.ganeshgfx.projectmanagement.Utils.ProjectListDiffUtil
 import com.ganeshgfx.projectmanagement.databinding.ProjectListItemBinding
 import com.ganeshgfx.projectmanagement.models.Project
 
-class ProjectListRecyclerViewAdapter() :
+class ProjectListRecyclerViewAdapter(private val projectOnClickListener: ProjectOnClickListener) :
     RecyclerView.Adapter<ProjectListRecyclerViewAdapter.ProjectListViewHolder>() {
 
     private var projectList = emptyList<Project>()
@@ -26,10 +24,11 @@ class ProjectListRecyclerViewAdapter() :
         )
 
     override fun onBindViewHolder(holder: ProjectListViewHolder, position: Int) {
-        holder.binding.data = projectList[position]
+        val project = projectList[position]
         holder.binding.card.setOnClickListener{
-            it.findNavController().navigate(R.id.action_projectFragment_to_taskOverviewFragment)
+            projectOnClickListener.onClick(project)
         }
+        holder.binding.data = project
     }
 
     override fun getItemCount(): Int = projectList.size

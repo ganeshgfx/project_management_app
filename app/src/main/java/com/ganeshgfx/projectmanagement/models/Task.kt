@@ -7,10 +7,11 @@ import com.google.gson.GsonBuilder
 @Entity
 data class Task(
     @PrimaryKey(autoGenerate = true)
-    val id : Long,
+    val id : Long? = null,
+    val projectId : Long,
     val title : String,
     val description : String,
-    val status: Status
+    var status: Status
 ){
     override fun toString(): String = GsonBuilder()
             .setPrettyPrinting()
