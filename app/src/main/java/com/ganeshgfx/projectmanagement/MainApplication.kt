@@ -20,11 +20,11 @@ class MainApplication : Application() {
         applyToActivitiesIfAvailable(this)
 
         projectRepository = ProjectRepository(
-            ProjectDatabase.getDatabase(applicationContext)
+            ProjectDatabase.getDatabase(applicationContext).projectDao()
         )
 
         taskListRepository = TaskListRepository(
-            ProjectDatabase.getDatabase(applicationContext)
+            ProjectDatabase.getDatabase(applicationContext).projectDao()
         )
 
         appContainer = AppContainer(this)

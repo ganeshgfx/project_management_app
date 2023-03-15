@@ -9,6 +9,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.ganeshgfx.projectmanagement.MainActivity
 import com.ganeshgfx.projectmanagement.R
+import com.ganeshgfx.projectmanagement.Utils.log
 import com.ganeshgfx.projectmanagement.adapters.ProjectOnClickListener
 import com.ganeshgfx.projectmanagement.adapters.ProjectListRecyclerViewAdapter
 import com.ganeshgfx.projectmanagement.databinding.FragmentProjectBinding
@@ -47,37 +48,27 @@ class ProjectFragment : Fragment() {
         }
 
         viewModel.formProjectTitleError.observe(viewLifecycleOwner) {
-            binding.formProjectTitle.error = if (it) {
-                "Project Title Required"
-            } else {
-                null
-            }
+            binding.formProjectTitle.error = if (it) "Project Title Required" else null
         }
         viewModel.formProjectDescriptionError.observe(viewLifecycleOwner) {
-            binding.formProjectDescription.error = if (it) {
-                "Project Description Required"
-            } else {
-                null
-            }
+            binding.formProjectDescription.error = if (it) "Project Description Required" else null
         }
 
         projectListRecyclerViewAdapter = ProjectListRecyclerViewAdapter(
             ProjectOnClickListener {
-                activity.viewModel.changeProject(it.id!!)
+                activity.viewModel.changeProject(it.project.id!!)
                 findNavController().navigate(
                     ProjectFragmentDirections.actionProjectFragmentToTaskOverviewFragment(
-                        it.id
+                        it.project.id
                     )
                 )
             }
         )
         binding.projectList.adapter = projectListRecyclerViewAdapter
-        viewModel.projects.observe(viewLifecycleOwner) {
-            projectListRecyclerViewAdapter.setData(it)
-        }
+        viewModel.projectWithTasksFlow.observe(viewLifecycleOwner) { projectListRecyclerViewAdapter.setData(it) }
+
         binding.lifecycleOwner = viewLifecycleOwner
         binding.viewModel = viewModel
-
         return binding.root
     }
 

@@ -8,4 +8,10 @@
         <item name="android:statusBarColor">#00FFFFFF</item>
         <item name="android:navigationBarColor">#00FFFFFF</item>
     </style>
+    <style name="cardItemShape" parent="ShapeAppearance.MaterialComponents.MediumComponent">
+        <item name="cornerFamilyTopLeft">rounded</item>
+        <item name="cornerFamilyTopRight">rounded</item>
+        <item name="cornerSizeTopLeft">20dp</item>
+        <item name="cornerSizeTopRight">20dp</item>
+    </style>
 </resources>

@@ -1,31 +1,26 @@
 package com.ganeshgfx.projectmanagement.repositories
 
-import android.util.Log
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.ganeshgfx.projectmanagement.Utils.log
+import com.ganeshgfx.projectmanagement.database.ProjectDAO
 import com.ganeshgfx.projectmanagement.database.ProjectDatabase
 import com.ganeshgfx.projectmanagement.models.Project
+import com.ganeshgfx.projectmanagement.models.ProjectWithTasks
 
 class ProjectRepository(
-    private val projectDatabase: ProjectDatabase
+    private val dao: ProjectDAO
 ) {
 
-    val projects = MutableLiveData<List<Project>>()
+    val projectWithTasksFlow = dao.getProjectWithTasksFlow()
 
-    suspend fun getAllProjects() : List<Project> {
-        val allProjects = projectDatabase.projectDao().getAllProjects()
-        //Log.d("TAG", "getAllProjects: ${allProjects}")
-        projects.postValue(allProjects)
-        log(projectDatabase.projectDao().getTasksCounts(36))
-        return allProjects
+    suspend fun addProject(project: Project) {
+        dao.insertProject(project)
     }
 
-    suspend fun addProject(project: Project){
-        projectDatabase.projectDao().insertProject(project)
+    suspend fun deleteProject(id: Long){
+        dao.deleteProject(id)
     }
 
-    suspend fun deleteAllProjects(){
-        projectDatabase.projectDao().deleteAllProjects()
+    suspend fun deleteAllProjects() {
+        dao.deleteAllProjects()
     }
 }

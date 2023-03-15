@@ -15,7 +15,7 @@
     <color name="taskDone">#F0EEED</color>
     <color name="taskDoneBack">#019267</color>
     <color name="taskIn">#F8F5E4</color>
-    <color name="taskInBack">#F7C04A</color>
+    <color name="taskInBack">#FFFF9100</color>
     <color name="taskPending">#F0EEED</color>
     <color name="taskPendingBack">#F0EEED</color>
 </resources>

@@ -1,6 +1,7 @@
 package com.ganeshgfx.projectmanagement.viewModels
 
 import android.util.Log
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -13,19 +14,22 @@ import kotlinx.coroutines.launch
 
 class TaskListViewModel(private val repository: TaskListRepository) : ViewModel() {
 
-    val tasks get() = repository.tasks
-    val showForm = MutableLiveData(false)
+    private var _currentProjectId =-1L
 
+    private val _tasks = MutableLiveData<List<Task>>()
+    val tasks:LiveData<List<Task>> get() = _tasks
+
+    val showForm = MutableLiveData(false)
     val title = MutableLiveData("")
     val titleError = MutableLiveData(false)
     val description = MutableLiveData("")
     val descriptionError = MutableLiveData(false)
 
-    private var _currentProjectId = -1L
-
-    fun setProjectId(projectId: Long) = viewModelScope.launch(Dispatchers.IO) {
+    fun setProjectId(projectId: Long) = viewModelScope.launch{
         _currentProjectId = projectId
-        repository.getTasks(projectId)
+        repository.tasksFlow(_currentProjectId).collect{
+            _tasks.postValue(it)
+        }
     }
 
     fun viewForm() {

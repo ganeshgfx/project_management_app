@@ -1,7 +1,7 @@
 package com.ganeshgfx.projectmanagement.adapters
 
-import com.ganeshgfx.projectmanagement.models.Project
+import com.ganeshgfx.projectmanagement.models.ProjectWithTasks
 
-class ProjectOnClickListener(val clickListener: (project: Project) -> Unit) {
-    fun onClick(project: Project) = clickListener(project)
+class ProjectOnClickListener(val clickListener: (project: ProjectWithTasks) -> Unit) {
+    fun onClick(projectWithTasks: ProjectWithTasks) = clickListener(projectWithTasks)
 }

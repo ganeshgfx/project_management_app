@@ -10,5 +10,5 @@ import com.ganeshgfx.projectmanagement.viewModels.TaskListViewModelFactory
 class TaskListContainer(
     repository: TaskListRepository
 ) {
-    val taskListViewModelFactory =  TaskListViewModelFactory(repository)
+    val taskListViewModelFactory = TaskListViewModelFactory(repository)
 }

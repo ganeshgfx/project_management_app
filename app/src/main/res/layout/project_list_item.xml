@@ -4,75 +4,94 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+
+        <import type="android.view.View" />
+        <import type="com.ganeshgfx.projectmanagement.models.Status" />
+
         <variable
             name="data"
-            type="com.ganeshgfx.projectmanagement.models.Project" />
+            type="com.ganeshgfx.projectmanagement.models.ProjectWithTasks" />
     </data>
 
     <com.google.android.material.card.MaterialCardView
-        android:layout_width="match_parent"
-        android:layout_marginTop="8dp"
-        android:layout_marginBottom="8dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp"
         android:id="@+id/card"
-        app:cardElevation="5dp"
-        style="@style/Widget.Material3.CardView.Elevated"
-        android:layout_height="wrap_content">
+        style="@style/Widget.Material3.CardView.Filled"
+        app:strokeColor="?attr/colorAccent"
+        app:strokeWidth="1dp"
+        app:cardElevation="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="8dp"
+        >
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:padding="15dp"
-            style="@style/TextAppearance.Material3.ActionBar.Title"
+            android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:layout_height="wrap_content">
+            android:padding="15dp">
 
             <TextView
+                android:textAppearance="@style/TextAppearance.Material3.TitleLarge"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="10dp"
-                android:textSize="20dp"
-                android:text="@{data.title}"
+                android:text="@{data.project.title}"
                 tools:text="Project Name" />
+
             <TextView
+                android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="10dp"
-                android:text="@{data.description}"
+                android:text="@{data.project.description}"
                 tools:text="Project Name" />
 
             <com.google.android.material.divider.MaterialDivider
+                android:visibility="@{data.tasks.empty ? View.GONE:View.VISIBLE}"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
 
             <com.google.android.material.chip.ChipGroup
                 android:id="@+id/chipGroup"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:visibility="@{data.tasks.empty ? View.GONE:View.VISIBLE}">
+
                 <com.google.android.material.chip.Chip
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    app:chipIconTint="@color/taskInBack"
-                    app:chipStrokeColor="@color/taskInBack"
+                    tools:text="Doing : 10"
+                    android:visibility="@{data.getStatusCount(Status.IN_PROGRESS) &lt; 1 ? View.GONE:View.VISIBLE}"
+                    android:text='@{"In Progress Tasks : "+data.getStatusCount(Status.IN_PROGRESS)}'
                     android:textColor="@color/taskInBack"
                     app:chipIcon="@drawable/twotone_draw_24"
-                    android:text="In Progress Tasks : 19"/>
+                    app:chipIconTint="@color/taskInBack"
+                    app:chipStrokeColor="@color/taskInBack" />
+
                 <com.google.android.material.chip.Chip
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    app:chipIconTint="@color/control"
-                    app:chipStrokeColor="@color/control"
+                    tools:text="Pending : 10"
+                    android:visibility="@{data.getStatusCount(Status.PENDING) &lt; 1 ? View.GONE:View.VISIBLE}"
+                    android:text='@{"Pending Tasks : "+data.getStatusCount(Status.PENDING)}'
                     android:textColor="@color/control"
                     app:chipIcon="@drawable/outline_circle_24"
-                    android:text="Pending Tasks : 80"/>
+                    app:chipIconTint="@color/control"
+                    app:chipStrokeColor="@color/control" />
+
                 <com.google.android.material.chip.Chip
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    app:chipIconTint="@color/taskDoneBack"
-                    app:chipStrokeColor="@color/taskDoneBack"
+                    tools:text="Done : 10"
+                    android:visibility="@{data.getStatusCount(Status.DONE) &lt; 1 ? View.GONE:View.VISIBLE}"
+                    android:text='@{"Done Tasks : "+data.getStatusCount(Status.DONE)}'
                     android:textColor="@color/taskDoneBack"
                     app:chipIcon="@drawable/round_done_outline_24"
-                    android:text="Done Tasks : 19"/>
+                    app:chipIconTint="@color/taskDoneBack"
+                    app:chipStrokeColor="@color/taskDoneBack" />
 
             </com.google.android.material.chip.ChipGroup>
 
@@ -82,11 +101,12 @@
 
             <TextView
                 android:id="@+id/dummyProject"
-                android:textAlignment="center"
-                android:layout_marginTop="15dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="View Project" />
+                android:layout_marginTop="15dp"
+                android:text="View Project"
+                android:textAlignment="center" />
+
         </LinearLayout>
     </com.google.android.material.card.MaterialCardView>
 </layout>

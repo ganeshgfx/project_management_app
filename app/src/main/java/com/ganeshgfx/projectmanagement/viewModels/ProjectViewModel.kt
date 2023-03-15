@@ -1,21 +1,28 @@
 package com.ganeshgfx.projectmanagement.viewModels
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.ganeshgfx.projectmanagement.Utils.log
 import com.ganeshgfx.projectmanagement.models.Project
+import com.ganeshgfx.projectmanagement.models.ProjectWithTasks
 import com.ganeshgfx.projectmanagement.repositories.ProjectRepository
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 class ProjectViewModel(private val projectRepository: ProjectRepository) : ViewModel() {
 
     init {
-        getProjects()
+        viewModelScope.launch {
+            projectRepository.projectWithTasksFlow.collect {
+                _projectWithTasksFlow.postValue(it)
+            }
+        }
     }
 
-    val projects :LiveData<List<Project>> get() = projectRepository.projects
+    private val _projectWithTasksFlow = MutableLiveData<List<ProjectWithTasks>>()
+    val projectWithTasksFlow: LiveData<List<ProjectWithTasks>> get() = _projectWithTasksFlow
 
     val showForm = MutableLiveData(false)
     val formProjectTitle = MutableLiveData("")
@@ -23,39 +30,47 @@ class ProjectViewModel(private val projectRepository: ProjectRepository) : ViewM
     val formProjectDescription = MutableLiveData("")
     val formProjectDescriptionError = MutableLiveData(false)
 
-    fun getProjects() = viewModelScope.launch {
-        projectRepository.getAllProjects()
+    private fun addProject(project: Project) = viewModelScope.launch {
+        projectRepository.addProject(project)
     }
 
-    fun addProject(project: Project) = viewModelScope.launch {
-        projectRepository.addProject(project)
-        getProjects()
+    suspend fun deleteProject(id:Long){
+        projectRepository.deleteProject(id)
     }
-    fun deleteAllProjects() = viewModelScope.launch{
+
+    fun deleteAllProjects() = viewModelScope.launch {
 //        projectRepository.deleteAllProjects()
 //        getProjects()
     }
-    fun viewForm(){
+
+    fun viewForm() {
         showForm.postValue(!showForm.value!!)
     }
+
     fun createProject() {
-        val title : String = formProjectTitle.value!!
-        val description : String  = formProjectDescription.value!!
+        val title: String = formProjectTitle.value!!
+        val description: String = formProjectDescription.value!!
 
         formProjectTitleError.postValue(false)
         formProjectDescriptionError.postValue(false)
 
-        when{
-            title.isBlank()-> {
+        when {
+            title.isBlank() -> {
                 formProjectTitleError.postValue(true)
             }
-            description.isBlank()-> {
+            description.isBlank() -> {
                 formProjectDescriptionError.postValue(true)
             }
-            else ->{
+            else -> {
                 formProjectTitle.postValue("")
                 formProjectDescription.postValue("")
-                addProject(Project(id = (0..100L).random(), title = title, description = description))
+                addProject(
+                    Project(
+                        id = (0..100L).random(),
+                        title = title,
+                        description = description
+                    )
+                )
                 viewForm()
             }
         }

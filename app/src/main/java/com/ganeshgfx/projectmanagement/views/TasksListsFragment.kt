@@ -19,6 +19,7 @@ import com.ganeshgfx.projectmanagement.Utils.log
 import com.ganeshgfx.projectmanagement.adapters.TaskListRecyclerViewAdapter
 import com.ganeshgfx.projectmanagement.adapters.TaskOnClickListener
 import com.ganeshgfx.projectmanagement.databinding.FragmentTasksListsBinding
+import com.ganeshgfx.projectmanagement.databinding.TaskListItemBinding
 import com.ganeshgfx.projectmanagement.models.Status
 import com.ganeshgfx.projectmanagement.viewModels.TaskListViewModel
 import kotlinx.coroutines.async
@@ -67,8 +68,8 @@ class TasksListsFragment : Fragment() {
                         lifecycleScope.launch {
                             val result = viewModel.updateTask(task)
                             if(result==1){
-                                toggleTaskEditView(holder,false)
                                 updateData(pos,task)
+                                mainCard.clearFocus()
                             }
                         }
                     }
@@ -77,8 +78,8 @@ class TasksListsFragment : Fragment() {
                         lifecycleScope.launch {
                             val result = viewModel.updateTask(task)
                             if(result==1){
-                                toggleTaskEditView(holder,false)
                                 updateData(pos,task)
+                                mainCard.clearFocus()
                             }
                         }
                     }
@@ -87,8 +88,8 @@ class TasksListsFragment : Fragment() {
                         lifecycleScope.launch {
                             val result = viewModel.updateTask(task)
                             if(result==1){
-                                toggleTaskEditView(holder,false)
                                 updateData(pos,task)
+                                mainCard.clearFocus()
                             }
                         }
                     }
@@ -96,6 +97,7 @@ class TasksListsFragment : Fragment() {
             })
         }
         viewModel.tasks.observe(viewLifecycleOwner) {
+            log(it)
             taskListRecyclerViewAdapter.setData(it)
         }
         binding.taskListRecyclerview.adapter = taskListRecyclerViewAdapter
