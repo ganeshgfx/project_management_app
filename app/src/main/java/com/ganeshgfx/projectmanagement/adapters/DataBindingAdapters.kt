@@ -1,10 +1,11 @@
 package com.ganeshgfx.projectmanagement.adapters
 
+import androidx.appcompat.widget.Toolbar
 import androidx.databinding.BindingAdapter
-import com.google.android.material.button.MaterialButton
+import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.appbar.MaterialToolbar
 
-
-//@BindingAdapter("setPending")
-//fun MaterialButton.setPending(){
-//
-//}
+@BindingAdapter("setMenuListener")
+fun MaterialToolbar.setMenuListener(listener: Toolbar.OnMenuItemClickListener){
+    setOnMenuItemClickListener(listener)
+}

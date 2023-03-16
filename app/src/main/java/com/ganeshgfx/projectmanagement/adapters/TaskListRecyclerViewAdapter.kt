@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.ganeshgfx.projectmanagement.R
 import com.ganeshgfx.projectmanagement.Utils.TaskListDiffUtil
+import com.ganeshgfx.projectmanagement.Utils.log
 import com.ganeshgfx.projectmanagement.databinding.TaskListItemBinding
 import com.ganeshgfx.projectmanagement.models.Status
 import com.ganeshgfx.projectmanagement.models.Task
@@ -24,42 +25,30 @@ class TaskListRecyclerViewAdapter(private var taskList: MutableList<Task> = muta
     class TaskListViewHolder(val binding: TaskListItemBinding) :
         RecyclerView.ViewHolder(binding.root)
 
-    private var topRadius = 20F
-    private var bottomRadius = 20F
-    private var normalRadius = 20F
-    private lateinit var focusCardShape:ShapeAppearanceModel
-    private lateinit var normalCardShape:ShapeAppearanceModel
+    private var _20dp = 20F
+    private var _10dp = 10F
+    private var _3dp = 3F
+    private lateinit var focusCardShape: ShapeAppearanceModel
+    private lateinit var normalCardShape: ShapeAppearanceModel
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TaskListViewHolder {
-       topRadius = TypedValue.applyDimension(
+        _20dp = TypedValue.applyDimension(
             TypedValue.COMPLEX_UNIT_DIP,
             20.toFloat(),
-           parent.context.resources.displayMetrics
+            parent.context.resources.displayMetrics
         )
-        bottomRadius = TypedValue.applyDimension(
+        _10dp = TypedValue.applyDimension(
             TypedValue.COMPLEX_UNIT_DIP,
             10.toFloat(),
             parent.context.resources.displayMetrics
         )
-        normalRadius = TypedValue.applyDimension(
+        _3dp = TypedValue.applyDimension(
             TypedValue.COMPLEX_UNIT_DIP,
             3.toFloat(),
             parent.context.resources.displayMetrics
         )
-        focusCardShape = ShapeAppearanceModel()
-            .toBuilder()
-            .setTopLeftCorner(CornerFamily.ROUNDED, topRadius)
-            .setTopRightCorner(CornerFamily.ROUNDED, topRadius)
-            .setBottomLeftCorner(CornerFamily.ROUNDED, normalRadius)
-            .setBottomRightCorner(CornerFamily.ROUNDED, normalRadius)
-            .build()
-       normalCardShape = ShapeAppearanceModel()
-            .toBuilder()
-            .setTopLeftCorner(CornerFamily.ROUNDED, bottomRadius)
-            .setTopRightCorner(CornerFamily.ROUNDED, bottomRadius)
-            .setBottomLeftCorner(CornerFamily.ROUNDED, bottomRadius)
-            .setBottomRightCorner(CornerFamily.ROUNDED, bottomRadius)
-            .build()
+        focusCardShape = makeShape(_20dp, _3dp);
+        normalCardShape = makeShape(_10dp, _10dp)
         return TaskListViewHolder(
             TaskListItemBinding.inflate(
                 LayoutInflater.from(parent.context), parent, false
@@ -70,50 +59,47 @@ class TaskListRecyclerViewAdapter(private var taskList: MutableList<Task> = muta
     override fun onBindViewHolder(holder: TaskListViewHolder, position: Int) {
         val task = taskList[position]
         with(holder.binding.mainCard) {
+            var editisible = false
             setOnFocusChangeListener { _, hasFocus ->
+               // log("has focus : $hasFocus")
                 if (hasFocus) {
                     clickListener.onClick(position)
                     shapeAppearanceModel = focusCardShape
-                } else {
-                    shapeAppearanceModel = normalCardShape
-                }
+                } else shapeAppearanceModel = normalCardShape
                 toggleTaskEditView(holder, hasFocus)
+                editisible = hasFocus
+            }
+            setOnClickListener{
+                if(editisible) clearFocus()
             }
         }
         holder.binding.data = task
         with(holder.binding.taskStatusIcon) {
             when (task.status) {
-                Status.IN_PROGRESS -> {
-                    setStatusOfTask(
-                        R.drawable.twotone_draw_24,
-                        R.color.taskIn,
-                        R.color.taskInBack
-                    )
-                }
-                Status.DONE -> {
-                    setStatusOfTask(
-                        R.drawable.round_done_outline_24,
-                        R.color.taskDone,
-                        R.color.taskDoneBack
-                    )
-                }
-                Status.PENDING -> {
-                    setStatusOfTask(
-                        R.drawable.outline_circle_24,
-                        R.color.control,
-                        R.color.controlBack
-                    )
-                }
+                Status.IN_PROGRESS -> setStatusOfTask(
+                    R.drawable.twotone_draw_24,
+                    R.color.taskIn,
+                    R.color.taskInBack
+                )
+                Status.DONE -> setStatusOfTask(
+                    R.drawable.round_done_outline_24,
+                    R.color.taskDone,
+                    R.color.taskDoneBack
+                )
+                Status.PENDING -> setStatusOfTask(
+                    R.drawable.outline_circle_24,
+                    R.color.control,
+                    R.color.controlBack
+                )
+
             }
         }
     }
 
-    fun toggleTaskEditView(holder: TaskListViewHolder, toggle: Boolean) {
+    private fun toggleTaskEditView(holder: TaskListViewHolder, toggle: Boolean) {
         if (toggle) {
-            //holder.binding.taskView.visibility = View.GONE
             holder.binding.taskEdit.visibility = View.VISIBLE
         } else {
-            //holder.binding.taskView.visibility = View.VISIBLE
             holder.binding.taskEdit.visibility = View.GONE
         }
     }
@@ -129,9 +115,9 @@ class TaskListRecyclerViewAdapter(private var taskList: MutableList<Task> = muta
     }
 
     fun updateData(pos: Int, task: Task) {
+
         taskList[pos] = task
         notifyItemChanged(pos)
-        //log(taskList.remove(task).toString())
     }
 
     fun clearList() {
@@ -140,11 +126,19 @@ class TaskListRecyclerViewAdapter(private var taskList: MutableList<Task> = muta
 
     infix fun getItem(pos: Int) = taskList[pos]
 
-    fun setClickListner(clickListener: TaskOnClickListener) {
+    fun setClickListener(clickListener: TaskOnClickListener) {
         this.clickListener = clickListener
     }
-}
 
+    private fun makeShape(topRadius: Float, bottomRadius: Float) =
+        ShapeAppearanceModel()
+            .toBuilder()
+            .setTopLeftCorner(CornerFamily.ROUNDED, topRadius)
+            .setTopRightCorner(CornerFamily.ROUNDED, topRadius)
+            .setBottomLeftCorner(CornerFamily.ROUNDED, bottomRadius)
+            .setBottomRightCorner(CornerFamily.ROUNDED, bottomRadius)
+            .build()
+}
 private fun MaterialButton.setStatusOfTask(
     iconDrawable: Int,
     iconColor: Int,

@@ -2,8 +2,8 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item android:id="@+id/refresh_quote"
-        android:icon="@drawable/baseline_animation_24"
-        android:title="Add Task"
+        android:icon="@drawable/baseline_keyboard_arrow_down_24"
+        android:title="Filter"
         app:iconTint="?attr/colorControlNormal"
         app:showAsAction="always" />
 </menu>

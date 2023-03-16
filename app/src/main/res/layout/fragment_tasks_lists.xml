@@ -66,18 +66,72 @@
            android:layout_height="match_parent"
            android:visibility="@{viewModel.showForm ? View.GONE : View.VISIBLE}"
            android:orientation="vertical">
+           <com.google.android.material.appbar.AppBarLayout
+           android:layout_width="match_parent"
+           android:layout_height="wrap_content"
+           android:fitsSystemWindows="true">
            <com.google.android.material.appbar.MaterialToolbar
                android:id="@+id/toolbar"
                android:layout_width="match_parent"
                app:menu="@menu/task_view_menu"
                app:title="Tasks List"
+               setMenuListener="@{viewModel.menuListener}"
                app:titleTextAppearance="@style/TextAppearance.MaterialComponents.Headline6"
                app:navigationIconTint="?attr/colorControlNormal"
                android:layout_height="?attr/actionBarSize" />
+               <com.google.android.material.chip.ChipGroup
+                   android:id="@+id/filters"
+                   android:layout_width="wrap_content"
+                   android:layout_gravity="center"
+                   android:layout_marginStart="16dp"
+                   app:selectionRequired="true"
+                   android:layout_marginEnd="16dp"
+                   android:layout_height="wrap_content"
+                   android:visibility="@{viewModel.filterOptionsVisibility ? View.VISIBLE : View.GONE}"
+                   >
+                  <com.google.android.material.chip.Chip
+                      android:id="@+id/filter_done"
+                      app:chipIcon="@drawable/round_done_outline_24"
+                      app:chipIconTint="@color/chip"
+                      android:text="Done"
+                      android:checked="true"
+                      android:layout_width="wrap_content"
+                      android:layout_height="wrap_content"
+                      android:focusable="true"
+                      android:checkable="true"
+                      android:clickable="true"
+                      />
+                   <com.google.android.material.chip.Chip
+                       android:id="@+id/filter_in_progress"
+                       app:chipIcon="@drawable/round_add_task_24"
+                       app:chipIconTint="@color/chip"
+                       android:text="In Progress"
+                       android:checked="true"
+                       android:layout_width="wrap_content"
+                       android:layout_height="wrap_content"
+                       android:focusable="true"
+                       android:checkable="true"
+                       android:clickable="true"
+                       />
+                   <com.google.android.material.chip.Chip
+                       android:id="@+id/filter_pending"
+                       app:chipIcon="@drawable/outline_circle_24"
+                       app:chipIconTint="@color/chip"
+                       android:text="Pending"
+                       android:checked="true"
+                       android:layout_width="wrap_content"
+                       android:layout_height="wrap_content"
+                       android:focusable="true"
+                       android:checkable="true"
+                       android:clickable="true"
+                       />
+               </com.google.android.material.chip.ChipGroup>
+           </com.google.android.material.appbar.AppBarLayout>
            <androidx.recyclerview.widget.RecyclerView
                android:layout_width="match_parent"
                android:layout_height="0dp"
                android:layout_weight="1"
+               android:adapter="@{viewModel.taskListAdapter}"
                tools:listitem="@layout/task_list_item"
                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                android:id="@+id/task_list_recyclerview" />
@@ -95,6 +149,7 @@
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             style="Widget.Material3.ExtendedFloatingActionButton.Icon.Primary"
+            tools:visibility="gone"
             android:layout_width="wrap_content"
             app:srcCompat = "@drawable/round_done_outline_24"
             android:layout_gravity="top|end"
@@ -104,6 +159,7 @@
             android:visibility="@{viewModel.showForm ? View.VISIBLE : View.GONE}"
             android:layout_height="wrap_content"/>
         <com.google.android.material.floatingactionbutton.FloatingActionButton
+            tools:visibility="gone"
             style="@style/Widget.Material3.ExtendedFloatingActionButton.Icon.Secondary"
             android:layout_width="wrap_content"
             app:srcCompat = "@drawable/twotone_arrow_back_ios_24"

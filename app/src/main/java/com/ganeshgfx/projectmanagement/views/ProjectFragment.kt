@@ -9,6 +9,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.ganeshgfx.projectmanagement.MainActivity
 import com.ganeshgfx.projectmanagement.R
+import com.ganeshgfx.projectmanagement.Utils.hideSoftKeyBord
 import com.ganeshgfx.projectmanagement.Utils.log
 import com.ganeshgfx.projectmanagement.adapters.ProjectOnClickListener
 import com.ganeshgfx.projectmanagement.adapters.ProjectListRecyclerViewAdapter
@@ -65,7 +66,10 @@ class ProjectFragment : Fragment() {
             }
         )
         binding.projectList.adapter = projectListRecyclerViewAdapter
-        viewModel.projectWithTasksFlow.observe(viewLifecycleOwner) { projectListRecyclerViewAdapter.setData(it) }
+        viewModel.projectWithTasksFlow.observe(viewLifecycleOwner) {
+            projectListRecyclerViewAdapter.setData(it)
+            hideSoftKeyBord(binding.root)
+        }
 
         binding.lifecycleOwner = viewLifecycleOwner
         binding.viewModel = viewModel
