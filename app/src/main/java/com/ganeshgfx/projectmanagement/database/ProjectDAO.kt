@@ -31,12 +31,12 @@ interface ProjectDAO {
 
     //task
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    suspend fun insertTask(task: Task)
+    suspend fun insertTask(task: Task) : Long
 
     @Query("SELECT * FROM task WHERE projectId = :projectId")
     suspend fun getAllTasks(projectId: Long): List<Task>
 
-    @Query("SELECT * FROM task WHERE projectId = :projectId AND status IN (:status) ORDER BY status DESC")
+    @Query("SELECT * FROM task WHERE projectId = :projectId AND status IN (:status)")//ORDER BY status DESC
     fun getTasksFlow(
         projectId: Long,
         status: List<Status>

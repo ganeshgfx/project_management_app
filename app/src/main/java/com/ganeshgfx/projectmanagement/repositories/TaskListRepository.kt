@@ -13,8 +13,8 @@ class TaskListRepository(
         status: List<Status> = listOf(Status.DONE, Status.PENDING, Status.IN_PROGRESS)
     ) = dao.getTasksFlow(_projectId, status)
 
-    suspend fun addTask(task: Task) {
-        dao.insertTask(task)
+    suspend fun addTask(task: Task):Long {
+        return dao.insertTask(task)
     }
 
     suspend fun updateTask(task: Task): Int {

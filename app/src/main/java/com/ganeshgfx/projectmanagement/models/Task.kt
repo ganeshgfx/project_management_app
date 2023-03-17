@@ -1,9 +1,11 @@
 package com.ganeshgfx.projectmanagement.models
 
+import android.icu.text.SimpleDateFormat
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
 import com.google.gson.GsonBuilder
+import java.util.*
 
 @Entity(
     foreignKeys = [
@@ -21,13 +23,15 @@ data class Task(
     val projectId: Long,
     val title: String,
     val description: String,
-    var status: Status
+    var status: Status,
+    var dueDate: Long? = null
 ) {
     override fun toString(): String = GsonBuilder()
         .setPrettyPrinting()
         .create()
         .toJson(this)
 
+    fun toDate(): String = com.ganeshgfx.projectmanagement.Utils.toDate(dueDate)
 }
 
 enum class Status {

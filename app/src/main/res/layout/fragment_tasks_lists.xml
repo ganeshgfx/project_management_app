@@ -21,13 +21,14 @@
             android:padding="20dp"
             android:layout_marginBottom="30dp"
             android:visibility="@{viewModel.showForm ? View.VISIBLE : View.GONE}"
+            tools:visibility="visible"
             android:id="@+id/addProjectForm"
             android:layout_height="wrap_content">
             <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="10dp"
-                android:id="@+id/formProjectTitle"
+                android:id="@+id/form_task_title"
                 app:errorIconDrawable="@drawable/twotone_error_24"
                 style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
                 android:hint="Task Title">
@@ -44,7 +45,7 @@
             <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/formProjectDescription"
+                android:id="@+id/form_task_description"
                 style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
                 android:layout_marginBottom="10dp"
                 app:errorIconDrawable="@drawable/twotone_error_24"
@@ -59,12 +60,59 @@
                     />
 
             </com.google.android.material.textfield.TextInputLayout>
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/form_task_due_date"
+                style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+                android:layout_marginBottom="10dp"
+                android:layout_marginTop="5dp"
+                android:focusableInTouchMode="true"
+                android:focusable="true"
+                android:checkable="true"
+                android:clickable="true"
+                >
+
+              <LinearLayout
+                  android:layout_width="match_parent"
+                  android:padding="5dp"
+                  android:layout_height="wrap_content">
+                  <com.google.android.material.button.MaterialButton
+                      android:layout_width="wrap_content"
+                      android:layout_height="wrap_content"
+                      android:visibility='@{viewModel.dateString=="" ? View.GONE:View.VISIBLE}'
+                      style="@style/Widget.Material3.Button.IconButton"
+                      app:icon="@drawable/round_clear_24"
+                      android:onClick="@{()->viewModel.clearDueDate()}"
+                      app:iconTint="?attr/colorError"
+                      />
+                  <TextView
+                      android:layout_width="wrap_content"
+                      android:layout_height="wrap_content"
+                      android:layout_weight="1"
+                      android:layout_marginStart="10dp"
+                      android:defaultFocusHighlightEnabled="false"
+                      tools:text="Date : 27/10/1998"
+                      android:textColor="?attr/colorAccent"
+                      android:text='@{"Due Date : "+viewModel.dateString}'
+                      />
+                  <com.google.android.material.button.MaterialButton
+                      android:layout_width="wrap_content"
+                      android:layout_height="wrap_content"
+                      android:clickable="false"
+                      style="@style/Widget.Material3.Button.IconButton.Filled.Tonal"
+                      app:icon="@drawable/twotone_edit_calendar_24"
+                      />
+              </LinearLayout>
+
+            </com.google.android.material.card.MaterialCardView>
         </LinearLayout>
 
        <LinearLayout
            android:layout_width="match_parent"
            android:layout_height="match_parent"
            android:visibility="@{viewModel.showForm ? View.GONE : View.VISIBLE}"
+           tools:visibility="gone"
            android:orientation="vertical">
            <com.google.android.material.appbar.AppBarLayout
            android:layout_width="match_parent"
@@ -79,54 +127,55 @@
                app:titleTextAppearance="@style/TextAppearance.MaterialComponents.Headline6"
                app:navigationIconTint="?attr/colorControlNormal"
                android:layout_height="?attr/actionBarSize" />
-               <com.google.android.material.chip.ChipGroup
-                   android:id="@+id/filters"
-                   android:layout_width="wrap_content"
-                   android:layout_gravity="center"
-                   android:layout_marginStart="16dp"
-                   app:selectionRequired="true"
-                   android:layout_marginEnd="16dp"
-                   android:layout_height="wrap_content"
-                   android:visibility="@{viewModel.filterOptionsVisibility ? View.VISIBLE : View.GONE}"
-                   >
-                  <com.google.android.material.chip.Chip
-                      android:id="@+id/filter_done"
-                      app:chipIcon="@drawable/round_done_outline_24"
-                      app:chipIconTint="@color/chip"
-                      android:text="Done"
-                      android:checked="true"
-                      android:layout_width="wrap_content"
-                      android:layout_height="wrap_content"
-                      android:focusable="true"
-                      android:checkable="true"
-                      android:clickable="true"
-                      />
-                   <com.google.android.material.chip.Chip
-                       android:id="@+id/filter_in_progress"
-                       app:chipIcon="@drawable/round_add_task_24"
-                       app:chipIconTint="@color/chip"
-                       android:text="In Progress"
-                       android:checked="true"
-                       android:layout_width="wrap_content"
-                       android:layout_height="wrap_content"
-                       android:focusable="true"
-                       android:checkable="true"
-                       android:clickable="true"
-                       />
-                   <com.google.android.material.chip.Chip
-                       android:id="@+id/filter_pending"
-                       app:chipIcon="@drawable/outline_circle_24"
-                       app:chipIconTint="@color/chip"
-                       android:text="Pending"
-                       android:checked="true"
-                       android:layout_width="wrap_content"
-                       android:layout_height="wrap_content"
-                       android:focusable="true"
-                       android:checkable="true"
-                       android:clickable="true"
-                       />
-               </com.google.android.material.chip.ChipGroup>
            </com.google.android.material.appbar.AppBarLayout>
+           <com.google.android.material.chip.ChipGroup
+               android:id="@+id/filters"
+               android:layout_width="wrap_content"
+               android:layout_gravity="center"
+               android:layout_marginStart="16dp"
+               app:selectionRequired="true"
+               android:layout_marginEnd="16dp"
+               android:layout_height="wrap_content"
+               android:layout_marginBottom="5dp"
+               android:visibility="@{viewModel.filterOptionsVisibility ? View.VISIBLE : View.GONE}"
+               >
+               <com.google.android.material.chip.Chip
+                   android:id="@+id/filter_done"
+                   app:chipIcon="@drawable/round_done_outline_24"
+                   app:chipIconTint="@color/chip"
+                   android:text="Done"
+                   android:checked="true"
+                   android:layout_width="wrap_content"
+                   android:layout_height="wrap_content"
+                   android:focusable="true"
+                   android:checkable="true"
+                   android:clickable="true"
+                   />
+               <com.google.android.material.chip.Chip
+                   android:id="@+id/filter_in_progress"
+                   app:chipIcon="@drawable/round_add_task_24"
+                   app:chipIconTint="@color/chip"
+                   android:text="In Progress"
+                   android:checked="true"
+                   android:layout_width="wrap_content"
+                   android:layout_height="wrap_content"
+                   android:focusable="true"
+                   android:checkable="true"
+                   android:clickable="true"
+                   />
+               <com.google.android.material.chip.Chip
+                   android:id="@+id/filter_pending"
+                   app:chipIcon="@drawable/outline_circle_24"
+                   app:chipIconTint="@color/chip"
+                   android:text="Pending"
+                   android:checked="true"
+                   android:layout_width="wrap_content"
+                   android:layout_height="wrap_content"
+                   android:focusable="true"
+                   android:checkable="true"
+                   android:clickable="true"
+                   />
+           </com.google.android.material.chip.ChipGroup>
            <androidx.recyclerview.widget.RecyclerView
                android:layout_width="match_parent"
                android:layout_height="0dp"

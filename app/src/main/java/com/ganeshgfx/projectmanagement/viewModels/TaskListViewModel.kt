@@ -5,7 +5,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.ganeshgfx.projectmanagement.Utils.log
 import com.ganeshgfx.projectmanagement.adapters.TaskListRecyclerViewAdapter
 import com.ganeshgfx.projectmanagement.models.Status
 import com.ganeshgfx.projectmanagement.models.Task
@@ -28,6 +27,8 @@ class TaskListViewModel(private val repository: TaskListRepository) : ViewModel(
     val titleError = MutableLiveData(false)
     val description = MutableLiveData("")
     val descriptionError = MutableLiveData(false)
+    var date : Long? = null
+    val dateString = MutableLiveData("")
 
     val filterOptionsVisibility = MutableLiveData(true)
     val menuListener = Toolbar.OnMenuItemClickListener {
@@ -62,21 +63,29 @@ class TaskListViewModel(private val repository: TaskListRepository) : ViewModel(
     }
 
     fun addTasks() = viewModelScope.launch(Dispatchers.IO) {
-        val title: String = title.value!!
-        val description: String = description.value!!
+        val _title: String = title.value!!
+        val _description: String = description.value!!
         when {
-            title.isBlank() -> titleError.postValue(true)
-            description.isBlank() -> descriptionError.postValue(true)
+            _title.isBlank() -> titleError.postValue(true)
+            _description.isBlank() -> descriptionError.postValue(true)
             else -> {
-                repository.addTask(
+                val result = repository.addTask(
                     Task(
                         projectId = _currentProjectId,
-                        title = title,
-                        description = description,
-                        status = Status.PENDING
+                        title = _title,
+                        description = _description,
+                        status = Status.PENDING,
+                        dueDate = date
                     )
                 )
                 viewForm()
+                if(result!=null){
+                    title.postValue("")
+                    description.postValue("")
+                    titleError.postValue(false)
+                    descriptionError.postValue(false)
+                    clearDueDate()
+                }
             }
         }
     }
@@ -84,5 +93,10 @@ class TaskListViewModel(private val repository: TaskListRepository) : ViewModel(
     suspend fun updateTask(task: Task):Int{
         val result = repository.updateTask(task)
         return result
+    }
+
+    fun clearDueDate(){
+        date = null
+        dateString.postValue("")
     }
 }
