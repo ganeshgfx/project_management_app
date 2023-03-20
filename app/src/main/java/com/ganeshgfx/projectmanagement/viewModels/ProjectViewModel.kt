@@ -11,12 +11,13 @@ import com.ganeshgfx.projectmanagement.repositories.ProjectRepository
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
-class ProjectViewModel(private val projectRepository: ProjectRepository) : ViewModel() {
+class ProjectViewModel(private val repo: ProjectRepository) : ViewModel() {
 
     init {
         viewModelScope.launch {
-            projectRepository.projectWithTasksFlow.collect {
+            repo.projectWithTasksFlow.collect {
                 _projectWithTasksFlow.postValue(it)
+               // log(it)
             }
         }
     }
@@ -31,11 +32,11 @@ class ProjectViewModel(private val projectRepository: ProjectRepository) : ViewM
     val formProjectDescriptionError = MutableLiveData(false)
 
     private fun addProject(project: Project) = viewModelScope.launch {
-        projectRepository.addProject(project)
+        repo.addProject(project)
     }
 
     suspend fun deleteProject(id:Long){
-        projectRepository.deleteProject(id)
+        repo.deleteProject(id)
     }
 
     fun deleteAllProjects() = viewModelScope.launch {
@@ -68,7 +69,8 @@ class ProjectViewModel(private val projectRepository: ProjectRepository) : ViewM
                     Project(
                         id = (0..100L).random(),
                         title = title,
-                        description = description
+                        description = description,
+                        uid = repo.getLoggedUser()
                     )
                 )
                 viewForm()

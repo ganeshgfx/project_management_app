@@ -5,12 +5,15 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.ganeshgfx.projectmanagement.Utils.log
 import com.ganeshgfx.projectmanagement.adapters.TaskListRecyclerViewAdapter
 import com.ganeshgfx.projectmanagement.models.Status
 import com.ganeshgfx.projectmanagement.models.Task
 import com.ganeshgfx.projectmanagement.repositories.TaskListRepository
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
+import kotlin.system.measureTimeMillis
 
 class TaskListViewModel(private val repository: TaskListRepository) : ViewModel() {
 
@@ -41,15 +44,10 @@ class TaskListViewModel(private val repository: TaskListRepository) : ViewModel(
         getTasks(_currentProjectId)
     }
 
-    private var tasksFlowJob = viewModelScope.launch {
-        repository.tasksFlow(_currentProjectId).collect{
-            _tasks.postValue(it)
-            taskListAdapter.setData(it)
-        }
-    }
+    private var tasksFlowJob : Job? = null
     fun getTasks(projectId: Long) {
         _currentProjectId = projectId
-        tasksFlowJob.cancel()
+        tasksFlowJob?.cancel()
         tasksFlowJob = viewModelScope.launch {
             repository.tasksFlow(_currentProjectId,filters).collect {
                 _tasks.postValue(it)

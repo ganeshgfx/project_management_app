@@ -89,7 +89,9 @@
                     android:layout_height="wrap_content"
                     android:clickable="false"
                     android:layout_gravity="center"
-                    app:icon="@drawable/round_done_outline_24" />
+                    tools:icon="@drawable/outline_circle_24"
+                    setDynamicStatusIcon="@{data.status}"
+                     />
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
 

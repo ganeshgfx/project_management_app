@@ -9,7 +9,7 @@ class AppContainer(context: Context) {
     val projectRepository = ProjectRepository(ProjectDatabase.getDatabase(context).projectDao())
     val taskListRepository = TaskListRepository(ProjectDatabase.getDatabase(context).projectDao())
 
-    var projectContainer : ProjectContainer? = null
-    var taskListContainer : TaskListContainer?=null
+    var projectContainer: ProjectContainer? = null
+    var taskListContainer: TaskListContainer? = null
 
 }

@@ -9,6 +9,7 @@ import androidx.room.Relation
 data class Project(
     @PrimaryKey(autoGenerate = true)
     val id: Long? = null,
+    val uid:String,
     val title: String,
     val description: String,
 )

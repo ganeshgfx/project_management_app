@@ -18,7 +18,7 @@ interface ProjectDAO {
     suspend fun deleteAllProjects()
 
     @Query("SELECT status,COUNT(id) AS count  FROM  task WHERE projectId = :projectId  GROUP BY status;")
-    suspend fun getTasksCounts(projectId: Long): List<ProjectTaskCount>
+    fun tasksStatus(projectId: Long): Flow<List<ProjectTaskCount>>
 
     @Query("SELECT * FROM project")
     suspend fun getProjectWithTasks(): List<ProjectWithTasks>

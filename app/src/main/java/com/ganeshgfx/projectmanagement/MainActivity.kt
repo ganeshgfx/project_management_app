@@ -1,5 +1,6 @@
 package com.ganeshgfx.projectmanagement
 
+import android.content.Intent
 import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -9,6 +10,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
+import com.ganeshgfx.projectmanagement.Utils.log
 import com.ganeshgfx.projectmanagement.databinding.ActivityMainBinding
 import com.ganeshgfx.projectmanagement.di.AppContainer
 import com.ganeshgfx.projectmanagement.di.ProjectContainer
@@ -16,6 +18,7 @@ import com.ganeshgfx.projectmanagement.di.TaskListContainer
 import com.ganeshgfx.projectmanagement.models.Project
 import com.ganeshgfx.projectmanagement.viewModels.MainActivityViewModel
 import com.google.android.material.elevation.SurfaceColors
+import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
@@ -30,6 +33,8 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        checkLogin()
 
         val app = application as MainApplication
 
@@ -70,11 +75,11 @@ class MainActivity : AppCompatActivity() {
                 }
                 R.id.projectOverviewFragment -> {
                     viewModel.hideBottomAppBar(false)
-                    window.navigationBarColor = color
+                    window.navigationBarColor = Color.TRANSPARENT//color
                 }
                 R.id.tasksListsFragment -> {
                     viewModel.hideBottomAppBar(false)
-                    window.navigationBarColor = color
+                    window.navigationBarColor = Color.TRANSPARENT//color
                 }
             }
         }
@@ -83,6 +88,15 @@ class MainActivity : AppCompatActivity() {
     override fun onDestroy() {
         super.onDestroy()
         appContainer.projectContainer = null
+    }
+
+    fun checkLogin(){
+        FirebaseAuth.getInstance().currentUser?.let {
+            it.email?.let { it1 -> log("User Logged in : $it1") }
+        }
+        if(FirebaseAuth.getInstance().currentUser==null) {
+            startActivity(Intent(this,LoginActivity::class.java))
+        }
     }
 
 }

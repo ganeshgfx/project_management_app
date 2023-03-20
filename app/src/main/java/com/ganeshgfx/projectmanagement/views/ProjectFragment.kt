@@ -15,6 +15,9 @@ import com.ganeshgfx.projectmanagement.adapters.ProjectOnClickListener
 import com.ganeshgfx.projectmanagement.adapters.ProjectListRecyclerViewAdapter
 import com.ganeshgfx.projectmanagement.databinding.FragmentProjectBinding
 import com.ganeshgfx.projectmanagement.viewModels.ProjectViewModel
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 
 class ProjectFragment : Fragment() {
 
@@ -31,8 +34,6 @@ class ProjectFragment : Fragment() {
     ): View {
         _binding = DataBindingUtil.inflate(inflater, R.layout.fragment_project, container, false)
 
-        checkLogin()
-
         val activity = requireActivity() as MainActivity
         val projectContainer = activity.appContainer.projectContainer
 
@@ -44,9 +45,12 @@ class ProjectFragment : Fragment() {
         }
 
         binding.addfab.setOnLongClickListener {
-            viewModel.deleteAllProjects()
+            //viewModel.deleteAllProjects()
+            Firebase.auth.signOut()
+            (requireActivity() as MainActivity).checkLogin()
             true
         }
+
 
         viewModel.formProjectTitleError.observe(viewLifecycleOwner) {
             binding.formProjectTitle.error = if (it) "Project Title Required" else null
@@ -63,6 +67,7 @@ class ProjectFragment : Fragment() {
                         it.project.id
                     )
                 )
+                log("here")
             }
         )
         binding.projectList.adapter = projectListRecyclerViewAdapter
@@ -75,12 +80,4 @@ class ProjectFragment : Fragment() {
         binding.viewModel = viewModel
         return binding.root
     }
-
-    private fun checkLogin() {
-        if (false) {
-            Toast.makeText(context, "Login Failed...", Toast.LENGTH_SHORT).show()
-            findNavController().navigate(R.id.action_projectFragment_to_loginFragment)
-        }
-    }
-
 }
