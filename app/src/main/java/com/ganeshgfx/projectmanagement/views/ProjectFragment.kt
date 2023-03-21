@@ -5,6 +5,7 @@ import android.view.*
 import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.ganeshgfx.projectmanagement.MainActivity
@@ -14,17 +15,20 @@ import com.ganeshgfx.projectmanagement.Utils.log
 import com.ganeshgfx.projectmanagement.adapters.ProjectOnClickListener
 import com.ganeshgfx.projectmanagement.adapters.ProjectListRecyclerViewAdapter
 import com.ganeshgfx.projectmanagement.databinding.FragmentProjectBinding
+import com.ganeshgfx.projectmanagement.viewModels.ManageProjectVM
 import com.ganeshgfx.projectmanagement.viewModels.ProjectViewModel
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class ProjectFragment : Fragment() {
 
     private var _binding: FragmentProjectBinding? = null
     private val binding get() = _binding!!
 
-    private lateinit var viewModel: ProjectViewModel
+    private val viewModel: ProjectViewModel by viewModels()
 
     private lateinit var projectListRecyclerViewAdapter: ProjectListRecyclerViewAdapter
 
@@ -35,14 +39,6 @@ class ProjectFragment : Fragment() {
         _binding = DataBindingUtil.inflate(inflater, R.layout.fragment_project, container, false)
 
         val activity = requireActivity() as MainActivity
-        val projectContainer = activity.appContainer.projectContainer
-
-        if (projectContainer != null) {
-            viewModel = ViewModelProvider(
-                viewModelStore,
-                projectContainer.projectViewModelFactory
-            )[ProjectViewModel::class.java]
-        }
 
         binding.addfab.setOnLongClickListener {
             //viewModel.deleteAllProjects()
@@ -67,7 +63,6 @@ class ProjectFragment : Fragment() {
                         it.project.id
                     )
                 )
-                log("here")
             }
         )
         binding.projectList.adapter = projectListRecyclerViewAdapter

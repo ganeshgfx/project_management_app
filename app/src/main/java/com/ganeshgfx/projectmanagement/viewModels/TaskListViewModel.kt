@@ -10,12 +10,15 @@ import com.ganeshgfx.projectmanagement.adapters.TaskListRecyclerViewAdapter
 import com.ganeshgfx.projectmanagement.models.Status
 import com.ganeshgfx.projectmanagement.models.Task
 import com.ganeshgfx.projectmanagement.repositories.TaskListRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 import kotlin.system.measureTimeMillis
 
-class TaskListViewModel(private val repository: TaskListRepository) : ViewModel() {
+@HiltViewModel
+class TaskListViewModel @Inject constructor(private val repository: TaskListRepository) : ViewModel() {
 
     private var _currentProjectId =-1L
 

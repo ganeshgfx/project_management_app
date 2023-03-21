@@ -10,11 +10,14 @@ import com.ganeshgfx.projectmanagement.models.ProjectTaskCount
 import com.ganeshgfx.projectmanagement.models.ProjectWithTasks
 import com.ganeshgfx.projectmanagement.models.Status
 import com.ganeshgfx.projectmanagement.repositories.ProjectRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class ProjectOverviewViewModel(private val repo: ProjectRepository) : ViewModel() {
+@HiltViewModel
+class ProjectOverviewViewModel @Inject constructor(private val repo: ProjectRepository) : ViewModel() {
     private var _currentProjectId = -1L
     private var tasksJob: Job? = null
     val taskStatusCount = MutableLiveData(emptyList<ProjectTaskCount>())

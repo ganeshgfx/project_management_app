@@ -4,9 +4,11 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.viewModels
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
@@ -19,14 +21,15 @@ import com.ganeshgfx.projectmanagement.models.ProjectTaskCount
 import com.ganeshgfx.projectmanagement.models.ProjectWithTasks
 import com.ganeshgfx.projectmanagement.models.Status
 import com.ganeshgfx.projectmanagement.viewModels.ProjectOverviewViewModel
+import com.ganeshgfx.projectmanagement.viewModels.TaskListViewModel
+import dagger.hilt.android.AndroidEntryPoint
 import org.eazegraph.lib.models.PieModel
 
-
+@AndroidEntryPoint
 class ProjectOverviewFragment : Fragment() {
     private lateinit var _binding: FragmentProjectOverviewBinding
-    private val args: ProjectOverviewFragmentArgs by navArgs()
     val binding get() = _binding
-    private lateinit var viewModel: ProjectOverviewViewModel
+    private val viewModel: ProjectOverviewViewModel by viewModels()
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -35,15 +38,8 @@ class ProjectOverviewFragment : Fragment() {
             DataBindingUtil.inflate(inflater, R.layout.fragment_project_overview, container, false)
 
         val activity = requireActivity() as MainActivity
-        val projectContainer = activity.appContainer.projectContainer
 
-        if (projectContainer != null) {
-            viewModel = ViewModelProvider(
-                viewModelStore,
-                projectContainer.projectOverviewViewModelFactory
-            )[ProjectOverviewViewModel::class.java]
-            viewModel.getTasksStatus(activity.viewModel.currentProjectId)
-        } else log("No proj id : ${args.projectId}")
+        viewModel.getTasksStatus(activity.viewModel.currentProjectId)
 
         binding.viewModel = viewModel
         binding.lifecycleOwner = this

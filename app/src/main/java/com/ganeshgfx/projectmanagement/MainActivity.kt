@@ -4,31 +4,23 @@ import android.content.Intent
 import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
+import androidx.activity.viewModels
 import androidx.databinding.DataBindingUtil
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
 import com.ganeshgfx.projectmanagement.Utils.log
 import com.ganeshgfx.projectmanagement.databinding.ActivityMainBinding
-import com.ganeshgfx.projectmanagement.di.AppContainer
-import com.ganeshgfx.projectmanagement.di.ProjectContainer
-import com.ganeshgfx.projectmanagement.di.TaskListContainer
-import com.ganeshgfx.projectmanagement.models.Project
 import com.ganeshgfx.projectmanagement.viewModels.MainActivityViewModel
 import com.google.android.material.elevation.SurfaceColors
 import com.google.firebase.auth.FirebaseAuth
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
-
-    lateinit var appContainer: AppContainer
 
     private lateinit var binding: ActivityMainBinding
 
-    lateinit var viewModel : MainActivityViewModel
+    val viewModel: MainActivityViewModel by viewModels()
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -36,18 +28,8 @@ class MainActivity : AppCompatActivity() {
 
         checkLogin()
 
-        val app = application as MainApplication
-
-        appContainer = app.appContainer
-
-        appContainer.projectContainer = ProjectContainer(appContainer.projectRepository)
-        appContainer.taskListContainer = TaskListContainer(appContainer.taskListRepository)
-
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
-        viewModel = ViewModelProvider(
-            this,
-            ViewModelProvider.AndroidViewModelFactory(application)
-        )[MainActivityViewModel::class.java]
+
         binding.data = viewModel
         binding.lifecycleOwner = this
 
@@ -87,7 +69,6 @@ class MainActivity : AppCompatActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
-        appContainer.projectContainer = null
     }
 
     fun checkLogin(){

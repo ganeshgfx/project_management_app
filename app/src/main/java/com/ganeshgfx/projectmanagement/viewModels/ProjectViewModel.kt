@@ -8,10 +8,13 @@ import com.ganeshgfx.projectmanagement.Utils.log
 import com.ganeshgfx.projectmanagement.models.Project
 import com.ganeshgfx.projectmanagement.models.ProjectWithTasks
 import com.ganeshgfx.projectmanagement.repositories.ProjectRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class ProjectViewModel(private val repo: ProjectRepository) : ViewModel() {
+@HiltViewModel
+class ProjectViewModel @Inject constructor(private val repo: ProjectRepository) : ViewModel() {
 
     init {
         viewModelScope.launch {

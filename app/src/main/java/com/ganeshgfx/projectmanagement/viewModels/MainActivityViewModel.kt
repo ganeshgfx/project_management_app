@@ -4,8 +4,12 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import dagger.hilt.android.AndroidEntryPoint
+import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 
-class MainActivityViewModel(app: Application) : AndroidViewModel(app) {
+@HiltViewModel
+class MainActivityViewModel @Inject constructor(app: Application) : AndroidViewModel(app) {
 
     private var _isProjectFragmentsActive = MutableLiveData(true)
 

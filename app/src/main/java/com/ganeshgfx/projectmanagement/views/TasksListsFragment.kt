@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.widget.doOnTextChanged
 import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -23,17 +24,19 @@ import com.ganeshgfx.projectmanagement.adapters.TaskOnClickListener
 import com.ganeshgfx.projectmanagement.databinding.FragmentTasksListsBinding
 import com.ganeshgfx.projectmanagement.models.Status
 import com.ganeshgfx.projectmanagement.models.Task
+import com.ganeshgfx.projectmanagement.viewModels.ManageProjectVM
 import com.ganeshgfx.projectmanagement.viewModels.TaskListViewModel
 import com.google.android.material.datepicker.CalendarConstraints
 import com.google.android.material.datepicker.DateValidatorPointForward
 import com.google.android.material.datepicker.MaterialDatePicker
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import java.util.*
 import kotlin.time.Duration.Companion.days
-
+@AndroidEntryPoint
 class TasksListsFragment : Fragment() {
     private lateinit var binding: FragmentTasksListsBinding
-    private lateinit var viewModel: TaskListViewModel
+    private val viewModel: TaskListViewModel by viewModels()
     private lateinit var taskListAdapter: TaskListRecyclerViewAdapter
 
     override fun onCreateView(
@@ -41,16 +44,9 @@ class TasksListsFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         val activity = requireActivity() as MainActivity
-        val tasksContainer = activity.appContainer.taskListContainer
-        if (tasksContainer != null) {
-            viewModel = ViewModelProvider(
-                viewModelStore,
-                tasksContainer.taskListViewModelFactory
-            )[TaskListViewModel::class.java]
-            viewModel.getTasks(activity.viewModel.currentProjectId)
-        } else {
-            throw Exception("tasksContainer is null")
-        }
+
+        viewModel.getTasks(activity.viewModel.currentProjectId)
+
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_tasks_lists, container, false)
 
         viewModel.titleError.observe(viewLifecycleOwner) {

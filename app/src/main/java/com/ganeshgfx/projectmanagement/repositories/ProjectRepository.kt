@@ -9,11 +9,11 @@ import com.ganeshgfx.projectmanagement.models.ProjectWithTasks
 import com.ganeshgfx.projectmanagement.models.Status
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
+import javax.inject.Inject
 
-class ProjectRepository(
+class ProjectRepository @Inject constructor(
     private val dao: ProjectDAO,
 ) {
-
     val projectWithTasksFlow = dao.getProjectWithTasksFlow()
 
     fun tasksStatusFlow(_projectId: Long) = dao.tasksStatus(_projectId)
