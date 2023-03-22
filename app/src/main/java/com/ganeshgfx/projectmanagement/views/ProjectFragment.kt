@@ -43,7 +43,6 @@ class ProjectFragment : Fragment() {
         binding.addfab.setOnLongClickListener {
             //viewModel.deleteAllProjects()
             Firebase.auth.signOut()
-            (requireActivity() as MainActivity).checkLogin()
             true
         }
 

@@ -26,14 +26,19 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        checkLogin()
+        viewModel.isLogged.observe(this){
+            if(!it){
+                startActivity(Intent(this,LoginActivity::class.java))
+                finish()
+            }
+        }
 
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
 
         binding.data = viewModel
         binding.lifecycleOwner = this
 
-        //setting color for appbar and statusbar
+        //setting color for appbar and status bar
         val color = SurfaceColors.SURFACE_2.getColor(this)
         //window.statusBarColor = color
         //window.navigationBarColor = color
@@ -69,15 +74,6 @@ class MainActivity : AppCompatActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
-    }
-
-    fun checkLogin(){
-        FirebaseAuth.getInstance().currentUser?.let {
-            it.email?.let { it1 -> log("User Logged in : $it1") }
-        }
-        if(FirebaseAuth.getInstance().currentUser==null) {
-            startActivity(Intent(this,LoginActivity::class.java))
-        }
     }
 
 }

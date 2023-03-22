@@ -1,9 +1,8 @@
 package com.ganeshgfx.projectmanagement.di
 
-import com.ganeshgfx.projectmanagement.database.FirebaseHelper
+import com.ganeshgfx.projectmanagement.database.FirestoreHelper
 import com.ganeshgfx.projectmanagement.database.ProjectDAO
 import com.ganeshgfx.projectmanagement.database.ProjectDatabase
-import com.ganeshgfx.projectmanagement.repositories.ManageProjectRepo
 import com.ganeshgfx.projectmanagement.repositories.ProjectRepository
 import dagger.Module
 import dagger.Provides
@@ -22,14 +21,9 @@ object ProjectModule {
 
     @Singleton
     @Provides
-    fun provideProjectRepo(dao: ProjectDAO): ProjectRepository {
-        return ProjectRepository(dao)
+    fun provideProjectRepo(dao: ProjectDAO,helper: FirestoreHelper): ProjectRepository {
+        return ProjectRepository(dao,helper)
     }
 
-    @Singleton
-    @Provides
-    fun provideManageRepo(firebaseHelper: FirebaseHelper, dao: ProjectDAO): ManageProjectRepo {
-        return ManageProjectRepo(firebaseHelper,dao)
-    }
 
 }

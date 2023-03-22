@@ -1,24 +1,22 @@
 package com.ganeshgfx.projectmanagement.repositories
 
-import androidx.lifecycle.MutableLiveData
-import com.ganeshgfx.projectmanagement.database.FirebaseHelper
+import com.ganeshgfx.projectmanagement.database.FirestoreHelper
 import com.ganeshgfx.projectmanagement.database.ProjectDAO
-import com.ganeshgfx.projectmanagement.database.ProjectDatabase
 import com.ganeshgfx.projectmanagement.models.Project
-import com.ganeshgfx.projectmanagement.models.ProjectWithTasks
-import com.ganeshgfx.projectmanagement.models.Status
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.FirebaseUser
 import javax.inject.Inject
 
 class ProjectRepository @Inject constructor(
     private val dao: ProjectDAO,
+    private val helper: FirestoreHelper
 ) {
     val projectWithTasksFlow = dao.getProjectWithTasksFlow()
 
     fun tasksStatusFlow(_projectId: Long) = dao.tasksStatus(_projectId)
 
     suspend fun addProject(project: Project) {
+        //TODO Validate Insertion
+        helper.addProject(project)
         dao.insertProject(project)
     }
 
