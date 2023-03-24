@@ -25,8 +25,8 @@ class MainActivityViewModel @Inject constructor(authRepo: AuthRepo) : ViewModel(
 
     private var _isProjectFragmentsActive = MutableLiveData(true)
 
-    private var _currentProjectId = -1L
-    val currentProjectId : Long get() = _currentProjectId
+    private var _currentProjectId = ""
+    val currentProjectId : String get() = _currentProjectId
 
     val isProjectFragmentsActive : LiveData<Boolean>
         get() = _isProjectFragmentsActive
@@ -35,7 +35,7 @@ class MainActivityViewModel @Inject constructor(authRepo: AuthRepo) : ViewModel(
         _isProjectFragmentsActive.postValue(isProjectFragmentsActive)
     }
 
-    fun changeProject(projectId:Long){
+    fun changeProject(projectId:String){
         _currentProjectId = projectId
     }
 }

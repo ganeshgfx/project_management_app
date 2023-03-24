@@ -5,6 +5,7 @@ import com.ganeshgfx.projectmanagement.database.FirebaseAuthHelper
 import com.ganeshgfx.projectmanagement.database.FirestoreHelper
 import com.ganeshgfx.projectmanagement.database.UserDAO
 import com.ganeshgfx.projectmanagement.models.User
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.launchIn
@@ -13,18 +14,19 @@ import javax.inject.Inject
 
 class AuthRepo @Inject constructor(
     private val dao: UserDAO,
-    private val auth: FirebaseAuthHelper,
+    private val remote: FirebaseFirestore,
+    private val auth : FirebaseAuth,
+    private val Xauth: FirebaseAuthHelper,
     private val store: FirestoreHelper
 ) {
-    val isLogged = auth.isLogged
+    val isLogged = Xauth.isLogged
 
     fun getUsers() = store.getUsers()
 
     suspend fun addLoggedUser() {
-        auth.loggedUser?.let {
+        Xauth.loggedUser?.let {
             dao.insertUser(it)
-            val result = store.addUser(it)
-            log(result)
+            store.addUser(it)
         }
     }
 

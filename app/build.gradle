@@ -75,6 +75,7 @@ dependencies {
 
     //gsm
     implementation 'com.google.android.gms:play-services-auth:20.4.1'
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.6.4"
 
     //hilt
     implementation 'com.google.dagger:hilt-android:2.45'

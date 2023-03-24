@@ -13,7 +13,7 @@ interface TaskDAO {
 
     @Query("SELECT * FROM task WHERE projectId = :projectId AND status IN (:status)")//ORDER BY status DESC
     fun getTasksFlow(
-        projectId: Long,
+        projectId: String,
         status: List<Status>
     ): Flow<List<Task>>
 

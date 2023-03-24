@@ -21,5 +21,13 @@ object FirebaseModule {
 
     @Singleton
     @Provides
-    fun provideFirestore() = FirestoreHelper(Firebase.firestore)
+    fun provideFirestore() = Firebase.firestore
+
+    @Singleton
+    @Provides
+    fun provideFiresAuth() = Firebase.auth
+
+    @Singleton
+    @Provides
+    fun provideFirestoreHelper() = FirestoreHelper(Firebase.firestore)
 }

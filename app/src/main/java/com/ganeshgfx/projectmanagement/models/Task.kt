@@ -20,7 +20,7 @@ import java.util.*
 data class Task(
     @PrimaryKey(autoGenerate = true)
     val id: Long? = null,
-    val projectId: Long,
+    val projectId: String,
     val title: String,
     val description: String,
     var status: Status,

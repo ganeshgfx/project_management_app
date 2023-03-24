@@ -11,7 +11,7 @@ class TaskListRepository @Inject constructor(
     private val dao: TaskDAO
 ) {
     fun tasksFlow(
-        _projectId: Long,
+        _projectId: String,
         status: List<Status> = listOf(Status.DONE, Status.PENDING, Status.IN_PROGRESS)
     ) = dao.getTasksFlow(_projectId, status)
 

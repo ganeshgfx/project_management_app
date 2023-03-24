@@ -20,7 +20,7 @@ import kotlin.system.measureTimeMillis
 @HiltViewModel
 class TaskListViewModel @Inject constructor(private val repository: TaskListRepository) : ViewModel() {
 
-    private var _currentProjectId =-1L
+    private var _currentProjectId = ""
 
     private var filters = listOf(Status.DONE,Status.IN_PROGRESS,Status.PENDING)
     private val _tasks = MutableLiveData<List<Task>>()
@@ -48,7 +48,7 @@ class TaskListViewModel @Inject constructor(private val repository: TaskListRepo
     }
 
     private var tasksFlowJob : Job? = null
-    fun getTasks(projectId: Long) {
+    fun getTasks(projectId: String) {
         _currentProjectId = projectId
         tasksFlowJob?.cancel()
         tasksFlowJob = viewModelScope.launch {

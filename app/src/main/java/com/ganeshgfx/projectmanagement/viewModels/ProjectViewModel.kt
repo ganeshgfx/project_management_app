@@ -4,12 +4,10 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.ganeshgfx.projectmanagement.Utils.log
 import com.ganeshgfx.projectmanagement.models.Project
 import com.ganeshgfx.projectmanagement.models.ProjectWithTasks
 import com.ganeshgfx.projectmanagement.repositories.ProjectRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -20,7 +18,6 @@ class ProjectViewModel @Inject constructor(private val repo: ProjectRepository) 
         viewModelScope.launch {
             repo.projectWithTasksFlow.collect {
                 _projectWithTasksFlow.postValue(it)
-               // log(it)
             }
         }
     }
@@ -33,8 +30,9 @@ class ProjectViewModel @Inject constructor(private val repo: ProjectRepository) 
     val formProjectTitleError = MutableLiveData(false)
     val formProjectDescription = MutableLiveData("")
     val formProjectDescriptionError = MutableLiveData(false)
+    val addingProject : LiveData<Boolean> get() = repo.addingProject
 
-    private fun addProject(project: Project) = viewModelScope.launch {
+    private suspend fun addProject(project: Project) {
         repo.addProject(project)
     }
 
@@ -51,7 +49,7 @@ class ProjectViewModel @Inject constructor(private val repo: ProjectRepository) 
         showForm.postValue(!showForm.value!!)
     }
 
-    fun createProject() {
+    fun createProject() = viewModelScope.launch{
         val title: String = formProjectTitle.value!!
         val description: String = formProjectDescription.value!!
 
@@ -70,7 +68,7 @@ class ProjectViewModel @Inject constructor(private val repo: ProjectRepository) 
                 formProjectDescription.postValue("")
                 addProject(
                     Project(
-                        id = (0..100L).random(),
+                        id = "",
                         title = title,
                         description = description,
                         uid = repo.getLoggedUser()

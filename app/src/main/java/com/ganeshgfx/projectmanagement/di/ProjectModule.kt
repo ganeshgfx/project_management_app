@@ -4,6 +4,7 @@ import com.ganeshgfx.projectmanagement.database.FirestoreHelper
 import com.ganeshgfx.projectmanagement.database.ProjectDAO
 import com.ganeshgfx.projectmanagement.database.ProjectDatabase
 import com.ganeshgfx.projectmanagement.repositories.ProjectRepository
+import com.google.firebase.firestore.FirebaseFirestore
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -21,8 +22,8 @@ object ProjectModule {
 
     @Singleton
     @Provides
-    fun provideProjectRepo(dao: ProjectDAO,helper: FirestoreHelper): ProjectRepository {
-        return ProjectRepository(dao,helper)
+    fun provideProjectRepo(dao: ProjectDAO,remote: FirebaseFirestore): ProjectRepository {
+        return ProjectRepository(dao,remote)
     }
 
 

@@ -46,6 +46,9 @@ class ProjectFragment : Fragment() {
             true
         }
 
+        viewModel.addingProject.observe(viewLifecycleOwner){
+            hideSoftKeyBord(binding.root)
+        }
 
         viewModel.formProjectTitleError.observe(viewLifecycleOwner) {
             binding.formProjectTitle.error = if (it) "Project Title Required" else null
@@ -58,9 +61,7 @@ class ProjectFragment : Fragment() {
             ProjectOnClickListener {
                 activity.viewModel.changeProject(it.project.id!!)
                 findNavController().navigate(
-                    ProjectFragmentDirections.actionProjectFragmentToTaskOverviewFragment(
-                        it.project.id
-                    )
+                    ProjectFragmentDirections.actionProjectFragmentToTaskOverviewFragment()
                 )
             }
         )

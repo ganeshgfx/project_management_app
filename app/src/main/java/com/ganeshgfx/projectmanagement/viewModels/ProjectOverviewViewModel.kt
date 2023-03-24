@@ -18,13 +18,13 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ProjectOverviewViewModel @Inject constructor(private val repo: ProjectRepository) : ViewModel() {
-    private var _currentProjectId = -1L
+    private var _currentProjectId = ""
     private var tasksJob: Job? = null
     val taskStatusCount = MutableLiveData(emptyList<ProjectTaskCount>())
     val pendingTasks = MutableLiveData(0)
     val doingTasks = MutableLiveData(0)
     val doneTasks = MutableLiveData(0)
-    fun getTasksStatus(projectId: Long) {
+    fun getTasksStatus(projectId: String) {
         _currentProjectId = projectId
         if (tasksJob != null)
             tasksJob!!.cancel()

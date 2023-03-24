@@ -72,19 +72,54 @@
           tools:visibility="visible"
           android:fitsSystemWindows="true"
           android:id="@+id/projects_view"
-          android:visibility="@{viewModel.showForm ? View.GONE : View.VISIBLE}"
+
           android:layout_height="match_parent">
 
 
             <com.google.android.material.appbar.MaterialToolbar
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"
-                app:menu="@menu/project_view_menu"
                 app:title="Projects"
                 app:titleTextAppearance="@style/TextAppearance.MaterialComponents.Headline6"
                 app:navigationIconTint="?attr/colorControlNormal"
                 android:layout_height="?attr/actionBarSize" />
 
+         <com.google.android.material.progressindicator.LinearProgressIndicator
+             android:layout_width="match_parent"
+             android:layout_height="wrap_content"
+             android:indeterminate="true"
+             app:trackThickness="7dp"
+             app:trackCornerRadius="10dp"
+             android:visibility="@{viewModel.addingProject ? View.VISIBLE : View.GONE}"
+             />
+
+         <LinearLayout
+             android:layout_width="match_parent"
+             android:orientation="horizontal"
+             android:layout_height="wrap_content"
+             android:visibility="@{viewModel.showForm ? View.VISIBLE : View.GONE}">
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                style="@style/Widget.Material3.ExtendedFloatingActionButton.Icon.Secondary"
+                android:layout_width="wrap_content"
+                app:srcCompat = "@drawable/twotone_arrow_back_ios_24"
+                android:layout_margin="16dp"
+                android:id="@+id/cancel_fab"
+                android:onClick="@{()->viewModel.viewForm()}"
+                android:layout_height="wrap_content"/>
+            <Button
+                android:layout_width="wrap_content"
+                android:visibility="invisible"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"/>
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                style="Widget.Material3.ExtendedFloatingActionButton.Icon.Primary"
+                android:layout_width="wrap_content"
+                app:srcCompat = "@drawable/round_done_outline_24"
+                android:layout_margin="16dp"
+                android:id="@+id/ok_fab"
+                android:onClick="@{()->viewModel.createProject()}"
+                android:layout_height="wrap_content"/>
+         </LinearLayout>
 
          <androidx.recyclerview.widget.RecyclerView
              android:layout_width="match_parent"
@@ -94,6 +129,7 @@
              app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
              android:id="@+id/project_list"
              android:layout_weight="1"
+             android:visibility="@{viewModel.showForm ? View.GONE : View.VISIBLE}"
              />
       </LinearLayout>
 
@@ -107,27 +143,5 @@
           android:onClick="@{()->viewModel.viewForm()}"
           android:visibility="@{viewModel.showForm ? View.GONE : View.VISIBLE}"
           android:layout_height="wrap_content"/>
-
-      <com.google.android.material.floatingactionbutton.FloatingActionButton
-          style="Widget.Material3.ExtendedFloatingActionButton.Icon.Primary"
-          android:layout_width="wrap_content"
-          app:srcCompat = "@drawable/round_done_outline_24"
-          android:layout_gravity="top|end"
-          android:layout_margin="16dp"
-          android:id="@+id/ok_fab"
-          android:onClick="@{()->viewModel.createProject()}"
-          android:visibility="@{viewModel.showForm ? View.VISIBLE : View.GONE}"
-          android:layout_height="wrap_content"/>
-      <com.google.android.material.floatingactionbutton.FloatingActionButton
-          style="@style/Widget.Material3.ExtendedFloatingActionButton.Icon.Secondary"
-          android:layout_width="wrap_content"
-          app:srcCompat = "@drawable/twotone_arrow_back_ios_24"
-          android:layout_gravity="top|start"
-          android:layout_margin="16dp"
-          android:id="@+id/cancel_fab"
-          android:onClick="@{()->viewModel.viewForm()}"
-          android:visibility="@{viewModel.showForm ? View.VISIBLE : View.GONE}"
-          android:layout_height="wrap_content"/>
-
    </FrameLayout>
 </layout>
