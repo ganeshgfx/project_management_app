@@ -41,6 +41,7 @@ class LoginActivity : AppCompatActivity() {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_login)
         viewModel.isLogged.observe(this) {
             if (it) {
+                log("Login done",it)
                 startApp()
             }
         }

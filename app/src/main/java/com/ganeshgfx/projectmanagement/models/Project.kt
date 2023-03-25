@@ -9,9 +9,9 @@ import androidx.room.Relation
 data class Project(
     @PrimaryKey
     val id: String = "",
-    val uid: String,
-    val title: String,
-    val description: String,
+    val uid: String = "",
+    val title: String = "",
+    val description: String = "",
 )
 
 data class ProjectTaskCount(

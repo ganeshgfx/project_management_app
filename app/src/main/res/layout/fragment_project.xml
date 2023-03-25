@@ -81,6 +81,7 @@
                 android:layout_width="match_parent"
                 app:title="Projects"
                 app:titleTextAppearance="@style/TextAppearance.MaterialComponents.Headline6"
+                app:menu="@menu/project_view_menu"
                 app:navigationIconTint="?attr/colorControlNormal"
                 android:layout_height="?attr/actionBarSize" />
 

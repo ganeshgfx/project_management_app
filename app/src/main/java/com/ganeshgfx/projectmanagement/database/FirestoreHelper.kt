@@ -22,45 +22,83 @@ import kotlinx.coroutines.tasks.await
 private const val USERS = "users"
 private const val PROJECTS = "projects"
 
-class FirestoreHelper(private val db: FirebaseFirestore) {
-
+class FirestoreHelper(
+    private val db: FirebaseFirestore,
+    private val auth: FirebaseAuth
+) {
     //Use
-    fun addUser(user: User) {
-        db.collection(USERS).document(user.uid).set(user)
-            .addOnSuccessListener {
-                log("User inserted : $user")
-            }
-            .addOnFailureListener {
-                log("Error inserting user : ${it.stackTrace}")
-            }
+    suspend fun addUser(user: User): Boolean {
+        try {
+            db.collection(USERS).document(user.uid).set(user).await()
+            return (true)
+        } catch (error: Exception) {
+            log("Error adding User to firestore : ", error)
+            return (false)
+        }
     }
 
     fun getUsers() = db.collection(USERS).getData<User>()
+    suspend fun searchUsers(search:String):List<User>{
+         val result = db.collection(USERS).get().await().documents
+            .map { it.toObject<User>()!! }
+            .filter {
+                val user = it
+                val result = user.displayName.lowercase().contains(search.lowercase())
+                log(user,result)
+                result
+            }
+        return result
+    }
 
     //Project
-    // fun addProject(project: Project) = db.collection(PROJECTS).document(project.uid).collection(PROJECTS).add(project)
+    suspend fun addProject(project: Project): Project {
+        val userID = auth.uid!!
+        val ref = db.collection(PROJECTS)
+        val id = ref.document().id
+        val data = project.let {
+            Project(id = id, uid = userID, title = it.title, description = it.description)
+        }
+        ref.document(id).set(data).await()
+        return data
+    }
 
-//    fun addProject(project: Project) = callbackFlow{
-//        db.collection(PROJECTS).document(project.uid).collection(PROJECTS).add(project)
-//            .addOnSuccessListener {
-//                trySend(true)
-//            }
-//            .addOnFailureListener {
-//                trySend(false)
-//            }
-//        awaitClose()
-//    }
 
-//    fun addProject(project: Project, callback: (Boolean) -> Unit) {
-//        db.collection(PROJECTS).document(project.uid).collection(PROJECTS).add(project)
-//            .addOnSuccessListener {
-//                callback(true)
-//            }
-//            .addOnFailureListener {
-//                callback(false)
-//            }
-//    }
-
+    /*
+    fun addProject(project: Project) = flow<Boolean> {
+        val result = try {
+            val ref = db.collection(PROJECTS).document(project.uid).collection(PROJECTS)
+            val id = ref.document().id
+            val data = project.let {
+                Project(id = id, uid = it.uid, title = it.title, description = it.description)
+            }
+            ref.add(data).await()
+            true
+        } catch (e: Exception) {
+            log("Error adding project : ", e)
+            false
+        }
+        emit(result)
+    }
+    fun addProject(project: Project) = callbackFlow{
+        db.collection(PROJECTS).document(project.uid).collection(PROJECTS).add(project)
+            .addOnSuccessListener {
+                trySend(true)
+            }
+            .addOnFailureListener {
+                trySend(false)
+            }
+        awaitClose()
+    }
+    fun addProject(project: Project, callback: (Boolean) -> Unit) {
+        db.collection(PROJECTS).document(project.uid).collection(PROJECTS).add(project)
+            .addOnSuccessListener {
+                callback(true)
+            }
+            .addOnFailureListener {
+                callback(false)
+            }
+    }
+    */
 
     inline fun <reified T> CollectionReference.getData() = callbackFlow {
         val listener =

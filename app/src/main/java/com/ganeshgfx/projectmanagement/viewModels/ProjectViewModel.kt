@@ -30,13 +30,9 @@ class ProjectViewModel @Inject constructor(private val repo: ProjectRepository) 
     val formProjectTitleError = MutableLiveData(false)
     val formProjectDescription = MutableLiveData("")
     val formProjectDescriptionError = MutableLiveData(false)
-    val addingProject : LiveData<Boolean> get() = repo.addingProject
+    val addingProject: LiveData<Boolean> get() = repo.addingProject
 
-    private suspend fun addProject(project: Project) {
-        repo.addProject(project)
-    }
-
-    suspend fun deleteProject(id:Long){
+    suspend fun deleteProject(id: Long) {
         repo.deleteProject(id)
     }
 
@@ -49,7 +45,7 @@ class ProjectViewModel @Inject constructor(private val repo: ProjectRepository) 
         showForm.postValue(!showForm.value!!)
     }
 
-    fun createProject() = viewModelScope.launch{
+    fun createProject() = viewModelScope.launch {
         val title: String = formProjectTitle.value!!
         val description: String = formProjectDescription.value!!
 
@@ -66,14 +62,7 @@ class ProjectViewModel @Inject constructor(private val repo: ProjectRepository) 
             else -> {
                 formProjectTitle.postValue("")
                 formProjectDescription.postValue("")
-                addProject(
-                    Project(
-                        id = "",
-                        title = title,
-                        description = description,
-                        uid = repo.getLoggedUser()
-                    )
-                )
+                repo.addProject(title, description)
                 viewForm()
             }
         }

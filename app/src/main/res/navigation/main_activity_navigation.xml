@@ -70,5 +70,14 @@
         android:id="@+id/manageProjectFragment"
         android:name="com.ganeshgfx.projectmanagement.views.ManageProjectFragment"
         android:label="Manage Project"
-        tools:layout="@layout/fragment_project_manage" />
+        tools:layout="@layout/fragment_project_manage" >
+        <action
+            android:id="@+id/action_manageProjectFragment_to_addMemberFragment"
+            app:destination="@id/addMemberFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/addMemberFragment"
+        android:name="com.ganeshgfx.projectmanagement.views.ManageMemberFragment"
+        android:label="Team Members"
+        tools:layout="@layout/fragment_manage_member" />
 </navigation>

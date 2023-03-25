@@ -8,5 +8,5 @@ import androidx.room.PrimaryKey
 data class User(
     @PrimaryKey
     val uid: String = "",
-    val displayName:String? = ""
+    val displayName:String = ""
 )

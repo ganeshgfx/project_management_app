@@ -14,20 +14,16 @@ import javax.inject.Inject
 
 class AuthRepo @Inject constructor(
     private val dao: UserDAO,
-    private val remote: FirebaseFirestore,
-    private val auth : FirebaseAuth,
-    private val Xauth: FirebaseAuthHelper,
+    private val auth: FirebaseAuthHelper,
     private val store: FirestoreHelper
 ) {
-    val isLogged = Xauth.isLogged
+    val isLogged = auth.isLogged
 
     fun getUsers() = store.getUsers()
 
-    suspend fun addLoggedUser() {
-        Xauth.loggedUser?.let {
-            dao.insertUser(it)
-            store.addUser(it)
-        }
+    suspend fun addLoggedUser(user:User):Boolean {
+        val result = store.addUser(user)
+        dao.insertUser(user)
+        return result
     }
-
 }

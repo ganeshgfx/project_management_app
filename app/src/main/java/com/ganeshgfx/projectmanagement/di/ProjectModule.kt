@@ -20,11 +20,14 @@ object ProjectModule {
         return db.projectDao()
     }
 
+//    @Singleton
+//    @Provides
+//    fun provideProjectRepo(dao: ProjectDAO,remote: FirebaseFirestore) = ProjectRepository(dao,remote)
+
     @Singleton
     @Provides
-    fun provideProjectRepo(dao: ProjectDAO,remote: FirebaseFirestore): ProjectRepository {
-        return ProjectRepository(dao,remote)
+    fun provideProjectRepo(dao: ProjectDAO,helper: FirestoreHelper): ProjectRepository {
+        return ProjectRepository(dao,helper)
     }
-
 
 }

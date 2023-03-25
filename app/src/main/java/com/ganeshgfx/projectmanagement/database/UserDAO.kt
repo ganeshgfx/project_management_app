@@ -10,5 +10,5 @@ import com.ganeshgfx.projectmanagement.models.User
 @Dao
 interface UserDAO {
     @Upsert
-    suspend fun insertUser(user: User) : Long
+    suspend fun insertUser(user: User): Long
 }

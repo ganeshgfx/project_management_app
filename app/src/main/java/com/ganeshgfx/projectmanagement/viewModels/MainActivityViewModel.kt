@@ -13,7 +13,11 @@ class MainActivityViewModel @Inject constructor(authRepo: AuthRepo) : ViewModel(
 
     init {
         authRepo.isLogged.onEach {
-            _isLogged.postValue(it)
+          if(it!=null){
+              _isLogged.postValue(true)
+          }else{
+              _isLogged.postValue(false)
+          }
         }.launchIn(viewModelScope)
 //        authRepo.getUsers().onEach {
 //            log(it)

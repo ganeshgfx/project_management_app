@@ -3,6 +3,7 @@ package com.ganeshgfx.projectmanagement.di
 import com.ganeshgfx.projectmanagement.database.FirebaseAuthHelper
 import com.ganeshgfx.projectmanagement.database.FirestoreHelper
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
@@ -29,5 +30,5 @@ object FirebaseModule {
 
     @Singleton
     @Provides
-    fun provideFirestoreHelper() = FirestoreHelper(Firebase.firestore)
+    fun provideFirestoreHelper() = FirestoreHelper(Firebase.firestore,Firebase.auth)
 }

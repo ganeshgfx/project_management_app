@@ -6,6 +6,7 @@ import com.ganeshgfx.projectmanagement.database.FirestoreHelper
 import com.ganeshgfx.projectmanagement.database.ProjectDAO
 import com.ganeshgfx.projectmanagement.models.Project
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.EventListener
 import com.google.firebase.firestore.FirebaseFirestore
@@ -17,13 +18,11 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 
-private const val USERS = "users"
-private const val PROJECTS = "projects"
-
 class ProjectRepository @Inject constructor(
     private val dao: ProjectDAO,
-    private val remote: FirebaseFirestore
+    private val remote: FirestoreHelper
 ) {
+
     val projectWithTasksFlow = dao.getProjectWithTasksFlow()
 
     //for getting individual project
@@ -31,16 +30,13 @@ class ProjectRepository @Inject constructor(
 
     val addingProject = MutableLiveData(false)
 
-    suspend fun addProject(project: Project) {
+    suspend fun addProject(title:String, description:String) {
         addingProject.postValue(true)
         try {
-            val ref = remote.collection(PROJECTS).document(project.uid).collection(PROJECTS)
-            val id = ref.document().id
-            val data = project.let {
-                Project(id = id, uid = it.uid, title = it.title, description = it.description)
-            }
-            ref.add(data).await()
-            dao.insertProject(data)
+            val response = remote.addProject(
+                Project(title = title, description = description)
+            )
+            dao.insertProject(response)
             addingProject.postValue(false)
         } catch (e: Exception) {
             log("Error adding project : ", e)
@@ -55,18 +51,8 @@ class ProjectRepository @Inject constructor(
         dao.deleteAllProjects()
     }
 
-    fun getLoggedUser(): String {
+    fun getLoggedUserId(): String {
         val user: String = FirebaseAuth.getInstance().currentUser?.uid!!
         return user
     }
-}
-
-inline fun <reified T> CollectionReference.getData() = callbackFlow {
-    val listener =
-        EventListener<QuerySnapshot> { list, error ->
-            //TODO HANDLE ERROR !
-            trySend(list!!.map { it.toObject<T>() })
-        }
-    val registration = addSnapshotListener(listener)
-    awaitClose { registration.remove() }
 }

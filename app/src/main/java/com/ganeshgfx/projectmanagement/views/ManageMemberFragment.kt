@@ -7,33 +7,31 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.setupWithNavController
 import com.ganeshgfx.projectmanagement.R
-import com.ganeshgfx.projectmanagement.databinding.FragmentProjectManageBinding
-import com.ganeshgfx.projectmanagement.viewModels.ManageProjectVM
+import com.ganeshgfx.projectmanagement.databinding.FragmentManageMemberBinding
+import com.ganeshgfx.projectmanagement.viewModels.ManageMemberViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class ManageProjectFragment : Fragment() {
-    private var _binding: FragmentProjectManageBinding? = null
+class ManageMemberFragment : Fragment() {
+    private var _binding: FragmentManageMemberBinding? = null
     private val binding get() = _binding!!
-
-    val viewModel: ManageProjectVM by viewModels()
+    val viewModel: ManageMemberViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding =
-            DataBindingUtil.inflate(inflater, R.layout.fragment_project_manage, container, false)
+        _binding = DataBindingUtil.inflate(inflater,R.layout.fragment_manage_member, container, false)
         binding.toolbar.setupWithNavController(findNavController())
-        binding.addMember.setOnClickListener {
-            findNavController().navigate(
-                ManageProjectFragmentDirections.actionManageProjectFragmentToAddMemberFragment()
-            )
+        binding.viewModel = viewModel
+        binding.lifecycleOwner = viewLifecycleOwner
+        binding.searchButton.setOnClickListener{
+            viewModel.search()
         }
         return binding.root
     }
+
 }
