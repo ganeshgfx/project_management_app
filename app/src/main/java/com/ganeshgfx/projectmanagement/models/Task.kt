@@ -1,6 +1,5 @@
 package com.ganeshgfx.projectmanagement.models
 
-import android.icu.text.SimpleDateFormat
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
@@ -13,7 +12,8 @@ import java.util.*
             entity = Project::class,
             parentColumns = arrayOf("id"),
             childColumns = arrayOf("projectId"),
-            onDelete = ForeignKey.CASCADE
+            onDelete = ForeignKey.CASCADE,
+            onUpdate = ForeignKey.CASCADE
         )
     ]
 )

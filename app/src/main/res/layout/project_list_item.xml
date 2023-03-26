@@ -6,6 +6,8 @@
     <data>
 
         <import type="android.view.View" />
+        <import type="android.widget.LinearLayout"/>
+
         <import type="com.ganeshgfx.projectmanagement.models.Status" />
 
         <variable
@@ -15,15 +17,14 @@
 
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/card"
-        app:strokeWidth="2dp"
-        app:cardElevation="10dp"
+        style="@style/Widget.Material3.CardView.Elevated"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="16dp"
         android:layout_marginBottom="8dp"
-        >
+        app:cardElevation="5dp">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -31,71 +32,129 @@
             android:orientation="vertical"
             android:padding="15dp">
 
-            <TextView
-                android:textAppearance="@style/TextAppearance.Material3.TitleLarge"
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="10dp"
-                android:text="@{data.project.title}"
-                tools:text="Project Name" />
+                android:orientation="vertical">
 
-            <TextView
-                android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="10dp"
-                android:text="@{data.project.description}"
-                tools:text="Project Name" />
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="10dp"
+                        android:text="@{data.project.title}"
+                        android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
+                        tools:text="Project Name" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="10dp"
+                        android:text="@{data.project.description}"
+                        android:textAppearance="@style/TextAppearance.Material3.BodySmall"
+                        tools:text="Project Name" />
+                </LinearLayout>
+
+                <com.google.android.material.chip.Chip
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:clickable="false"
+                    android:layout_weight="1"
+                    android:text='No Tasks'
+                    android:visibility="@{data.tasks.empty ? View.VISIBLE:View.GONE}"
+                    app:chipIcon="@drawable/twotone_emoji_nature_24"
+                    app:chipIconTint="?attr/colorAccent"
+                    app:chipStrokeColor="?attr/colorAccent"
+                    android:textColor="?attr/colorAccent"
+                    app:ensureMinTouchTargetSize="false" />
+            </LinearLayout>
 
             <com.google.android.material.divider.MaterialDivider
-                android:visibility="@{data.tasks.empty ? View.GONE:View.VISIBLE}"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-
-            <com.google.android.material.chip.ChipGroup
-                android:id="@+id/chipGroup"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:visibility="@{data.tasks.empty ? View.GONE:View.VISIBLE}" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:orientation="horizontal"
                 android:visibility="@{data.tasks.empty ? View.GONE:View.VISIBLE}">
 
-                <com.google.android.material.chip.Chip
-                    android:layout_width="wrap_content"
+                <com.google.android.flexbox.FlexboxLayout
+                    android:id="@+id/chipGroup"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    tools:text="Doing : 10"
-                    android:visibility="@{data.getStatusCount(Status.IN_PROGRESS) &lt; 1 ? View.GONE:View.VISIBLE}"
-                    android:text='@{"In Progress Tasks : "+data.getStatusCount(Status.IN_PROGRESS)}'
-                    android:textColor="@color/taskInBack"
-                    app:chipIcon="@drawable/twotone_draw_24"
-                    app:chipIconTint="@color/taskInBack"
-                    app:chipStrokeColor="@color/taskInBack" />
+                    android:layout_gravity="center"
+                    android:layout_weight="1"
+                    app:flexWrap="wrap">
 
-                <com.google.android.material.chip.Chip
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    tools:text="Pending : 10"
-                    android:visibility="@{data.getStatusCount(Status.PENDING) &lt; 1 ? View.GONE:View.VISIBLE}"
-                    android:text='@{"Pending Tasks : "+data.getStatusCount(Status.PENDING)}'
-                    android:textColor="@color/control"
-                    app:chipIcon="@drawable/outline_circle_24"
-                    app:chipIconTint="@color/control"
-                    app:chipStrokeColor="@color/control" />
+                    <com.google.android.material.chip.Chip
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="4dp"
+                        android:clickable="false"
+                        android:text='@{"In Progress Tasks : "+data.getStatusCount(Status.IN_PROGRESS)}'
+                        android:textColor="@color/taskInBack"
+                        android:visibility="@{data.getStatusCount(Status.IN_PROGRESS) &lt; 1 ? View.GONE:View.VISIBLE}"
+                        app:chipIcon="@drawable/twotone_draw_24"
+                        app:chipIconTint="@color/taskInBack"
+                        app:chipStrokeColor="@color/taskInBack"
+                        app:ensureMinTouchTargetSize="false"
+                        tools:text="Doing : 10" />
 
-                <com.google.android.material.chip.Chip
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    tools:text="Done : 10"
-                    android:visibility="@{data.getStatusCount(Status.DONE) &lt; 1 ? View.GONE:View.VISIBLE}"
-                    android:text='@{"Done Tasks : "+data.getStatusCount(Status.DONE)}'
-                    android:textColor="@color/taskDoneBack"
-                    app:chipIcon="@drawable/round_done_outline_24"
-                    app:chipIconTint="@color/taskDoneBack"
-                    app:chipStrokeColor="@color/taskDoneBack" />
+                    <com.google.android.material.chip.Chip
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="4dp"
+                        android:clickable="false"
+                        android:text='@{"Pending Tasks : "+data.getStatusCount(Status.PENDING)}'
+                        android:textColor="@color/control"
+                        android:visibility="@{data.getStatusCount(Status.PENDING) &lt; 1 ? View.GONE:View.VISIBLE}"
+                        app:chipIcon="@drawable/outline_circle_24"
+                        app:chipIconTint="@color/control"
+                        app:chipStrokeColor="@color/control"
+                        app:ensureMinTouchTargetSize="false"
+                        tools:text="Pending : 10" />
 
-            </com.google.android.material.chip.ChipGroup>
+                    <com.google.android.material.chip.Chip
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="4dp"
+                        android:clickable="false"
+                        android:text='@{"Done Tasks : "+data.getStatusCount(Status.DONE)}'
+                        android:textColor="@color/taskDoneBack"
+                        android:visibility="@{data.getStatusCount(Status.DONE) &lt; 1 ? View.GONE:View.VISIBLE}"
+                        app:chipIcon="@drawable/round_done_outline_24"
+                        app:chipIconTint="@color/taskDoneBack"
+                        app:chipStrokeColor="@color/taskDoneBack"
+                        app:ensureMinTouchTargetSize="false"
+                        tools:text="Done : 10" />
+
+                </com.google.android.flexbox.FlexboxLayout>
+
+                <org.eazegraph.lib.charts.PieChart
+                    android:id="@+id/pie_chart"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_gravity="center"
+                    android:layout_margin="5dp"
+                    app:egAnimationTime="500"
+                    app:egInnerPadding="0"
+                    app:egInnerPaddingColor="?attr/colorSurface"
+                    app:egInnerPaddingOutline="0" />
+            </LinearLayout>
 
             <com.google.android.material.divider.MaterialDivider
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:visibility="gone" />
 
             <TextView
                 android:id="@+id/dummyProject"
@@ -103,7 +162,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="15dp"
                 android:text="View Project"
-                android:textAlignment="center" />
+                android:textAlignment="center"
+                android:visibility="gone" />
 
         </LinearLayout>
     </com.google.android.material.card.MaterialCardView>

@@ -19,7 +19,11 @@ class LoginVM @Inject constructor(private val repo: AuthRepo) : ViewModel() {
     init {
         repo.isLogged.onEach {
             if (it!=null) {
-                val user = User(uid = it.uid, displayName = it.displayName!!)
+                var photo = ""
+                if(it.photoUrl!=null){
+                    photo = it.photoUrl.toString()
+                }
+                val user = User(uid = it.uid, displayName = it.displayName!!, profile = photo)
                 val result = repo.addLoggedUser(user)
                 log(user,result)
                 isLogged.postValue(result)

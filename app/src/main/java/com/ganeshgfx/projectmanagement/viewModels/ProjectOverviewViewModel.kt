@@ -7,28 +7,41 @@ import androidx.lifecycle.viewModelScope
 import com.ganeshgfx.projectmanagement.Utils.log
 import com.ganeshgfx.projectmanagement.models.Project
 import com.ganeshgfx.projectmanagement.models.ProjectTaskCount
-import com.ganeshgfx.projectmanagement.models.ProjectWithTasks
 import com.ganeshgfx.projectmanagement.models.Status
 import com.ganeshgfx.projectmanagement.repositories.ProjectRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class ProjectOverviewViewModel @Inject constructor(private val repo: ProjectRepository) : ViewModel() {
+class ProjectOverviewViewModel @Inject constructor(private val repo: ProjectRepository) :
+    ViewModel() {
     private var _currentProjectId = ""
-    private var tasksJob: Job? = null
+
+    private var projectJob: Job? = null
+    private var taskCountJob: Job? = null
+
     val taskStatusCount = MutableLiveData(emptyList<ProjectTaskCount>())
     val pendingTasks = MutableLiveData(0)
     val doingTasks = MutableLiveData(0)
     val doneTasks = MutableLiveData(0)
-    fun getTasksStatus(projectId: String) {
+
+    private val _project = MutableLiveData<Project>()
+    val project: LiveData<Project> get() = _project
+
+    fun getProject(projectId: String) {
         _currentProjectId = projectId
-        if (tasksJob != null)
-            tasksJob!!.cancel()
-        tasksJob = viewModelScope.launch {
+
+        if (projectJob != null) projectJob!!.cancel()
+        projectJob = viewModelScope.launch {
+            repo.getProject(_currentProjectId).collect {
+                _project.postValue(it)
+            }
+        }
+
+        if (taskCountJob != null) taskCountJob!!.cancel()
+        taskCountJob = viewModelScope.launch {
             repo.tasksStatusFlow(_currentProjectId).collect {
                 pendingTasks.postValue(getStatusCount(it, Status.PENDING))
                 doingTasks.postValue(getStatusCount(it, Status.IN_PROGRESS))
@@ -38,7 +51,7 @@ class ProjectOverviewViewModel @Inject constructor(private val repo: ProjectRepo
         }
     }
 
-    fun getStatusCount(it: List<ProjectTaskCount>, status: Status) =
+    private fun getStatusCount(it: List<ProjectTaskCount>, status: Status) =
         it.let {
             var temp = 0
             it.filter { it.status == status }

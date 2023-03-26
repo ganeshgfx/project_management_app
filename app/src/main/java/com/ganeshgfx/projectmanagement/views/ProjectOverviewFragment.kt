@@ -4,24 +4,16 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.activity.viewModels
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
-import androidx.navigation.fragment.navArgs
 import androidx.navigation.ui.setupWithNavController
 import com.ganeshgfx.projectmanagement.MainActivity
 import com.ganeshgfx.projectmanagement.R
-import com.ganeshgfx.projectmanagement.Utils.log
 import com.ganeshgfx.projectmanagement.databinding.FragmentProjectOverviewBinding
-import com.ganeshgfx.projectmanagement.models.ProjectTaskCount
-import com.ganeshgfx.projectmanagement.models.ProjectWithTasks
-import com.ganeshgfx.projectmanagement.models.Status
 import com.ganeshgfx.projectmanagement.viewModels.ProjectOverviewViewModel
-import com.ganeshgfx.projectmanagement.viewModels.TaskListViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import org.eazegraph.lib.models.PieModel
 
@@ -39,7 +31,7 @@ class ProjectOverviewFragment : Fragment() {
 
         val activity = requireActivity() as MainActivity
 
-        viewModel.getTasksStatus(activity.viewModel.currentProjectId)
+        viewModel.getProject(activity.viewModel.currentProjectId)
 
         binding.viewModel = viewModel
         binding.lifecycleOwner = this

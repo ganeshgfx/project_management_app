@@ -9,6 +9,7 @@ import com.google.android.gms.tasks.OnSuccessListener
 import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
+import com.google.firebase.database.ktx.database
 import com.google.firebase.firestore.*
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.firestore.ktx.toObject
@@ -21,6 +22,8 @@ import kotlinx.coroutines.tasks.await
 
 private const val USERS = "users"
 private const val PROJECTS = "projects"
+private const val MEMBERS = "members"
+private const val PROJECTDATA = "projectData"
 
 class FirestoreHelper(
     private val db: FirebaseFirestore,
@@ -44,7 +47,7 @@ class FirestoreHelper(
             .filter {
                 val user = it
                 val result = user.displayName.lowercase().contains(search.lowercase())
-                log(user,result)
+                //log(user,result)
                 result
             }
         return result
@@ -60,6 +63,17 @@ class FirestoreHelper(
         }
         ref.document(id).set(data).await()
         return data
+    }
+
+    suspend fun addMember(userId: String,projectID:String) {
+        val userRef = db.collection(USERS).document(userId)
+        val data = hashMapOf(
+            "ref" to userRef
+        )
+        db.collection(PROJECTDATA).document(projectID).collection(MEMBERS).document(userId).set(data).await()
+    }
+    suspend fun removeMember(userId: String,projectID:String){
+        db.collection(PROJECTDATA).document(projectID).collection(MEMBERS).document(userId).delete().await()
     }
 
 

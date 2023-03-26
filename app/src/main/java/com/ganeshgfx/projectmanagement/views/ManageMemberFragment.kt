@@ -1,18 +1,24 @@
 package com.ganeshgfx.projectmanagement.views
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.EditorInfo
 import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.setupWithNavController
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.StaggeredGridLayoutManager
+import com.ganeshgfx.projectmanagement.MainActivity
 import com.ganeshgfx.projectmanagement.R
+import com.ganeshgfx.projectmanagement.Utils.hideSoftKeyBord
 import com.ganeshgfx.projectmanagement.databinding.FragmentManageMemberBinding
 import com.ganeshgfx.projectmanagement.viewModels.ManageMemberViewModel
 import dagger.hilt.android.AndroidEntryPoint
+
 
 @AndroidEntryPoint
 class ManageMemberFragment : Fragment() {
@@ -24,12 +30,27 @@ class ManageMemberFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = DataBindingUtil.inflate(inflater,R.layout.fragment_manage_member, container, false)
-        binding.toolbar.setupWithNavController(findNavController())
-        binding.viewModel = viewModel
-        binding.lifecycleOwner = viewLifecycleOwner
-        binding.searchButton.setOnClickListener{
-            viewModel.search()
+        val activity = (requireActivity() as MainActivity)
+        viewModel.setProjectId(activity.viewModel.currentProjectId)
+        _binding =
+            DataBindingUtil.inflate(inflater, R.layout.fragment_manage_member, container, false)
+        with(binding) {
+            toolbar.setupWithNavController(findNavController())
+            vm = viewModel
+            lifecycleOwner = viewLifecycleOwner
+            searchButton.setOnClickListener {
+                viewModel.search()
+                hideSoftKeyBord(it)
+            }
+            searchText.setOnEditorActionListener { view, action, _ ->
+                if(action==EditorInfo.IME_ACTION_SEARCH){
+                    viewModel.search()
+                    hideSoftKeyBord(view)
+                }
+                true
+            }
+//        val staggeredGridLayoutManager = StaggeredGridLayoutManager(2, LinearLayoutManager.VERTICAL)
+//        userList.layoutManager = staggeredGridLayoutManager
         }
         return binding.root
     }

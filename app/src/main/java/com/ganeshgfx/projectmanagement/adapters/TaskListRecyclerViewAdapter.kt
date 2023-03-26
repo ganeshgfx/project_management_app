@@ -1,27 +1,20 @@
 package com.ganeshgfx.projectmanagement.adapters
 
-import android.content.res.ColorStateList
 import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
-import com.ganeshgfx.projectmanagement.R
 import com.ganeshgfx.projectmanagement.Utils.TaskListDiffUtil
-import com.ganeshgfx.projectmanagement.Utils.log
 import com.ganeshgfx.projectmanagement.databinding.TaskListItemBinding
-import com.ganeshgfx.projectmanagement.models.Status
 import com.ganeshgfx.projectmanagement.models.Task
-import com.google.android.material.button.MaterialButton
 import com.google.android.material.shape.CornerFamily
 import com.google.android.material.shape.ShapeAppearanceModel
-import kotlin.system.measureTimeMillis
 
 class TaskListRecyclerViewAdapter(private var taskList: MutableList<Task> = mutableListOf()) :
     RecyclerView.Adapter<TaskListRecyclerViewAdapter.TaskListViewHolder>() {
-    private lateinit var clickListener: TaskOnClickListener
+    private lateinit var clickListener: OnClickListener
 
     class TaskListViewHolder(val binding: TaskListItemBinding) :
         RecyclerView.ViewHolder(binding.root)
@@ -34,23 +27,23 @@ class TaskListRecyclerViewAdapter(private var taskList: MutableList<Task> = muta
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TaskListViewHolder {
-            _20dp = TypedValue.applyDimension(
-                TypedValue.COMPLEX_UNIT_DIP,
-                20.toFloat(),
-                parent.context.resources.displayMetrics
-            )
-            _10dp = TypedValue.applyDimension(
-                TypedValue.COMPLEX_UNIT_DIP,
-                10.toFloat(),
-                parent.context.resources.displayMetrics
-            )
-            _3dp = TypedValue.applyDimension(
-                TypedValue.COMPLEX_UNIT_DIP,
-                3.toFloat(),
-                parent.context.resources.displayMetrics
-            )
-            focusCardShape = makeShape(_20dp, _3dp);
-            normalCardShape = makeShape(_10dp, _10dp)
+        _20dp = TypedValue.applyDimension(
+            TypedValue.COMPLEX_UNIT_DIP,
+            20.toFloat(),
+            parent.context.resources.displayMetrics
+        )
+        _10dp = TypedValue.applyDimension(
+            TypedValue.COMPLEX_UNIT_DIP,
+            10.toFloat(),
+            parent.context.resources.displayMetrics
+        )
+        _3dp = TypedValue.applyDimension(
+            TypedValue.COMPLEX_UNIT_DIP,
+            3.toFloat(),
+            parent.context.resources.displayMetrics
+        )
+        focusCardShape = makeShape(_20dp, _3dp);
+        normalCardShape = makeShape(_10dp, _10dp)
 
         return TaskListViewHolder(
             TaskListItemBinding.inflate(
@@ -60,23 +53,23 @@ class TaskListRecyclerViewAdapter(private var taskList: MutableList<Task> = muta
     }
 
     override fun onBindViewHolder(holder: TaskListViewHolder, position: Int) {
-            val task = taskList[position]
-            with(holder.binding.mainCard) {
-                var editisible = false
-                setOnFocusChangeListener { _, hasFocus ->
-                    // log("has focus : $hasFocus")
-                    if (hasFocus) {
-                        clickListener.onClick(position)
-                        shapeAppearanceModel = focusCardShape!!
-                    } else shapeAppearanceModel = normalCardShape!!
-                    toggleTaskEditView(holder, hasFocus)
-                    editisible = hasFocus
-                }
-                setOnClickListener {
-                    if (editisible) clearFocus()
-                }
+        val task = taskList[position]
+        with(holder.binding.mainCard) {
+            var editisible = false
+            setOnFocusChangeListener { _, hasFocus ->
+                // log("has focus : $hasFocus")
+                if (hasFocus) {
+                    clickListener.onClick(position)
+                    shapeAppearanceModel = focusCardShape!!
+                } else shapeAppearanceModel = normalCardShape!!
+                toggleTaskEditView(holder, hasFocus)
+                editisible = hasFocus
             }
-            holder.binding.data = task
+            setOnClickListener {
+                if (editisible) clearFocus()
+            }
+        }
+        holder.binding.data = task
     }
 
     private fun toggleTaskEditView(holder: TaskListViewHolder, toggle: Boolean) {
@@ -108,7 +101,7 @@ class TaskListRecyclerViewAdapter(private var taskList: MutableList<Task> = muta
 
     infix fun getItem(pos: Int) = taskList[pos]
 
-    fun setClickListener(clickListener: TaskOnClickListener) {
+    fun setClickListener(clickListener: OnClickListener) {
         this.clickListener = clickListener
     }
 

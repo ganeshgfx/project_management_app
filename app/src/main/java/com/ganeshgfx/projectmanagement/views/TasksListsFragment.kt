@@ -1,15 +1,12 @@
 package com.ganeshgfx.projectmanagement.views
 
-import android.icu.text.SimpleDateFormat
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.widget.doOnTextChanged
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.setupWithNavController
@@ -17,22 +14,18 @@ import com.ganeshgfx.projectmanagement.MainActivity
 import com.ganeshgfx.projectmanagement.R
 import com.ganeshgfx.projectmanagement.Utils.hideSoftKeyBord
 import com.ganeshgfx.projectmanagement.Utils.log
-import com.ganeshgfx.projectmanagement.Utils.randomString
 import com.ganeshgfx.projectmanagement.Utils.toDate
 import com.ganeshgfx.projectmanagement.adapters.TaskListRecyclerViewAdapter
-import com.ganeshgfx.projectmanagement.adapters.TaskOnClickListener
+import com.ganeshgfx.projectmanagement.adapters.OnClickListener
 import com.ganeshgfx.projectmanagement.databinding.FragmentTasksListsBinding
 import com.ganeshgfx.projectmanagement.models.Status
-import com.ganeshgfx.projectmanagement.models.Task
-import com.ganeshgfx.projectmanagement.viewModels.ManageProjectVM
 import com.ganeshgfx.projectmanagement.viewModels.TaskListViewModel
 import com.google.android.material.datepicker.CalendarConstraints
 import com.google.android.material.datepicker.DateValidatorPointForward
 import com.google.android.material.datepicker.MaterialDatePicker
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
-import java.util.*
-import kotlin.time.Duration.Companion.days
+
 @AndroidEntryPoint
 class TasksListsFragment : Fragment() {
     private lateinit var binding: FragmentTasksListsBinding
@@ -67,7 +60,7 @@ class TasksListsFragment : Fragment() {
 
         taskListAdapter = viewModel.taskListAdapter
 
-        taskListAdapter.setClickListener(TaskOnClickListener {
+        taskListAdapter.setClickListener(OnClickListener {
             val pos = it
             val _holder = binding.taskListRecyclerview.findViewHolderForAdapterPosition(pos)
             if (_holder != null) {

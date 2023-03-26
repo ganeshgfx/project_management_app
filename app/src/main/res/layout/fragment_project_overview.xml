@@ -4,7 +4,9 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+
         <import type="android.view.View" />
+
         <variable
             name="viewModel"
             type="com.ganeshgfx.projectmanagement.viewModels.ProjectOverviewViewModel" />
@@ -32,85 +34,113 @@
 
             <com.google.android.material.card.MaterialCardView
                 style="@style/Widget.Material3.CardView.Filled"
-                android:layout_margin="16dp"
+                android:elevation="10dp"
                 android:layout_width="match_parent"
+                android:layout_height="match_parent"
                 android:layout_gravity="center"
-                android:layout_height="match_parent">
+                android:layout_margin="16dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_gravity="center"
+                    android:layout_height="match_parent"
                     android:orientation="vertical"
-                    android:visibility="@{viewModel.taskStatusCount.size>0?View.VISIBLE:View.GONE}"
-                    android:layout_height="wrap_content">
-
+                    android:visibility="@{viewModel.taskStatusCount.size>0?View.VISIBLE:View.GONE}">
+                    <TextView
+                        android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
+                        android:layout_width="match_parent"
+                        android:textAlignment="center"
+                        android:layout_height="wrap_content"
+                        android:padding="8dp"
+                        android:text="@{viewModel.project.title}"
+                        tools:text="Project Name" />
                     <com.google.android.material.card.MaterialCardView
                         style="@style/Widget.Material3.CardView.Elevated"
+                        android:elevation="5dp"
                         android:layout_margin="5dp"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:clickable="true"
-                        android:layout_gravity="center"
-                        app:cardCornerRadius="200dp">
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:orientation="vertical"
+                            android:layout_height="wrap_content">
+                            <com.google.android.material.card.MaterialCardView
+                                style="@style/Widget.Material3.CardView.Elevated"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:layout_margin="16dp"
+                                android:clickable="true"
+                                app:cardCornerRadius="200dp">
 
-                        <org.eazegraph.lib.charts.PieChart
-                            android:id="@+id/pie_chart"
-                            android:layout_margin="5dp"
-                            android:layout_width="200dp"
-                            android:layout_height="200dp"
-                            app:egAnimationTime="500"
-                            app:egInnerPadding="75"
-                            app:egInnerPaddingColor="?attr/colorSurface"
-                            app:egInnerPaddingOutline="0" />
+                                <org.eazegraph.lib.charts.PieChart
+                                    android:id="@+id/pie_chart"
+                                    android:layout_width="200dp"
+                                    android:layout_height="200dp"
+                                    android:layout_margin="5dp"
+                                    app:egAnimationTime="500"
+                                    app:egInnerPadding="75"
+                                    app:egInnerPaddingColor="?attr/colorSurface"
+                                    app:egInnerPaddingOutline="0" />
 
+                            </com.google.android.material.card.MaterialCardView>
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:orientation="vertical"
+                                android:padding="10dp">
+
+                                <com.google.android.material.button.MaterialButton
+                                    android:id="@+id/pending_info"
+                                    style="@style/Widget.Material3.Button.ElevatedButton.Icon"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:text='@{viewModel.pendingTasks+" Pending"}'
+                                    android:textAlignment="textStart"
+                                    android:textColor="@color/control"
+                                    android:visibility="@{viewModel.pendingTasks>0?View.VISIBLE:View.GONE}"
+                                    app:icon="@drawable/outline_circle_24"
+                                    app:iconTint="@color/control"
+                                    tools:text="Pending" />
+
+                                <com.google.android.material.button.MaterialButton
+                                    android:id="@+id/ding_info"
+                                    style="@style/Widget.Material3.Button.ElevatedButton.Icon"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:text='@{viewModel.doingTasks+" In Progress"}'
+                                    android:textAlignment="textStart"
+                                    android:textColor="@color/taskInBack"
+                                    android:visibility="@{viewModel.doingTasks>0?View.VISIBLE:View.GONE}"
+                                    app:icon="@drawable/round_add_task_24"
+                                    app:iconTint="@color/taskInBack"
+                                    tools:text="In Progress" />
+
+                                <com.google.android.material.button.MaterialButton
+                                    android:id="@+id/done_info"
+                                    style="@style/Widget.Material3.Button.ElevatedButton.Icon"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:text='@{viewModel.doneTasks+" Done"}'
+                                    android:textAlignment="textStart"
+                                    android:textColor="@color/taskDoneBack"
+                                    android:visibility="@{viewModel.doneTasks>0?View.VISIBLE:View.GONE}"
+                                    app:icon="@drawable/round_done_outline_24"
+                                    app:iconTint="@color/taskDoneBack"
+                                    tools:text="Done" />
+                            </LinearLayout>
+                            <TextView
+                                android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginBottom="10dp"
+                                android:layout_marginStart="20dp"
+                                android:text="@{viewModel.project.description}"
+                                tools:text="Project Name" />
+                        </LinearLayout>
                     </com.google.android.material.card.MaterialCardView>
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_gravity="center"
-                    android:orientation="vertical"
-                    android:padding="10dp"
-                    android:layout_height="wrap_content">
-                    <com.google.android.material.button.MaterialButton
-                        android:id="@+id/pending_info"
-                        style="@style/Widget.Material3.Button.ElevatedButton.Icon"
-                        android:visibility="@{viewModel.pendingTasks>0?View.VISIBLE:View.GONE}"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        app:icon="@drawable/outline_circle_24"
-                        android:text='@{viewModel.pendingTasks+" Pending"}'
-                        tools:text="Pending"
-                        app:iconTint="@color/control"
-                        android:textColor="@color/control"
-                        android:textAlignment="textStart"
-                        />
-                    <com.google.android.material.button.MaterialButton
-                        android:id="@+id/ding_info"
-                        android:visibility="@{viewModel.doingTasks>0?View.VISIBLE:View.GONE}"
-                        style="@style/Widget.Material3.Button.ElevatedButton.Icon"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        app:icon="@drawable/round_add_task_24"
-                        android:text='@{viewModel.doingTasks+" In Progress"}'
-                        tools:text="In Progress"
-                        app:iconTint="@color/taskInBack"
-                        android:textColor="@color/taskInBack"
-                        android:textAlignment="textStart"
-                        />
-                    <com.google.android.material.button.MaterialButton
-                        android:id="@+id/done_info"
-                        android:visibility="@{viewModel.doneTasks>0?View.VISIBLE:View.GONE}"
-                        style="@style/Widget.Material3.Button.ElevatedButton.Icon"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        app:icon="@drawable/round_done_outline_24"
-                        android:text='@{viewModel.doneTasks+" Done"}'
-                        tools:text = "Done"
-                        android:textAlignment="textStart"
-                        app:iconTint="@color/taskDoneBack"
-                        android:textColor="@color/taskDoneBack"
-                        />
                 </LinearLayout>
-                </LinearLayout>
+
             </com.google.android.material.card.MaterialCardView>
         </FrameLayout>
 

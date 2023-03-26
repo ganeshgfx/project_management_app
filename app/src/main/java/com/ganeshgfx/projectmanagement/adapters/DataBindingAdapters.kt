@@ -1,15 +1,19 @@
 package com.ganeshgfx.projectmanagement.adapters
 
 import android.view.View
+import android.widget.ImageView
 import androidx.annotation.DrawableRes
 import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
 import androidx.databinding.BindingAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.ganeshgfx.projectmanagement.R
 import com.ganeshgfx.projectmanagement.models.Status
 import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.button.MaterialButton
+import org.eazegraph.lib.charts.PieChart
+import org.eazegraph.lib.models.PieModel
 
 @BindingAdapter("setMenuListener")
 fun MaterialToolbar.setMenuListener(listener: Toolbar.OnMenuItemClickListener) {
@@ -42,4 +46,13 @@ fun View.setDynamicStatusIcon(status: Status) {
     (this as MaterialButton).setIconTintResource(iconTintResource)
     (this as MaterialButton).setBackgroundColor(ContextCompat.getColor(context, backgroundRes))
     //(this as MaterialButton).setBackgroundResource(iconTintResource)
+}
+
+@BindingAdapter("setUrl")
+fun ImageView.setUrl(url:String){
+    Glide
+        .with(context)
+        .load(url)
+        .placeholder(R.drawable.twotone_tag_faces_24)
+        .into(this)
 }

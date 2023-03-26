@@ -41,7 +41,6 @@ class ProjectFragment : Fragment() {
         val activity = requireActivity() as MainActivity
 
         binding.addfab.setOnLongClickListener {
-            //viewModel.deleteAllProjects()
             Firebase.auth.signOut()
             true
         }

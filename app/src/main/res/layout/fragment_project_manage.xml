@@ -13,7 +13,6 @@
         android:orientation="vertical"
         tools:context=".views.ManageProjectFragment">
 
-
         <com.google.android.material.appbar.MaterialToolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
@@ -35,7 +34,6 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="8dp"
                 app:cardCornerRadius="15dp">
-
                 <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
