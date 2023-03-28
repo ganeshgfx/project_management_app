@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.ganeshgfx.projectmanagement.MainActivity
 import com.ganeshgfx.projectmanagement.R
 import com.ganeshgfx.projectmanagement.Utils.hideSoftKeyBord
+import com.ganeshgfx.projectmanagement.Utils.log
 import com.ganeshgfx.projectmanagement.databinding.FragmentManageMemberBinding
 import com.ganeshgfx.projectmanagement.viewModels.ManageMemberViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -41,11 +42,16 @@ class ManageMemberFragment : Fragment() {
             searchButton.setOnClickListener {
                 viewModel.search()
                 hideSoftKeyBord(it)
+                searchText.clearFocus()
+            }
+            clearSearchButton.setOnClickListener {
+                viewModel.search.postValue("")
             }
             searchText.setOnEditorActionListener { view, action, _ ->
                 if(action==EditorInfo.IME_ACTION_SEARCH){
                     viewModel.search()
                     hideSoftKeyBord(view)
+                    searchText.clearFocus()
                 }
                 true
             }
@@ -55,4 +61,18 @@ class ManageMemberFragment : Fragment() {
         return binding.root
     }
 
+//    override fun onDestroy() {
+//        super.onDestroy()
+//        log("destroying")
+//    }
+//
+//    override fun onPause() {
+//        super.onPause()
+//        log("pausing")
+//    }
+//
+//    override fun onResume() {
+//        super.onResume()
+//        log("resuming")
+//    }
 }

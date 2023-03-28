@@ -14,6 +14,8 @@ interface UserDAO {
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun addMember(member: Member)
+    @Delete
+    suspend fun deleteMember(member: Member)
 
     @Query("SELECT user.* from user INNER JOIN member ON user.uid = member.uid WHERE member.projectId = :projectId;")
     fun getMembers(projectId: String): Flow<List<User>>

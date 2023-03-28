@@ -23,7 +23,9 @@ class AuthRepo @Inject constructor(
 
     suspend fun addLoggedUser(user:User):Boolean {
         val result = store.addUser(user)
-        dao.insertUser(user)
+        if(result){
+            dao.insertUser(user)
+        }
         return result
     }
 }

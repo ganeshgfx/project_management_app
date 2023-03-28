@@ -12,6 +12,7 @@ import com.ganeshgfx.projectmanagement.repositories.ProjectRepository
 import com.ganeshgfx.projectmanagement.repositories.UserRepo
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -20,7 +21,7 @@ class ManageMemberViewModel @Inject constructor(
     private val userRepo: UserRepo,
     private val repo: ProjectRepository
 ) : ViewModel() {
-    val search = MutableLiveData("")
+    val search:MutableLiveData<String> = MutableLiveData("")
     val userListAdapter = UserListAdapter()
     private var _currentProjectId = ""
     private var getProjectMembersJob: Job? = null
@@ -30,13 +31,16 @@ class ManageMemberViewModel @Inject constructor(
         //adding user from search
         userListAdapter.setOnClickListener { user, event ->
             viewModelScope.launch {
+                loading.postValue(true)
                 if (event == Event.ADD) {
                     userRepo.addMember(user, _currentProjectId)
                     search.postValue("")
+                    "".isNotBlank()
                 }
                 if (event == Event.DELETE) {
                     userRepo.deleteProjectMember(_currentProjectId, user.uid)
                 }
+                loading.postValue(false)
             }
         }
     }
@@ -49,7 +53,8 @@ class ManageMemberViewModel @Inject constructor(
     private fun loadUsers() {
         getProjectMembersJob?.cancel()
         getProjectMembersJob = viewModelScope.launch {
-            userRepo.getProjectMembers(_currentProjectId).collect {
+            userRepo.getProjectMembers(_currentProjectId).collect{
+                //log(it)
                 userListAdapter.setData(it)
             }
         }

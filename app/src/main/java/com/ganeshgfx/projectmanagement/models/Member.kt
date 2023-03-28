@@ -30,5 +30,4 @@ data class ProjectMember(
     val member: Member?=null,
     @Relation(parentColumn = "uid", entityColumn = "uid")
     val user: User
-
 )
