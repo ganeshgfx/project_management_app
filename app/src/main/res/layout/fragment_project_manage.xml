@@ -4,7 +4,9 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-
+        <variable
+            name="vm"
+            type="com.ganeshgfx.projectmanagement.viewModels.ManageProjectVM" />
     </data>
 
     <LinearLayout
@@ -41,6 +43,20 @@
                     android:text="Team Members"
                     android:textAlignment="textStart"
                     app:icon="@drawable/twotone_tag_faces_24" />
+            </com.google.android.material.card.MaterialCardView>
+
+            <com.google.android.material.card.MaterialCardView
+                style="@style/Widget.Material3.CardView.Filled"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="8dp"
+                app:cardCornerRadius="15dp">
+                <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Delete Project"
+                    android:textAlignment="textStart"
+                    app:icon="@drawable/twotone_delete_forever_24" />
             </com.google.android.material.card.MaterialCardView>
 
         </LinearLayout>

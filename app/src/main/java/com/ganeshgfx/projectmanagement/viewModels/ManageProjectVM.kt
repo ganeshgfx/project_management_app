@@ -8,5 +8,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ManageProjectVM @Inject constructor(private val repo: ProjectRepository) : ViewModel() {
-
+    suspend fun deleteProject(id:String){
+        repo.deleteProject(id)
+    }
 }

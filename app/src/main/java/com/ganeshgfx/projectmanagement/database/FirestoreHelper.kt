@@ -19,7 +19,7 @@ class FirestoreHelper(
     private val db: FirebaseFirestore,
     private val auth: FirebaseAuth
 ) {
-    //Use
+    //USER RELATED CODE START
     suspend fun addUser(user: User): Boolean {
         try {
             db.collection(USERS).document(user.uid).set(user).await()
@@ -31,6 +31,7 @@ class FirestoreHelper(
     }
 
     fun getUsers() = db.collection(USERS).getData<User>()
+
     suspend fun searchUsers(search: String): List<User> {
         val result = db.collection(USERS).get().await().documents
             .map { it.toObject<User>()!! }
@@ -43,19 +44,8 @@ class FirestoreHelper(
         return result
     }
 
-    //Project
-    suspend fun addProject(project: Project): Project {
-        val userID = auth.uid!!
-        val ref = db.collection(PROJECTS)
-        val id = ref.document().id
-        val data = project.let {
-            Project(id = id, uid = userID, title = it.title, description = it.description)
-        }
-        ref.document(id).set(data).await()
-        return data
-    }
-
     suspend fun addMember(userId: String, projectID: String) {
+        //TODO add also to members
         val data = hashMapOf(
             "ownerId" to auth.uid!!,
             "projectId" to projectID,
@@ -69,33 +59,29 @@ class FirestoreHelper(
             .await()
     }
 
-    fun getProjectMembers(projectID: String) =  db.collection(MEMBERS).whereEqualTo("projectId", projectID)
-//    = callbackFlow {
-//         db.collection(MEMBERS).whereEqualTo("projectId", projectID)
-//            .get()
-//            .addOnSuccessListener {
-//                trySend(true)
-//                log(it)
-//            }
-//            .addOnFailureListener {
-//                trySend(false)
-//                log(it)
-//            }
-//        awaitClose()
-//    }
+    fun getProjectMembers(projectID: String) =
+        db.collection(MEMBERS).whereEqualTo("projectId", projectID)
+
+    //USER RELATED CODE END
+
+    //PROJECT RELATED CODE START
+    suspend fun addProject(project: Project): Project {
+        val userID = auth.uid!!
+        val ref = db.collection(PROJECTS)
+        val id = ref.document().id
+        val data = project.let {
+            Project(id = id, uid = userID, title = it.title, description = it.description)
+        }
+        ref.document(id).set(data).await()
+        return data
+    }
+
+    fun getOwnProjects() =
+        db.collection(PROJECTS).whereEqualTo("uid", auth.uid)
+    //PROJECT RELATED CODE END
 }
 
 inline fun <reified T> CollectionReference.getData() = callbackFlow {
-    val listener =
-        EventListener<QuerySnapshot> { list, error ->
-            //TODO HANDLE ERROR !
-            trySend(list!!.map { it.toObject<T>() })
-        }
-    val registration = addSnapshotListener(listener)
-    awaitClose { registration.remove() }
-}
-
-inline fun <reified T> Query.getData() = callbackFlow {
     val listener =
         EventListener<QuerySnapshot> { list, error ->
             //TODO HANDLE ERROR !

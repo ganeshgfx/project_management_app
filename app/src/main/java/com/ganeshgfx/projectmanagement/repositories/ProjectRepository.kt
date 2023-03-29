@@ -5,6 +5,10 @@ import com.ganeshgfx.projectmanagement.Utils.log
 import com.ganeshgfx.projectmanagement.database.FirestoreHelper
 import com.ganeshgfx.projectmanagement.database.ProjectDAO
 import com.ganeshgfx.projectmanagement.models.Project
+import com.ganeshgfx.projectmanagement.models.ProjectWithTasks
+import com.google.firebase.FirebaseException
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 
 class ProjectRepository @Inject constructor(
@@ -12,7 +16,16 @@ class ProjectRepository @Inject constructor(
     private val remote: FirestoreHelper
 ) {
 
-    val projectWithTasksFlow = dao.getProjectWithTasksFlow()
+    //TODO specify with ID
+    suspend fun projectWithTasksFlow(): Flow<List<ProjectWithTasks>> {
+        try {
+            val result = remote.getOwnProjects().get().await().documents
+            log(result.size)
+        }catch (error:FirebaseException){
+            log(error)
+        }
+        return dao.getProjectWithTasksFlow()
+    }
 
     //for getting individual project
     fun tasksStatusFlow(_projectId: String) = dao.tasksStatus(_projectId)
@@ -27,14 +40,14 @@ class ProjectRepository @Inject constructor(
             )
             dao.insertProject(response)
             addingProject.postValue(false)
-        }catch(e: Exception) {
+        }catch(e: FirebaseException) {
             log("Error adding project : ", e)
         }
     }
 
     fun getProject(id:String) = dao.getProject(id)
 
-    suspend fun deleteProject(id: Long) {
+    suspend fun deleteProject(id: String) {
         dao.deleteProject(id)
     }
 

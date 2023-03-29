@@ -55,9 +55,7 @@ class UserRepo @Inject constructor(
         try {
             remote.addMember(user.uid, projectID)
             dao.insertUser(user)
-            dao.addMember(
-                Member(uid = user.uid, projectId = projectID)
-            )
+            dao.addMember(Member(uid = user.uid, projectId = projectID))
         } catch (error: FirebaseException) {
             log("Error adding member to firestore : ", error)
         }

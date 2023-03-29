@@ -16,7 +16,7 @@ class ProjectViewModel @Inject constructor(private val repo: ProjectRepository) 
 
     init {
         viewModelScope.launch {
-            repo.projectWithTasksFlow.collect {
+            repo.projectWithTasksFlow().collect {
                 _projectWithTasksFlow.postValue(it)
             }
         }
@@ -31,10 +31,6 @@ class ProjectViewModel @Inject constructor(private val repo: ProjectRepository) 
     val formProjectDescription = MutableLiveData("")
     val formProjectDescriptionError = MutableLiveData(false)
     val addingProject: LiveData<Boolean> get() = repo.addingProject
-
-    suspend fun deleteProject(id: Long) {
-        repo.deleteProject(id)
-    }
 
     fun deleteAllProjects() = viewModelScope.launch {
 //        projectRepository.deleteAllProjects()
