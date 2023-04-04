@@ -4,7 +4,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.ganeshgfx.projectmanagement.Utils.log
 import com.ganeshgfx.projectmanagement.models.Project
 import com.ganeshgfx.projectmanagement.models.ProjectTaskCount
 import com.ganeshgfx.projectmanagement.models.Status
@@ -18,6 +17,7 @@ import javax.inject.Inject
 class ProjectOverviewViewModel @Inject constructor(private val repo: ProjectRepository) :
     ViewModel() {
     private var _currentProjectId = ""
+    val currentProjectId get() = _currentProjectId
 
     private var projectJob: Job? = null
     private var taskCountJob: Job? = null
@@ -30,19 +30,21 @@ class ProjectOverviewViewModel @Inject constructor(private val repo: ProjectRepo
     private val _project = MutableLiveData<Project>()
     val project: LiveData<Project> get() = _project
 
-    fun getProject(projectId: String) {
+    fun setCurrentProject(projectId: String){
         _currentProjectId = projectId
+    }
 
+    fun getProjectInfo() {
         if (projectJob != null) projectJob!!.cancel()
         projectJob = viewModelScope.launch {
-            repo.getProject(_currentProjectId).collect {
+            repo.getProject(currentProjectId).collect {
                 _project.postValue(it)
             }
         }
 
         if (taskCountJob != null) taskCountJob!!.cancel()
         taskCountJob = viewModelScope.launch {
-            repo.tasksStatusFlow(_currentProjectId).collect {
+            repo.tasksStatusFlow(currentProjectId).collect {
                 pendingTasks.postValue(getStatusCount(it, Status.PENDING))
                 doingTasks.postValue(getStatusCount(it, Status.IN_PROGRESS))
                 doneTasks.postValue(getStatusCount(it, Status.DONE))
@@ -58,4 +60,11 @@ class ProjectOverviewViewModel @Inject constructor(private val repo: ProjectRepo
                 .map { temp += it.count }
             temp
         }
+
+    fun deleteProject() = viewModelScope.launch {
+        val deleted = repo.deleteProject(currentProjectId) == 1
+        if(deleted){
+            _currentProjectId = ""
+        }
+    }
 }

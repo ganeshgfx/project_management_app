@@ -16,9 +16,12 @@ class UserListDiffUtil(
 
     override fun areItemsTheSame(oldPosition: Int, newPosition: Int): Boolean =
         oldList[oldPosition].user.uid == newList[newPosition].user.uid
+                &&
+                (oldList[oldPosition].member==null) == (newList[newPosition].member==null)
 
     override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean =
         when {
+            (oldList[oldItemPosition].member==null) != (newList[newItemPosition].member==null)->false
             oldList[oldItemPosition].user.uid != newList[newItemPosition].user.uid -> false
             oldList[oldItemPosition].user.displayName != newList[newItemPosition].user.displayName -> false
             else -> true

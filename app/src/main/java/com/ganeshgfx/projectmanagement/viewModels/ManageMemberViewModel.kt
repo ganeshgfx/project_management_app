@@ -1,5 +1,6 @@
 package com.ganeshgfx.projectmanagement.viewModels
 
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -7,6 +8,7 @@ import com.ganeshgfx.projectmanagement.Utils.log
 import com.ganeshgfx.projectmanagement.adapters.UserListAdapter
 import com.ganeshgfx.projectmanagement.adapters.UserListAdapter.*
 import com.ganeshgfx.projectmanagement.models.ProjectMember
+import com.ganeshgfx.projectmanagement.models.State
 import com.ganeshgfx.projectmanagement.models.User
 import com.ganeshgfx.projectmanagement.repositories.ProjectRepository
 import com.ganeshgfx.projectmanagement.repositories.UserRepo
@@ -27,13 +29,20 @@ class ManageMemberViewModel @Inject constructor(
     private var getProjectMembersJob: Job? = null
     val loading = MutableLiveData(false)
     val searchView = MutableLiveData(false)
+    val _error = MutableLiveData("")
+    val error :LiveData<String> get() = _error
     init {
         //adding user from search
         userListAdapter.setOnClickListener { user, event ->
             viewModelScope.launch {
                 loading.postValue(true)
                 if (event == Event.ADD) {
-                    userRepo.addMember(user, _currentProjectId)
+                     val result = userRepo.addMember(user, _currentProjectId)
+                    when(result){
+                        is State.Success -> {}
+                        is State.Error -> {_error.postValue(result.error)}
+                        else->{}
+                    }
                     search.postValue("")
                     "".isNotBlank()
                 }

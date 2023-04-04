@@ -18,6 +18,7 @@ import com.ganeshgfx.projectmanagement.Utils.hideSoftKeyBord
 import com.ganeshgfx.projectmanagement.Utils.log
 import com.ganeshgfx.projectmanagement.databinding.FragmentManageMemberBinding
 import com.ganeshgfx.projectmanagement.viewModels.ManageMemberViewModel
+import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 
 
@@ -35,6 +36,13 @@ class ManageMemberFragment : Fragment() {
         viewModel.setProjectId(activity.viewModel.currentProjectId)
         _binding =
             DataBindingUtil.inflate(inflater, R.layout.fragment_manage_member, container, false)
+        with(viewModel){
+            error.observe(viewLifecycleOwner){
+                if(it.isNotBlank()){
+                    Snackbar.make(binding.root, it, Snackbar.LENGTH_LONG).show()
+                }
+            }
+        }
         with(binding) {
             toolbar.setupWithNavController(findNavController())
             vm = viewModel

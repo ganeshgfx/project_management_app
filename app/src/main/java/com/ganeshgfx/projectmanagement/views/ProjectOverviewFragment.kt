@@ -31,7 +31,8 @@ class ProjectOverviewFragment : Fragment() {
 
         val activity = requireActivity() as MainActivity
 
-        viewModel.getProject(activity.viewModel.currentProjectId)
+        viewModel.setCurrentProject(activity.viewModel.currentProjectId)
+        viewModel.getProjectInfo()
 
         binding.viewModel = viewModel
         binding.lifecycleOwner = this

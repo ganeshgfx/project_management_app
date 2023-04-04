@@ -4,9 +4,10 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+
         <variable
             name="vm"
-            type="com.ganeshgfx.projectmanagement.viewModels.ManageProjectVM" />
+            type="com.ganeshgfx.projectmanagement.viewModels.ProjectOverviewViewModel" />
     </data>
 
     <LinearLayout
@@ -36,10 +37,27 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="8dp"
                 app:cardCornerRadius="15dp">
+
                 <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+                    android:id="@+id/edit_project"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:text="Edit Project Info"
+                    android:textAlignment="textStart"
+                    app:icon="@drawable/twotone_mode_edit_outline_24" />
+            </com.google.android.material.card.MaterialCardView>
+
+            <com.google.android.material.card.MaterialCardView
+                style="@style/Widget.Material3.CardView.Filled"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="8dp"
+                app:cardCornerRadius="15dp">
+
+                <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
                     android:id="@+id/add_member"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
                     android:text="Team Members"
                     android:textAlignment="textStart"
                     app:icon="@drawable/twotone_tag_faces_24" />
@@ -51,7 +69,9 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="8dp"
                 app:cardCornerRadius="15dp">
+
                 <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+                    android:id="@+id/delete_project"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="Delete Project"

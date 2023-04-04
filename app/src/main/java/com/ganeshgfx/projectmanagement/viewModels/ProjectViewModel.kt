@@ -4,26 +4,29 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.ganeshgfx.projectmanagement.Utils.log
+import com.ganeshgfx.projectmanagement.adapters.ProjectListRecyclerViewAdapter
 import com.ganeshgfx.projectmanagement.models.Project
 import com.ganeshgfx.projectmanagement.models.ProjectWithTasks
 import com.ganeshgfx.projectmanagement.repositories.ProjectRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 import javax.inject.Inject
+import kotlin.system.measureTimeMillis
+import kotlin.time.measureTime
 
 @HiltViewModel
 class ProjectViewModel @Inject constructor(private val repo: ProjectRepository) : ViewModel() {
 
+    var projectListAdapter = ProjectListRecyclerViewAdapter()
+
     init {
         viewModelScope.launch {
             repo.projectWithTasksFlow().collect {
-                _projectWithTasksFlow.postValue(it)
+                projectListAdapter.setData(it)
             }
         }
     }
-
-    private val _projectWithTasksFlow = MutableLiveData<List<ProjectWithTasks>>()
-    val projectWithTasksFlow: LiveData<List<ProjectWithTasks>> get() = _projectWithTasksFlow
 
     val showForm = MutableLiveData(false)
     val formProjectTitle = MutableLiveData("")
@@ -31,11 +34,6 @@ class ProjectViewModel @Inject constructor(private val repo: ProjectRepository) 
     val formProjectDescription = MutableLiveData("")
     val formProjectDescriptionError = MutableLiveData(false)
     val addingProject: LiveData<Boolean> get() = repo.addingProject
-
-    fun deleteAllProjects() = viewModelScope.launch {
-//        projectRepository.deleteAllProjects()
-//        getProjects()
-    }
 
     fun viewForm() {
         showForm.postValue(!showForm.value!!)

@@ -11,6 +11,9 @@ interface ProjectDAO {
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insertProject(project: Project)
 
+    @Update
+    suspend fun updateProject(project: Project):Int
+
     @Query("SELECT * FROM project WHERE id = :id")
     fun getProject(id:String): Flow<Project>
 
@@ -24,6 +27,6 @@ interface ProjectDAO {
     fun getProjectWithTasksFlow(): Flow<List<ProjectWithTasks>>
 
     @Query("DELETE FROM project WHERE id = :id")
-    suspend fun deleteProject(id: String)
+    suspend fun deleteProject(id: String) : Int
 
 }

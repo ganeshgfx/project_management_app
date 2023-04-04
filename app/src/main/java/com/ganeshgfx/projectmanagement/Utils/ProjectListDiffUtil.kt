@@ -12,14 +12,16 @@ class ProjectListDiffUtil(
 
     override fun getNewListSize(): Int = newList.size
 
-    override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean =
-        oldList[oldItemPosition].project.id == newList[newItemPosition].project.id
+    override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
+        return oldList[oldItemPosition].project.id == newList[newItemPosition].project.id
+    }
 
-    override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean =
-        when {
+    override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
+        return when {
             oldList[oldItemPosition].project.id != newList[newItemPosition].project.id -> false
             oldList[oldItemPosition].project.title != newList[newItemPosition].project.title -> false
             oldList[oldItemPosition].project.description != newList[newItemPosition].project.description -> false
             else -> true
         }
+    }
 }

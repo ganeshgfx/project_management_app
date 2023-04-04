@@ -13,11 +13,12 @@ import com.ganeshgfx.projectmanagement.models.ProjectWithTasks
 import com.ganeshgfx.projectmanagement.models.Status
 import com.ganeshgfx.projectmanagement.models.User
 import org.eazegraph.lib.models.PieModel
+import kotlin.system.measureTimeMillis
 
-class ProjectListRecyclerViewAdapter(private val projectOnClickListener: ProjectOnClickListener) :
-    RecyclerView.Adapter<ProjectListRecyclerViewAdapter.ProjectListViewHolder>() {
+class ProjectListRecyclerViewAdapter : RecyclerView.Adapter<ProjectListRecyclerViewAdapter.ProjectListViewHolder>() {
 
-    private var projectList = emptyList<ProjectWithTasks>()
+    private var projectList = mutableListOf<ProjectWithTasks>()
+    private lateinit var projectOnClickListener: ProjectOnClickListener
 
     class ProjectListViewHolder(val binding: ProjectListItemBinding) :
         RecyclerView.ViewHolder(binding.root)
@@ -36,7 +37,6 @@ class ProjectListRecyclerViewAdapter(private val projectOnClickListener: Project
             val pending = item.getStatusCount(Status.PENDING)
             val inProgress = item.getStatusCount(Status.IN_PROGRESS)
             val done = item.getStatusCount(Status.DONE)
-            //log(pending,inProgress,done)
             with(pieChart) {
                 clearChart()
                 if (pending > 0) addPieSlice(
@@ -71,10 +71,15 @@ class ProjectListRecyclerViewAdapter(private val projectOnClickListener: Project
 
     override fun getItemCount(): Int = projectList.size
 
+    fun setListener(projectOnClickListener: ProjectOnClickListener){
+        this.projectOnClickListener = projectOnClickListener
+    }
+
     fun setData(newList: List<ProjectWithTasks>) {
         val diffUtil = ProjectListDiffUtil(projectList, newList)
         val diffResult = DiffUtil.calculateDiff(diffUtil)
-        projectList = newList
+        projectList.clear()
+        projectList.addAll(newList)
         diffResult.dispatchUpdatesTo(this)
     }
 

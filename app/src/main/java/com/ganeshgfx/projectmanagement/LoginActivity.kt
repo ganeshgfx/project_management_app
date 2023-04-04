@@ -9,9 +9,7 @@ import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
-import androidx.lifecycle.lifecycleScope
 import com.ganeshgfx.projectmanagement.Utils.log
 import com.ganeshgfx.projectmanagement.databinding.ActivityLoginBinding
 import com.ganeshgfx.projectmanagement.viewModels.LoginVM
@@ -23,8 +21,6 @@ import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
 
 
 @AndroidEntryPoint
@@ -68,7 +64,7 @@ class LoginActivity : AppCompatActivity() {
                     val account: GoogleSignInAccount? = task.result
                     if (account != null) {
                         Snackbar.make(binding.root, "Please Wait...", Snackbar.LENGTH_SHORT)
-                            .setBackgroundTint(fetchAccentColor())
+                            .setBackgroundTint(fetchColor(androidx.appcompat.R.attr.colorPrimary))
                             .show()
                         val credential = GoogleAuthProvider.getCredential(account.idToken, null)
                         FirebaseAuth.getInstance().signInWithCredential(credential)
@@ -84,14 +80,14 @@ class LoginActivity : AppCompatActivity() {
         finish()
     }
 
-    private fun fetchAccentColor(): Int {
+    fun fetchColor(color: Int): Int {
         val typedValue = TypedValue()
         val a: TypedArray = obtainStyledAttributes(
             typedValue.data,
-            intArrayOf(androidx.appcompat.R.attr.colorPrimary)
+            intArrayOf(color)
         )
-        val color = a.getColor(0, 0)
+        val v = a.getColor(0, 0)
         a.recycle()
-        return color
+        return v
     }
 }

@@ -8,6 +8,7 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import kotlinx.coroutines.CoroutineScope
 import javax.inject.Singleton
 
 @Module
@@ -19,5 +20,5 @@ object UserModule {
 
     @Singleton
     @Provides
-    fun provideUserRepo(dao: UserDAO,helper: FirestoreHelper) = UserRepo(dao,helper)
+    fun provideUserRepo(dao: UserDAO,helper: FirestoreHelper, scope: CoroutineScope) = UserRepo(dao,helper,scope)
 }

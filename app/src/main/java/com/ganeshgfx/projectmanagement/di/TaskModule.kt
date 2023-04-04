@@ -1,5 +1,6 @@
 package com.ganeshgfx.projectmanagement.di
 
+import com.ganeshgfx.projectmanagement.database.FirestoreHelper
 import com.ganeshgfx.projectmanagement.database.ProjectDAO
 import com.ganeshgfx.projectmanagement.database.ProjectDatabase
 import com.ganeshgfx.projectmanagement.database.TaskDAO
@@ -8,6 +9,7 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import kotlinx.coroutines.CoroutineScope
 import javax.inject.Singleton
 
 @Module
@@ -21,8 +23,8 @@ object TaskModule {
 
     @Singleton
     @Provides
-    fun provideTaskRepo(dao: TaskDAO): TaskListRepository {
-        return TaskListRepository(dao)
+    fun provideTaskRepo(dao: TaskDAO, helper: FirestoreHelper,scope: CoroutineScope): TaskListRepository {
+        return TaskListRepository(dao,helper,scope)
     }
 
 }

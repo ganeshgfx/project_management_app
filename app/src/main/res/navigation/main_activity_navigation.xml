@@ -74,6 +74,9 @@
         <action
             android:id="@+id/action_manageProjectFragment_to_addMemberFragment"
             app:destination="@id/addMemberFragment" />
+        <action
+            android:id="@+id/action_manageProjectFragment_to_projectFragment"
+            app:destination="@id/projectFragment" />
     </fragment>
     <fragment
         android:id="@+id/addMemberFragment"

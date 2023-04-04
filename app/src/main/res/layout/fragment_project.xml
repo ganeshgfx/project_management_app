@@ -94,9 +94,47 @@
              android:visibility="@{viewModel.addingProject ? View.VISIBLE : View.GONE}"
              />
 
+         <com.google.android.material.chip.ChipGroup
+             android:id="@+id/filters"
+             android:layout_width="wrap_content"
+             android:layout_gravity="center"
+             android:layout_marginStart="16dp"
+             app:selectionRequired="true"
+             android:layout_marginEnd="16dp"
+             android:layout_height="wrap_content"
+             android:layout_marginBottom="5dp"
+             android:visibility="visible"
+             >
+            <com.google.android.material.chip.Chip
+                android:id="@+id/filter_done"
+                app:chipIcon="@drawable/twotone_home_24"
+                app:chipIconTint="@color/chip"
+                android:text="By Me"
+                android:checked="true"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:focusable="true"
+                android:checkable="true"
+                android:clickable="true"
+                />
+            <com.google.android.material.chip.Chip
+                android:id="@+id/filter_in_progress"
+                app:chipIcon="@drawable/baseline_animation_24"
+                app:chipIconTint="@color/chip"
+                android:text="By Others"
+                android:checked="true"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:focusable="true"
+                android:checkable="true"
+                android:clickable="true"
+                />
+         </com.google.android.material.chip.ChipGroup>
+
          <LinearLayout
              android:layout_width="match_parent"
              android:orientation="horizontal"
+             tools:visibility="gone"
              android:layout_height="wrap_content"
              android:visibility="@{viewModel.showForm ? View.VISIBLE : View.GONE}">
             <com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -126,10 +164,10 @@
              android:layout_width="match_parent"
              tools:listitem="@layout/project_list_item"
              android:layout_height="0dp"
-             android:paddingTop="20dp"
              app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
              android:id="@+id/project_list"
              android:layout_weight="1"
+             android:adapter="@{viewModel.projectListAdapter}"
              android:visibility="@{viewModel.showForm ? View.GONE : View.VISIBLE}"
              />
       </LinearLayout>

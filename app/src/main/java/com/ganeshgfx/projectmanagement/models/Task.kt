@@ -18,13 +18,14 @@ import java.util.*
     ]
 )
 data class Task(
-    @PrimaryKey(autoGenerate = true)
-    val id: Long? = null,
-    val projectId: String,
-    val title: String,
-    val description: String,
-    var status: Status,
-    var dueDate: Long? = null
+    @PrimaryKey
+    val id: String = "",
+    val projectId: String = "",
+    val title: String = "",
+    val description: String = "",
+    var status: Status = Status.PENDING,
+    var dueDate: Long? = null,
+    var assignedTo:String = ""
 ) {
     override fun toString(): String = GsonBuilder()
         .setPrettyPrinting()

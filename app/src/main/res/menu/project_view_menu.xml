@@ -3,6 +3,20 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
+        android:id="@+id/filter_on"
+        android:icon="@drawable/twotone_filter_alt_24"
+        android:title="Refresh"
+        app:iconTint="?attr/colorControlNormal"
+        app:showAsAction="always" />
+
+    <item
+        android:id="@+id/filter_off"
+        android:icon="@drawable/twotone_filter_alt_off_24"
+        android:title="Refresh"
+        app:iconTint="?attr/colorControlNormal"
+        app:showAsAction="always" />
+
+    <item
         android:id="@+id/refresh_quote"
         android:icon="@drawable/round_transit_enterexit_24"
         android:title="Refresh"

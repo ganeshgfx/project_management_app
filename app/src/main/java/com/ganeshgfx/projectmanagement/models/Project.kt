@@ -4,6 +4,7 @@ import androidx.room.Embedded
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import androidx.room.Relation
+import com.ganeshgfx.projectmanagement.Utils.log
 
 @Entity
 data class Project(
@@ -26,7 +27,7 @@ data class ProjectWithTasks(
     val tasks: List<Task>
 ) {
     fun getStatusCount(status: Status): Int {
-        val pending = tasks.filter { it.status == status }
-        return pending.size
+        val result = tasks.filter { it.status == status }
+        return result.size
     }
 }
