@@ -104,8 +104,8 @@ class FirestoreHelper(
         db.collection(PROJECTS).document(id).delete().await()
     }
 
-    fun getProjectImIn() = db.collection(MEMBERS).whereEqualTo(USER_ID, auth.uid).getData()
-    fun getProjectList(ids: List<String>) = db.collection(PROJECTS).whereIn(ID, ids).getData()
+    fun getProjectImIn() = db.collection(MEMBERS).whereEqualTo(USER_ID, auth.uid).snapshots()
+    fun getProjectList(ids: List<String>) = db.collection(PROJECTS).whereIn(ID, ids).snapshots()
     //PROJECT RELATED CODE END
 
     //TASK RELATED CODE START
@@ -127,6 +127,10 @@ class FirestoreHelper(
 
     fun getTasks(projectId: String) =
         db.collection(TASKS).whereEqualTo(PROJECT_ID, projectId).getData()
+
+    fun getAllTasks(projectIds: List<String>) =
+        db.collection(TASKS).whereIn(PROJECT_ID, projectIds).snapshots()
+
 
     suspend fun updateTask(task: Task) {
         db.collection(TASKS).document(task.id).update("status", task.status).await()

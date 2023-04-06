@@ -23,8 +23,8 @@ object TaskModule {
 
     @Singleton
     @Provides
-    fun provideTaskRepo(dao: TaskDAO, helper: FirestoreHelper,scope: CoroutineScope): TaskListRepository {
-        return TaskListRepository(dao,helper,scope)
+    fun provideTaskRepo(dao: TaskDAO, helper: FirestoreHelper): TaskListRepository {
+        return TaskListRepository(dao,helper)
     }
 
 }

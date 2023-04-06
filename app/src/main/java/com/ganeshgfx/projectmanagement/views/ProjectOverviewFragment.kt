@@ -12,6 +12,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.setupWithNavController
 import com.ganeshgfx.projectmanagement.MainActivity
 import com.ganeshgfx.projectmanagement.R
+import com.ganeshgfx.projectmanagement.Utils.log
 import com.ganeshgfx.projectmanagement.databinding.FragmentProjectOverviewBinding
 import com.ganeshgfx.projectmanagement.viewModels.ProjectOverviewViewModel
 import dagger.hilt.android.AndroidEntryPoint

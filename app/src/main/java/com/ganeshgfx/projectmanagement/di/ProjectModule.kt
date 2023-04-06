@@ -26,11 +26,9 @@ object ProjectModule {
     @Provides
     fun provideProjectRepo(
         dao: ProjectDAO,
-        userDAO: UserDAO,
         helper: FirestoreHelper,
-        scope: CoroutineScope
     ): ProjectRepository {
-        return ProjectRepository(dao, userDAO, helper, scope)
+        return ProjectRepository(dao, helper)
     }
 
 //    @Singleton

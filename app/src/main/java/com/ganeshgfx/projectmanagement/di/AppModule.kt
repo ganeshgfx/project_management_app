@@ -1,7 +1,8 @@
 package com.ganeshgfx.projectmanagement.di
 
 import android.content.Context
-import com.ganeshgfx.projectmanagement.database.ProjectDatabase
+import com.ganeshgfx.projectmanagement.database.*
+import com.ganeshgfx.projectmanagement.repositories.MainActivityRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -22,5 +23,15 @@ object AppModule {
     @Provides
     @Singleton
     fun provideCoroutineScope(): CoroutineScope = CoroutineScope(SupervisorJob())
+
+    @Provides
+    @Singleton
+    fun provideMainActivityRepository(
+        projectDAO: ProjectDAO,
+        userDAO: UserDAO,
+        taskDAO: TaskDAO,
+        remote: FirestoreHelper,
+        scope: CoroutineScope
+    ): MainActivityRepository = MainActivityRepository(userDAO,projectDAO, taskDAO, remote, scope)
 
 }

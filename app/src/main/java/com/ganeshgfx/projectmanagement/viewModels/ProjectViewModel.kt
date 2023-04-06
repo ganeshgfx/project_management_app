@@ -11,6 +11,8 @@ import com.ganeshgfx.projectmanagement.models.ProjectWithTasks
 import com.ganeshgfx.projectmanagement.repositories.ProjectRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.*
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import javax.inject.Inject
 import kotlin.system.measureTimeMillis
 import kotlin.time.measureTime
@@ -21,11 +23,9 @@ class ProjectViewModel @Inject constructor(private val repo: ProjectRepository) 
     var projectListAdapter = ProjectListRecyclerViewAdapter()
 
     init {
-        viewModelScope.launch {
-            repo.projectWithTasksFlow().collect {
-                projectListAdapter.setData(it)
-            }
-        }
+        repo.projectWithTasksFlow().onEach {
+            projectListAdapter.setData(it)
+        }.launchIn(viewModelScope)
     }
 
     val showForm = MutableLiveData(false)

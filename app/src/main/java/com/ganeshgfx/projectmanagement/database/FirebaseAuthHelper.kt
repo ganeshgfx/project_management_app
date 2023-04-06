@@ -11,10 +11,7 @@ class FirebaseAuthHelper(private val auth: FirebaseAuth) {
 
     val isLogged = callbackFlow {
         val listener = FirebaseAuth.AuthStateListener { firebaseAuth ->
-            //val isAuthenticated = firebaseAuth.currentUser != null
-           // if(isAuthenticated){
-                trySend(firebaseAuth.currentUser)
-            //}
+            trySend(firebaseAuth.currentUser)
         }
         auth.addAuthStateListener(listener)
         awaitClose {
