@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.ganeshgfx.projectmanagement.Utils.TaskListDiffUtil
+import com.ganeshgfx.projectmanagement.Utils.log
 import com.ganeshgfx.projectmanagement.databinding.TaskListItemBinding
 import com.ganeshgfx.projectmanagement.models.Task
 import com.google.android.material.shape.CornerFamily
@@ -90,7 +91,14 @@ class TaskListRecyclerViewAdapter(private var taskList: MutableList<Task> = muta
         diffResult.dispatchUpdatesTo(this)
     }
 
-    fun updateData(pos: Int, task: Task) {
+    fun updateData(task: Task) {
+//        taskList.forEachIndexed { index, data ->
+//            if(data.id==task.id){
+//                pos = index
+//                return@forEachIndexed
+//            }
+//        }
+        val pos = taskList.indexOf(task)
         taskList[pos] = task
         notifyItemChanged(pos)
     }

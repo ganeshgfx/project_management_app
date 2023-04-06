@@ -65,6 +65,9 @@
             app:popExitAnim="@anim/nav_default_pop_exit_anim"
             app:popUpToInclusive="false" >
         </action>
+        <action
+            android:id="@+id/action_projectFragment_to_tasksListsFragment"
+            app:destination="@id/tasksListsFragment" />
     </fragment>
     <fragment
         android:id="@+id/manageProjectFragment"

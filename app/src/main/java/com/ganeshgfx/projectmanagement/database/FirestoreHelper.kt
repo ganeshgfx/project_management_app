@@ -6,11 +6,11 @@ import com.ganeshgfx.projectmanagement.models.Task
 import com.ganeshgfx.projectmanagement.models.User
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.*
+import com.google.firebase.firestore.ktx.snapshots
 import com.google.firebase.firestore.ktx.toObject
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.tasks.await
-import org.w3c.dom.Document
 
 private const val USERS = "users"
 private const val MEMBERS = "members"
@@ -38,7 +38,8 @@ class FirestoreHelper(
         }
     }
 
-    fun getUsers() = db.collection(USERS).getData<User>()
+    suspend fun getUsers(ids: List<String>) =
+        db.collection(USERS).whereIn("uid", ids).get().await().documents.map { it.toObject<User>() }
 
     suspend fun searchUsers(search: String): List<User> {
         val result = db.collection(USERS).get().await().documents
@@ -127,8 +128,8 @@ class FirestoreHelper(
     fun getTasks(projectId: String) =
         db.collection(TASKS).whereEqualTo(PROJECT_ID, projectId).getData()
 
-    suspend fun updateTask(task: Task){
-        db.collection(TASKS).document(task.id).update("status",task.status).await()
+    suspend fun updateTask(task: Task) {
+        db.collection(TASKS).document(task.id).update("status", task.status).await()
     }
     //TASK RELATED CODE END
 }
@@ -150,7 +151,7 @@ inline fun Query.getData() = callbackFlow<List<DocumentChange>> {
     val listener =
         EventListener<QuerySnapshot> { list, error ->
             if (error != null) {
-                log("Query.getData()",error)
+                log("Query.getData()", error)
                 return@EventListener
             }
             trySend(list!!.documentChanges)

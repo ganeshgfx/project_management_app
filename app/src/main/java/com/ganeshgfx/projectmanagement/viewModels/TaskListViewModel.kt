@@ -47,14 +47,20 @@ class TaskListViewModel @Inject constructor(private val repository: TaskListRepo
         getTasks(_currentProjectId)
     }
 
+    private var updateTask : Task? = null
     private var tasksFlowJob : Job? = null
     fun getTasks(projectId: String) {
         _currentProjectId = projectId
         tasksFlowJob?.cancel()
         tasksFlowJob = viewModelScope.launch {
-            repository.tasksFlow(_currentProjectId,filters).collect {
-                _tasks.postValue(it)
-                taskListAdapter.setData(it)
+            repository.tasksFlow(_currentProjectId,filters).collect { taskList ->
+                _tasks.postValue(taskList)
+                //log(taskList.map { taskList.status })
+                taskListAdapter.setData(taskList)
+                updateTask?.let {
+                    taskListAdapter.updateData(it)
+                    updateTask = null
+                }
             }
         }
     }
@@ -93,6 +99,7 @@ class TaskListViewModel @Inject constructor(private val repository: TaskListRepo
 
     suspend fun updateTask(task: Task):Int{
         val result = repository.updateTask(task)
+        updateTask = task
         return result
     }
 

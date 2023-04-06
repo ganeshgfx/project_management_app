@@ -32,7 +32,6 @@ class TaskListRepository @Inject constructor(
         _projectId: String,
         status: List<Status> = listOf(Status.DONE, Status.PENDING, Status.IN_PROGRESS)
     ): Flow<List<Task>> {
-
         scope.launch(Dispatchers.IO) {
             remote.getTasks(_projectId).onEach { list ->
                 list.forEach {
@@ -51,7 +50,6 @@ class TaskListRepository @Inject constructor(
                 }
             }.launchIn(this)
         }
-
         return dao.getTasksFlow(_projectId, status)
     }
 

@@ -19,8 +19,6 @@ class AuthRepo @Inject constructor(
 ) {
     val isLogged = auth.isLogged
 
-    fun getUsers() = store.getUsers()
-
     suspend fun addLoggedUser(user:User):Boolean {
         val result = store.addUser(user)
         if(result){

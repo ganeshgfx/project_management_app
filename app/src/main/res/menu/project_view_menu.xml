@@ -13,6 +13,7 @@
         android:id="@+id/filter_off"
         android:icon="@drawable/twotone_filter_alt_off_24"
         android:title="Refresh"
+        android:visible="false"
         app:iconTint="?attr/colorControlNormal"
         app:showAsAction="always" />
 

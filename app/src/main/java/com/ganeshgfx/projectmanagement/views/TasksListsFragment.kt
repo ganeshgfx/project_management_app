@@ -122,7 +122,7 @@ class TasksListsFragment : Fragment() {
         task.status = status
         val result = viewModel.updateTask(task)
         if (result == 1) {
-            taskListAdapter.updateData(pos, task)
+            //taskListAdapter.updateData(pos, task)
             view.clearFocus()
         }
     }

@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.ganeshgfx.projectmanagement.Utils.log
 import com.ganeshgfx.projectmanagement.models.Project
 import com.ganeshgfx.projectmanagement.models.ProjectTaskCount
 import com.ganeshgfx.projectmanagement.models.Status
@@ -18,6 +19,8 @@ class ProjectOverviewViewModel @Inject constructor(private val repo: ProjectRepo
     ViewModel() {
     private var _currentProjectId = ""
     val currentProjectId get() = _currentProjectId
+
+    val myUid = repo.myUid
 
     private var projectJob: Job? = null
     private var taskCountJob: Job? = null

@@ -14,6 +14,7 @@ import com.google.firebase.firestore.DocumentChange
 import com.google.firebase.firestore.DocumentChange.*
 import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FieldPath
+import com.google.firebase.firestore.ktx.snapshots
 import com.google.firebase.firestore.ktx.toObject
 import com.google.firebase.firestore.model.Document
 import kotlinx.coroutines.*
@@ -30,32 +31,37 @@ class UserRepo @Inject constructor(
     suspend fun searchUser(search: String) = remote.searchUsers(search)
 
     suspend fun getProjectMembers(projectId: String): Flow<List<ProjectMember>> {
-        withContext(Dispatchers.IO) {
-            remote.getProjectMembers(projectId)
-                .addSnapshotListener { snapshots, error ->
-                    if (error != null) {
-                        log(error)
-                        return@addSnapshotListener
-                    }
-                    snapshots?.documentChanges?.forEach {
-                        val member = Member(
-                            projectId = it.document["projectId"].toString(),
-                            uid = it.document["userId"].toString()
-                        )
-                        when (it.type) {
-                            Type.ADDED -> scope.launch {
-                                try {
-                                    if (remote.myUid != member.uid)
-                                        dao.addMember(member)
-                                } catch (error: SQLiteConstraintException) {
-                                    log(error)
+        withContext(Dispatchers.IO){
+            scope.launch {
+                remote.getProjectMembers(projectId)
+                    .snapshots().collect { snapshot ->
+                        val memberList = mutableListOf<Member>()
+                        snapshot.documentChanges.forEach {
+                            val member = Member(
+                                projectId = it.document["projectId"].toString(),
+                                uid = it.document["userId"].toString()
+                            )
+                            when (it.type) {
+                                Type.ADDED ->{
+                                    if (remote.myUid != member.uid) {
+                                        memberList.add(member)
+                                    }
                                 }
+                                Type.MODIFIED -> {}
+                                Type.REMOVED -> scope.launch { dao.deleteMember(member) }
                             }
-                            Type.MODIFIED -> {}//log("MODIFIED", member)
-                            Type.REMOVED -> scope.launch { dao.deleteMember(member) }
+                        }
+                        if(memberList.size>0) {
+                            val users = remote.getUsers(memberList.map { it.uid })
+                            users.forEach {
+                                dao.insertUser(it!!)
+                            }
+                            memberList.forEach {
+                                dao.addMember(it)
+                            }
                         }
                     }
-                }
+            }
         }
         return dao.getProjectMember(projectId)
     }

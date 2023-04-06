@@ -12,7 +12,7 @@ interface UserDAO {
     @Upsert
     suspend fun insertUser(user: User): Long
 
-    @Upsert
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun addMember(member: Member)
     @Delete
     suspend fun deleteMember(member: Member):Int

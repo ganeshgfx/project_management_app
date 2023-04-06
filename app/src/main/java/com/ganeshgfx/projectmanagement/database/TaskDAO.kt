@@ -11,7 +11,7 @@ interface TaskDAO {
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insertTask(task: Task) : Long
 
-    @Query("SELECT * FROM task WHERE projectId = :projectId AND status IN (:status)")//ORDER BY status DESC
+    @Query("SELECT * FROM task WHERE projectId = :projectId AND status IN (:status) ORDER BY status ASC")
     fun getTasksFlow(
         projectId: String,
         status: List<Status>

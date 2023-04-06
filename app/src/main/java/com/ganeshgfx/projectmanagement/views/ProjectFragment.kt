@@ -54,13 +54,30 @@ class ProjectFragment : Fragment() {
             ProjectOnClickListener {
                 activity.viewModel.changeProject(it.project.id)
                 findNavController().navigate(
-                    ProjectFragmentDirections.actionProjectFragmentToTaskOverviewFragment()
+                    ProjectFragmentDirections.actionProjectFragmentToTasksListsFragment()
                 )
             }
         )
 
         binding.lifecycleOwner = viewLifecycleOwner
         binding.viewModel = viewModel
+
+        binding.toolbar.setOnMenuItemClickListener {
+            when(it.itemId){
+                R.id.filter_off ->{
+                    binding.toolbar.menu.findItem(R.id.filter_off).isVisible = false
+                    binding.toolbar.menu.findItem(R.id.filter_on).isVisible = true
+                    binding.filters.visibility = View.GONE
+                }
+                R.id.filter_on->{
+                    binding.toolbar.menu.findItem(R.id.filter_off).isVisible = true
+                    binding.toolbar.menu.findItem(R.id.filter_on).isVisible = false
+                    binding.filters.visibility = View.VISIBLE
+                }
+            }
+            true
+        }
+
         return binding.root
     }
 }

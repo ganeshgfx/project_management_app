@@ -1,13 +1,11 @@
 package com.ganeshgfx.projectmanagement.views
 
 import android.os.Bundle
-import android.view.Gravity
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.content.res.ResourcesCompat
 import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.setupWithNavController
@@ -16,9 +14,9 @@ import com.ganeshgfx.projectmanagement.R
 import com.ganeshgfx.projectmanagement.Utils.log
 import com.ganeshgfx.projectmanagement.databinding.FragmentProjectManageBinding
 import com.ganeshgfx.projectmanagement.viewModels.ProjectOverviewViewModel
-import com.ganeshgfx.projectmanagement.viewModels.ProjectViewModel
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dagger.hilt.android.AndroidEntryPoint
+
 
 @AndroidEntryPoint
 class ManageProjectFragment : Fragment() {
@@ -49,11 +47,11 @@ class ManageProjectFragment : Fragment() {
                     .setIcon(R.drawable.twotone_delete_forever_24)
                     .setTitle("Are you sure about that ?")
                     .setMessage("If you delete the project all the progress and tasks will be lost")
-                    .setPositiveButton("Yes"){dialog, which ->
+                    .setPositiveButton("Yes") { dialog, which ->
                         viewModel.deleteProject()
                         findNavController().navigate(ManageProjectFragmentDirections.actionManageProjectFragmentToProjectFragment())
                     }
-                    .setNegativeButton("Cancel"){dialog, which ->
+                    .setNegativeButton("Cancel") { dialog, which ->
                         dialog.dismiss()
                     }
                     .show()

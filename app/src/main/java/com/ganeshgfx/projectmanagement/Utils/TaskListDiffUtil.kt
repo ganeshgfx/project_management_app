@@ -18,15 +18,20 @@ class TaskListDiffUtil(
     }
 
     override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
+        val old = oldList[oldItemPosition]
+        val new = newList[newItemPosition]
         val result = when {
-            oldList[oldItemPosition].status != newList[newItemPosition].status -> false
-            oldList[oldItemPosition].id != newList[newItemPosition].id -> false
-            oldList[oldItemPosition].projectId != newList[newItemPosition].projectId -> false
-            oldList[oldItemPosition].title != newList[newItemPosition].title -> false
-            oldList[oldItemPosition].description != newList[newItemPosition].description -> false
+            old.status != new.status -> {
+                false
+            }
+            old.id != new.id -> false
+            old.projectId != new.projectId -> false
+            old.title != new.title -> false
+            old.description != new.description -> false
             else -> true
         }
-       // log("areContentsTheSame $result")
+       //log("areContentsTheSame $result")
+        //log(old,new)
         return result
     }
 }

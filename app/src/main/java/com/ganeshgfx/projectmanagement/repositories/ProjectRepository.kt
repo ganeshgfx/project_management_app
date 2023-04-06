@@ -29,6 +29,7 @@ class ProjectRepository @Inject constructor(
     suspend fun projectWithTasksFlow(): Flow<List<ProjectWithTasks>> {
         withContext(Dispatchers.IO) {
             getProjectImInJob?.cancel()
+
             scope.launch(Dispatchers.IO) {
                 remote.getProjectImIn().onEach { list ->
                     val projectIds = mutableSetOf<String>()
@@ -50,6 +51,7 @@ class ProjectRepository @Inject constructor(
                             }
                         }
                     }
+
                     getProjectsJob?.cancel()
                     //log(projectIds)
                     if (projectIds.isNotEmpty()) {
@@ -76,6 +78,8 @@ class ProjectRepository @Inject constructor(
         return projectDAO.getProjectWithTasksFlow()
     }
 
+    val myUid = remote.myUid
+
     //for getting individual project
     fun tasksStatusFlow(_projectId: String) = projectDAO.tasksStatus(_projectId)
 
@@ -90,7 +94,7 @@ class ProjectRepository @Inject constructor(
             projectDAO.insertProject(response)
             addingProject.postValue(false)
         } catch (e: FirebaseException) {
-            log("Error adding project : ", e)
+            log("at addProject","Error adding project : ", e)
         }
     }
 
