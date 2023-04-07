@@ -30,7 +30,6 @@ class ProjectRepository @Inject constructor(
 
     val myUid = remote.myUid
 
-    //for getting individual project
     fun tasksStatusFlow(_projectId: String) = projectDAO.tasksStatus(_projectId)
 
     val addingProject = MutableLiveData(false)
@@ -51,12 +50,12 @@ class ProjectRepository @Inject constructor(
     fun getProject(id: String) = projectDAO.getProject(id)
 
     suspend fun deleteProject(id: String): Int {
-        try {
+        return try {
             remote.deleteProject(id)
-            return projectDAO.deleteProject(id)
+            projectDAO.deleteProject(id)
         } catch (error: FirebaseException) {
             log(error)
-            return -1
+            -1
         }
     }
 

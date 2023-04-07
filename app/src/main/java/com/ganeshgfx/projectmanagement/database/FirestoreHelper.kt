@@ -80,6 +80,9 @@ class FirestoreHelper(
     fun getProjectMembers(projectID: String) =
         db.collection(MEMBERS).whereEqualTo(PROJECT_ID, projectID)
 
+    fun getProjectMembersAll(projectIds: List<String>) =
+        db.collection(MEMBERS).whereIn(PROJECT_ID, projectIds).snapshots()
+
     //USER RELATED CODE END
 
     //PROJECT RELATED CODE START
