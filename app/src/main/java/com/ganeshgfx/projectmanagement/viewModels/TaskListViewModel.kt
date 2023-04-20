@@ -5,7 +5,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.ganeshgfx.projectmanagement.Utils.log
 import com.ganeshgfx.projectmanagement.adapters.TaskListRecyclerViewAdapter
 import com.ganeshgfx.projectmanagement.models.Status
 import com.ganeshgfx.projectmanagement.models.Task
@@ -15,7 +14,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import javax.inject.Inject
-import kotlin.system.measureTimeMillis
 
 @HiltViewModel
 class TaskListViewModel @Inject constructor(private val repository: TaskListRepository) : ViewModel() {
@@ -33,7 +31,8 @@ class TaskListViewModel @Inject constructor(private val repository: TaskListRepo
     val titleError = MutableLiveData(false)
     val description = MutableLiveData("")
     val descriptionError = MutableLiveData(false)
-    var date : Long? = null
+    var startDate : Long? = null
+    var endDate : Long? = null
     val dateString = MutableLiveData("")
 
     val filterOptionsVisibility = MutableLiveData(true)
@@ -82,7 +81,8 @@ class TaskListViewModel @Inject constructor(private val repository: TaskListRepo
                         title = _title,
                         description = _description,
                         status = Status.PENDING,
-                        dueDate = date
+                        startDate = startDate,
+                        endDate = endDate
                     )
                 )
                 viewForm()
@@ -91,7 +91,7 @@ class TaskListViewModel @Inject constructor(private val repository: TaskListRepo
                     description.postValue("")
                     titleError.postValue(false)
                     descriptionError.postValue(false)
-                    clearDueDate()
+                    clearDate()
                 }
             }
         }
@@ -103,8 +103,9 @@ class TaskListViewModel @Inject constructor(private val repository: TaskListRepo
         return result
     }
 
-    fun clearDueDate(){
-        date = null
+    fun clearDate(){
+        startDate = null
+        endDate = null
         dateString.postValue("")
     }
 }

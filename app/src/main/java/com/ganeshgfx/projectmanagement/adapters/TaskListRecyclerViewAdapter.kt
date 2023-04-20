@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.ganeshgfx.projectmanagement.Utils.TaskListDiffUtil
 import com.ganeshgfx.projectmanagement.Utils.log
+import com.ganeshgfx.projectmanagement.Utils.makeShape
 import com.ganeshgfx.projectmanagement.databinding.TaskListItemBinding
 import com.ganeshgfx.projectmanagement.models.Task
 import com.google.android.material.shape.CornerFamily
@@ -43,8 +44,8 @@ class TaskListRecyclerViewAdapter(private var taskList: MutableList<Task> = muta
             3.toFloat(),
             parent.context.resources.displayMetrics
         )
-        focusCardShape = makeShape(_20dp, _3dp);
-        normalCardShape = makeShape(_10dp, _10dp)
+        focusCardShape = makeShape(_20dp,_20dp,_3dp,_3dp,);
+        normalCardShape = makeShape(_10dp, _10dp,_10dp,_10dp)
 
         return TaskListViewHolder(
             TaskListItemBinding.inflate(
@@ -113,12 +114,5 @@ class TaskListRecyclerViewAdapter(private var taskList: MutableList<Task> = muta
         this.clickListener = clickListener
     }
 
-    private fun makeShape(topRadius: Float, bottomRadius: Float) =
-        ShapeAppearanceModel()
-            .toBuilder()
-            .setTopLeftCorner(CornerFamily.ROUNDED, topRadius)
-            .setTopRightCorner(CornerFamily.ROUNDED, topRadius)
-            .setBottomLeftCorner(CornerFamily.ROUNDED, bottomRadius)
-            .setBottomRightCorner(CornerFamily.ROUNDED, bottomRadius)
-            .build()
+
 }

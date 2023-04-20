@@ -54,7 +54,7 @@ class ProjectFragment : Fragment() {
             ProjectOnClickListener {
                 activity.viewModel.changeProject(it.project.id)
                 findNavController().navigate(
-                    ProjectFragmentDirections.actionProjectFragmentToTasksListsFragment()
+                    ProjectFragmentDirections.actionProjectFragmentToCalenderFragment()
                 )
             }
         )

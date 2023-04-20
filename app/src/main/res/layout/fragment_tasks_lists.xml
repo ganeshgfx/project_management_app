@@ -83,7 +83,7 @@
                       android:visibility='@{viewModel.dateString=="" ? View.GONE:View.VISIBLE}'
                       style="@style/Widget.Material3.Button.IconButton"
                       app:icon="@drawable/round_clear_24"
-                      android:onClick="@{()->viewModel.clearDueDate()}"
+                      android:onClick="@{()->viewModel.clearDate()}"
                       app:iconTint="?attr/colorError"
                       />
                   <TextView

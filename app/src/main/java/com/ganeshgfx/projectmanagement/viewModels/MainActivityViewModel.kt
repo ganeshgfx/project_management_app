@@ -26,6 +26,8 @@ class MainActivityViewModel @Inject constructor(
 
     }
 
+    val notification = repo.notification
+
     private val _isLogged = MutableLiveData(true)
     val isLogged:LiveData<Boolean> get() = _isLogged
 

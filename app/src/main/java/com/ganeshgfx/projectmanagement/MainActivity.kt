@@ -8,11 +8,9 @@ import androidx.activity.viewModels
 import androidx.databinding.DataBindingUtil
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
-import com.ganeshgfx.projectmanagement.Utils.log
 import com.ganeshgfx.projectmanagement.databinding.ActivityMainBinding
+import com.ganeshgfx.projectmanagement.services.MainServices
 import com.ganeshgfx.projectmanagement.viewModels.MainActivityViewModel
-import com.google.android.material.elevation.SurfaceColors
-import com.google.firebase.auth.FirebaseAuth
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -25,9 +23,9 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        viewModel.isLogged.observe(this){
-            if(!it){
-                startActivity(Intent(this,LoginActivity::class.java))
+        viewModel.isLogged.observe(this) {
+            if (!it) {
+                startActivity(Intent(this, LoginActivity::class.java))
                 finish()
             }
         }
@@ -37,38 +35,38 @@ class MainActivity : AppCompatActivity() {
         binding.data = viewModel
         binding.lifecycleOwner = this
 
-        //setting color for appbar and status bar
-        val color = SurfaceColors.SURFACE_2.getColor(this)
-        //window.statusBarColor = color
-        //window.navigationBarColor = color
+        //val color = SurfaceColors.SURFACE_2.getColor(this)
+        window.navigationBarColor = Color.TRANSPARENT
 
-        //appbar setup
+
         //setSupportActionBar(binding.toolbar)
         //binding.toolbar.setBackgroundColor(color)
         //Navigation Setup
 
-        val navHostFragment = supportFragmentManager.findFragmentById(R.id.main_fragment) as NavHostFragment
+        val navHostFragment =
+            supportFragmentManager.findFragmentById(R.id.main_fragment) as NavHostFragment
         val navController = navHostFragment.navController
         //val appBarConfiguration = AppBarConfiguration(navController.graph)
         binding.bottomNavigation.setupWithNavController(navController)
         //binding.toolbar.setupWithNavController(navController, appBarConfiguration)
         //setupActionBarWithNavController(navController,appBarConfiguration)
-        navController.addOnDestinationChangedListener{_, destination, _ ->
-            when(destination.id){
+        navController.addOnDestinationChangedListener { _, destination, _ ->
+            when (destination.id) {
                 R.id.projectFragment -> {
                     viewModel.hideBottomAppBar(true)
-                    window.navigationBarColor = Color.TRANSPARENT
+                }
+                R.id.calenderFragment -> {
+                    viewModel.hideBottomAppBar(false)
                 }
                 R.id.projectOverviewFragment -> {
                     viewModel.hideBottomAppBar(false)
-                    window.navigationBarColor = Color.TRANSPARENT//color
                 }
                 R.id.tasksListsFragment -> {
                     viewModel.hideBottomAppBar(false)
-                    window.navigationBarColor = Color.TRANSPARENT//color
                 }
             }
         }
+        startService(Intent(this, MainServices::class.java))
     }
 
     override fun onDestroy() {

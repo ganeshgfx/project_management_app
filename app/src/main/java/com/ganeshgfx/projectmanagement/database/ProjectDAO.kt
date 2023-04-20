@@ -12,10 +12,16 @@ interface ProjectDAO {
     suspend fun insertProject(project: Project)
 
     @Update
-    suspend fun updateProject(project: Project):Int
+    suspend fun updateProject(project: Project): Int
 
     @Query("SELECT * FROM project WHERE id = :id")
-    fun getProject(id:String): Flow<Project>
+    fun getProject(id: String): Flow<Project>
+
+    @Query("SELECT * FROM project WHERE id = :id")
+    fun getProjectInfo(id: String): Project
+
+    @Query("SELECT COUNT(*) FROM project WHERE id = :id")
+    fun checkProject(id: String): Int
 
     @Query("DELETE FROM project WHERE 1")
     suspend fun deleteAllProjects()
@@ -27,6 +33,6 @@ interface ProjectDAO {
     fun getProjectWithTasksFlow(): Flow<List<ProjectWithTasks>>
 
     @Query("DELETE FROM project WHERE id = :id")
-    suspend fun deleteProject(id: String) : Int
+    suspend fun deleteProject(id: String): Int
 
 }

@@ -3,8 +3,13 @@
     <item
         android:id="@+id/projectOverviewFragment"
         android:enabled="true"
+        android:icon="@drawable/twotone_pie_chart_24"
+        android:title="Overview"/>
+    <item
+        android:id="@+id/calenderFragment"
+        android:enabled="true"
         android:icon="@drawable/twotone_calendar_month_24"
-        android:title="Project Overview"/>
+        android:title="Calender"/>
     <item
         android:id="@+id/tasksListsFragment"
         android:enabled="true"

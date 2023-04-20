@@ -66,6 +66,7 @@ class ManageMemberFragment : Fragment() {
 //        val staggeredGridLayoutManager = StaggeredGridLayoutManager(2, LinearLayoutManager.VERTICAL)
 //        userList.layoutManager = staggeredGridLayoutManager
         }
+
         return binding.root
     }
 

@@ -9,17 +9,34 @@
 
     <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        tools:context=".LoginActivity">
-        <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
-            style="Widget.Material3.ExtendedFloatingActionButton.Icon.Primary"
-            android:id="@+id/login"
-            android:padding="20dp"
-            android:layout_width="wrap_content"
-            android:text="Login"
-            app:icon="@drawable/googleg_disabled_color_18"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_margin="16dp"
-            android:layout_height="wrap_content"/>
+            android:orientation="vertical"
+            android:paddingBottom="125dp"
+            tools:context=".LoginActivity">
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingStart="25dp"
+                android:paddingEnd="25dp"
+                android:src="@drawable/objectappart" />
+
+            <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+                android:id="@+id/login"
+                style="Widget.Material3.ExtendedFloatingActionButton.Icon.Primary"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_margin="16dp"
+                android:gravity="center"
+                android:padding="20dp"
+                android:text="Login"
+                app:icon="@drawable/googleg_disabled_color_18" />
+        </LinearLayout>
     </FrameLayout>
 </layout>

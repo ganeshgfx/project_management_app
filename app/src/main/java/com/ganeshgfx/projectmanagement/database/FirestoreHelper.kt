@@ -121,7 +121,8 @@ class FirestoreHelper(
             title = task.title,
             description = task.description,
             status = task.status,
-            dueDate = task.dueDate,
+            startDate = task.startDate,
+            endDate = task.endDate,
             assignedTo = task.assignedTo
         )
         ref.document(id).set(data).await()

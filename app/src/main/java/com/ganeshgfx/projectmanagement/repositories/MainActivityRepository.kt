@@ -1,21 +1,18 @@
 package com.ganeshgfx.projectmanagement.repositories
 
+import android.database.sqlite.SQLiteConstraintException
+import androidx.lifecycle.MutableLiveData
 import com.ganeshgfx.projectmanagement.Utils.log
 import com.ganeshgfx.projectmanagement.database.FirestoreHelper
 import com.ganeshgfx.projectmanagement.database.ProjectDAO
 import com.ganeshgfx.projectmanagement.database.TaskDAO
 import com.ganeshgfx.projectmanagement.database.UserDAO
-import com.ganeshgfx.projectmanagement.models.Member
-import com.ganeshgfx.projectmanagement.models.Project
-import com.ganeshgfx.projectmanagement.models.Task
-import com.ganeshgfx.projectmanagement.models.User
+import com.ganeshgfx.projectmanagement.models.*
 import com.google.firebase.firestore.DocumentChange
 import com.google.firebase.firestore.ktx.toObject
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.*
 import javax.inject.Inject
 
 class MainActivityRepository @Inject constructor(
@@ -30,11 +27,19 @@ class MainActivityRepository @Inject constructor(
     private var getProjectsInfo: Job? = null
     private var getTasks: Job? = null
 
+    private val _notice = MutableSharedFlow<Notice>(replay = 2)
+    val notification get() = _notice
+
     init {
+        //    startJob()
+    }
+
+    fun startJob() {
         getProjects?.cancel()
         getProjects = remote.getProjectImIn()
             .catch { error ->
-                log(error.cause.toString())
+                //log(error.cause.toString())
+                checkError("startJob", error)
             }
             .onEach { list ->
                 val projectIds = mutableSetOf<String>()
@@ -69,41 +74,70 @@ class MainActivityRepository @Inject constructor(
     private fun runGetProjectInfo(projectIds: Set<String>) =
         remote.getProjectList(projectIds.toList())
             .catch { error ->
-                log(error.cause.toString())
+                //log(error.cause.toString())
+                checkError("runGetProjectInfo()", error)
             }
             .onEach { list ->
                 list.documentChanges.forEach { change ->
                     val project: Project = change.document.toObject()
                     when (change.type) {
-                        DocumentChange.Type.ADDED -> projectDAO.insertProject(project)
+                        DocumentChange.Type.ADDED -> {
+                            val result = projectDAO.checkProject(project.id)
+                            if (result == 0)
+                                notification.emit(
+                                    Notice(
+                                        "You added to ${project.title}",
+                                        project.description
+                                    )
+                                )
+                            projectDAO.insertProject(project)
+                        }
                         DocumentChange.Type.MODIFIED -> projectDAO.updateProject(project)
-                        DocumentChange.Type.REMOVED -> projectDAO.deleteProject(project.id)
+                        DocumentChange.Type.REMOVED -> {
+                            projectDAO.deleteProject(project.id)
+                        }
                     }
                 }
             }
             .launchIn(scope)
 
+    private fun checkError(msg: String, error: Throwable) {
+        log(msg)
+        when (error.cause) {
+            is SQLiteConstraintException -> {
+                // Handle SQLiteConstraintException error here
+                log("SQLiteConstraintException error: ${error.message}")
+            }
+            else -> {
+                // Handle other errors here
+                log("Error: ${error.message}")
+            }
+        }
+    }
+
     private fun runGetTasks(projectIds: Set<String>) =
         remote.getAllTasks(projectIds.toList())
             .catch { error ->
-            log(error.cause.toString())
-        }
+                checkError("runGetTasks", error)
+                // log(error.cause.toString())
+            }
             .onEach { list ->
-            list.documentChanges.forEach {
-                val task = it.document.toObject<Task>()
-                when (it.type) {
-                    DocumentChange.Type.ADDED -> taskDAO.insertTask(task)
-                    DocumentChange.Type.MODIFIED -> taskDAO.updateTask(task)
-                    DocumentChange.Type.REMOVED -> taskDAO.deleteTask(task)
+                list.documentChanges.forEach {
+                    val task = it.document.toObject<Task>()
+                    when (it.type) {
+                        DocumentChange.Type.ADDED -> taskDAO.insertTask(task)
+                        DocumentChange.Type.MODIFIED -> taskDAO.updateTask(task)
+                        DocumentChange.Type.REMOVED -> taskDAO.deleteTask(task)
+                    }
                 }
             }
-        }
             .launchIn(scope)
 
     private fun runGetMembers(projectIds: Set<String>) =
         remote.getProjectMembersAll(projectIds.toList())
             .catch { error ->
-                log(error.cause.toString())
+                // log(error.cause.toString())
+                checkError("runGetMembers", error)
             }
             .onEach { snapshot ->
                 val memberList = mutableListOf<Member>()
@@ -119,7 +153,16 @@ class MainActivityRepository @Inject constructor(
                             }
                         }
                         DocumentChange.Type.MODIFIED -> {}
-                        DocumentChange.Type.REMOVED -> userDAO.deleteMember(member)
+                        DocumentChange.Type.REMOVED -> {
+                            val project = projectDAO.getProjectInfo(member.projectId)
+                            notification.emit(
+                                Notice(
+                                    "You removed from ${project.title}",
+                                    project.description
+                                )
+                            )
+                            userDAO.deleteMember(member)
+                        }
                     }
                 }
                 if (memberList.size > 0) {
@@ -131,7 +174,7 @@ class MainActivityRepository @Inject constructor(
                         try {
                             userDAO.addMember(it)
                         } catch (error: Exception) {
-                            log(error)
+                            checkError("memberList.forEach", error)
                         }
                     }
                 }

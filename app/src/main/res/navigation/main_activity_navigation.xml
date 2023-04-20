@@ -68,6 +68,13 @@
         <action
             android:id="@+id/action_projectFragment_to_tasksListsFragment"
             app:destination="@id/tasksListsFragment" />
+        <action
+            android:id="@+id/action_projectFragment_to_calenderFragment"
+            app:destination="@id/calenderFragment"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim" />
     </fragment>
     <fragment
         android:id="@+id/manageProjectFragment"
@@ -86,4 +93,17 @@
         android:name="com.ganeshgfx.projectmanagement.views.ManageMemberFragment"
         android:label="Team Members"
         tools:layout="@layout/fragment_manage_member" />
+    <fragment
+        android:id="@+id/calenderFragment"
+        android:name="com.ganeshgfx.projectmanagement.CalenderFragment"
+        android:label="Calender"
+        tools:layout="@layout/fragment_calender" >
+        <action
+            android:id="@+id/action_calenderFragment_to_projectFragment"
+            app:destination="@id/projectFragment"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim" />
+    </fragment>
 </navigation>

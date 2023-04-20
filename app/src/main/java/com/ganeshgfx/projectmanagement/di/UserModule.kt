@@ -20,5 +20,5 @@ object UserModule {
 
     @Singleton
     @Provides
-    fun provideUserRepo(dao: UserDAO,helper: FirestoreHelper, scope: CoroutineScope) = UserRepo(dao,helper,scope)
+    fun provideUserRepo(dao: UserDAO,helper: FirestoreHelper) = UserRepo(dao,helper)
 }

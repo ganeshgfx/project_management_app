@@ -104,14 +104,15 @@ class TasksListsFragment : Fragment() {
             .setValidator(DateValidatorPointForward.now())
             .build()
         val datePicker =
-            MaterialDatePicker.Builder.datePicker()
-                .setTitleText("Select Task Due Date")
+            MaterialDatePicker.Builder.dateRangePicker()
+                .setTitleText("Select Task Due Date Range")
                 .setCalendarConstraints(constrains)
                 .build()
         datePicker.addOnPositiveButtonClickListener {
             //log(Date(it))
-            viewModel.date = it
-            viewModel.dateString.postValue(toDate(it))
+            viewModel.startDate = it.first
+            viewModel.endDate = it.second
+            viewModel.dateString.postValue(toDate(it.first,it.second))
         }
         datePicker.show(parentFragmentManager, "Select Task Due Date")
         view.clearFocus()

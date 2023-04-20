@@ -20,8 +20,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ManageMemberViewModel @Inject constructor(
-    private val userRepo: UserRepo,
-    private val repo: ProjectRepository
+    private val userRepo: UserRepo
 ) : ViewModel() {
     val search:MutableLiveData<String> = MutableLiveData("")
     val userListAdapter = UserListAdapter()

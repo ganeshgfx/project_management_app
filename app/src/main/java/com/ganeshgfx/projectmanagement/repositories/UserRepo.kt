@@ -25,40 +25,11 @@ import kotlin.coroutines.coroutineContext
 
 class UserRepo @Inject constructor(
     private val dao: UserDAO,
-    private val remote: FirestoreHelper,
-    private val scope: CoroutineScope
+    private val remote: FirestoreHelper
 ) {
     suspend fun searchUser(search: String) = remote.searchUsers(search)
 
     fun getProjectMembers(projectId: String): Flow<List<ProjectMember>> {
-//        remote.getProjectMembers(projectId)
-//            .snapshots().onEach { snapshot ->
-//                val memberList = mutableListOf<Member>()
-//                snapshot.documentChanges.forEach {
-//                    val member = Member(
-//                        projectId = it.document["projectId"].toString(),
-//                        uid = it.document["userId"].toString()
-//                    )
-//                    when (it.type) {
-//                        Type.ADDED -> {
-//                            if (remote.myUid != member.uid) {
-//                                memberList.add(member)
-//                            }
-//                        }
-//                        Type.MODIFIED -> {}
-//                        Type.REMOVED -> scope.launch { dao.deleteMember(member) }
-//                    }
-//                }
-//                if (memberList.size > 0) {
-//                    val users = remote.getUsers(memberList.map { it.uid })
-//                    users.forEach {
-//                        dao.insertUser(it!!)
-//                    }
-//                    memberList.forEach {
-//                        dao.addMember(it)
-//                    }
-//                }
-//            }.launchIn(scope)
         return dao.getProjectMember(projectId)
     }
 

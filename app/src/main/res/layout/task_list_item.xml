@@ -58,7 +58,7 @@
                          android:layout_height="wrap_content"
                          android:textAppearance="?attr/textAppearanceBodySmall"
                          android:textStyle="italic"
-                         android:visibility="@{data.dueDate!=null ? View.VISIBLE:View.GONE}"
+                         android:visibility="@{data.endDate!=null ? View.VISIBLE:View.GONE}"
                          android:text='@{"Due : "+data.toDate()}'
                          tools:text="⌚ : Loading" />
                      <TextView
