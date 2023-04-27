@@ -1,12 +1,17 @@
 package com.ganeshgfx.projectmanagement.Utils
 
+import android.app.job.JobInfo
+import android.app.job.JobScheduler
+import android.content.ComponentName
 import android.content.Context
 import android.graphics.Color
 import android.icu.text.SimpleDateFormat
 import android.view.View
 import android.view.inputmethod.InputMethodManager
+import com.ganeshgfx.projectmanagement.services.MainServices
 import com.google.android.material.shape.CornerFamily
 import com.google.android.material.shape.ShapeAppearanceModel
+import java.time.YearMonth
 import java.util.*
 
 fun randomString(length: Int): String {
@@ -54,3 +59,7 @@ fun makeShape(topRight: Float, topLeft: Float, bottomRight: Float, bottomLeft: F
         .setBottomLeftCorner(CornerFamily.ROUNDED, bottomLeft)
         .setBottomRightCorner(CornerFamily.ROUNDED, bottomRight)
         .build()
+
+
+fun getLastDay(year: Int, month: Int) =
+    YearMonth.of(year, month).atEndOfMonth().dayOfMonth

@@ -71,7 +71,6 @@
           tools:visibility="visible"
           android:fitsSystemWindows="true"
           android:id="@+id/projects_view"
-
           android:layout_height="match_parent">
 
 

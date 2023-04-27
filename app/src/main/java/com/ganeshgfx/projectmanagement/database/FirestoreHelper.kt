@@ -8,6 +8,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.*
 import com.google.firebase.firestore.ktx.snapshots
 import com.google.firebase.firestore.ktx.toObject
+import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.tasks.await
@@ -38,6 +39,7 @@ class FirestoreHelper(
         }
     }
 
+    // TODO: change to chunk of 10s
     suspend fun getUsers(ids: List<String>) =
         db.collection(USERS).whereIn("uid", ids).get().await().documents.map { it.toObject<User>() }
 
@@ -81,7 +83,7 @@ class FirestoreHelper(
         db.collection(MEMBERS).whereEqualTo(PROJECT_ID, projectID)
 
     fun getProjectMembersAll(projectIds: List<String>) =
-        db.collection(MEMBERS).whereIn(PROJECT_ID, projectIds).snapshots()
+        projectIds.chunked(10).map { db.collection(MEMBERS).whereIn(PROJECT_ID, it).snapshots() }.asFlow().flattenConcat()
 
     //USER RELATED CODE END
 
@@ -108,8 +110,10 @@ class FirestoreHelper(
     }
 
     fun getProjectImIn() = db.collection(MEMBERS).whereEqualTo(USER_ID, auth.uid).snapshots()
-    fun getProjectList(ids: List<String>) = db.collection(PROJECTS).whereIn(ID, ids).snapshots()
-    //PROJECT RELATED CODE END
+    fun getProjectList(ids: List<String>): Flow<QuerySnapshot> =
+        ids.chunked(10).map { db.collection(PROJECTS).whereIn(ID, it).snapshots() }.asFlow()
+            .flattenConcat()
+//PROJECT RELATED CODE END
 
     //TASK RELATED CODE START
     suspend fun addTask(task: Task): Task {
@@ -133,13 +137,20 @@ class FirestoreHelper(
         db.collection(TASKS).whereEqualTo(PROJECT_ID, projectId).getData()
 
     fun getAllTasks(projectIds: List<String>) =
-        db.collection(TASKS).whereIn(PROJECT_ID, projectIds).snapshots()
+        projectIds.chunked(10)
+            .map {
+                db.collection(TASKS)
+                    .whereIn(PROJECT_ID, it)
+                    .snapshots()
+            }
+            .asFlow()
+            .flattenConcat()
 
 
     suspend fun updateTask(task: Task) {
         db.collection(TASKS).document(task.id).update("status", task.status).await()
     }
-    //TASK RELATED CODE END
+//TASK RELATED CODE END
 }
 
 inline fun <reified T> CollectionReference.getData() = callbackFlow {

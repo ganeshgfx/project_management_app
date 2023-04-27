@@ -1,4 +1,4 @@
-package com.ganeshgfx.projectmanagement
+package com.ganeshgfx.projectmanagement.views
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -9,11 +9,11 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.ganeshgfx.projectmanagement.R
 import com.ganeshgfx.projectmanagement.Utils.log
 import com.ganeshgfx.projectmanagement.databinding.FragmentCalenderBinding
 import com.ganeshgfx.projectmanagement.viewModels.CalenderViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.delay
 
 @AndroidEntryPoint
 class CalenderFragment : Fragment() {
@@ -41,19 +41,25 @@ class CalenderFragment : Fragment() {
         binding.calender.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
                 super.onScrollStateChanged(recyclerView, newState)
-                when (newState) {
-                    RecyclerView.SCROLL_STATE_IDLE -> {
-                        viewModel.lastItem?.let {
-                            viewModel.newPage(it)
-                        }
-                    }
-                    RecyclerView.SCROLL_STATE_DRAGGING -> {
-
-                    }
-                    RecyclerView.SCROLL_STATE_SETTLING -> {
-
+                viewModel.lastItem?.let {
+                    recyclerView.post {
+                        viewModel.newPage(it)
                     }
                 }
+//                when (newState) {
+//                    RecyclerView.SCROLL_STATE_IDLE -> {
+//                        viewModel.lastItem?.let {
+//                            log(it)
+//                            viewModel.newPage(it)
+//                        }
+//                    }
+//                    RecyclerView.SCROLL_STATE_DRAGGING -> {
+//
+//                    }
+//                    RecyclerView.SCROLL_STATE_SETTLING -> {
+//
+//                    }
+//                }
             }
         })
 

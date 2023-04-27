@@ -20,4 +20,6 @@
     <color name="taskInBack">#E7B10A</color>
     <color name="taskPending">#F0EEED</color>
     <color name="taskPendingBack">#F0EEED</color>
+
+    <color name="appLogoBack">#2F2F2F</color>
 </resources>

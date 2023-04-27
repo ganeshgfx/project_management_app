@@ -53,6 +53,7 @@ class MainActivityRepository @Inject constructor(
                                 userDAO.insertUser(User(uid = member.uid))
                             projectIds.add(pid)
                         }
+
                         DocumentChange.Type.MODIFIED -> {}
                         DocumentChange.Type.REMOVED -> projectDAO.deleteProject(member.projectId)
                     }
@@ -71,10 +72,9 @@ class MainActivityRepository @Inject constructor(
             .launchIn(scope)
     }
 
-    private fun runGetProjectInfo(projectIds: Set<String>) =
-        remote.getProjectList(projectIds.toList())
+    private fun runGetProjectInfo(projectIds: Set<String>): Job {
+        return remote.getProjectList(projectIds.toList())
             .catch { error ->
-                //log(error.cause.toString())
                 checkError("runGetProjectInfo()", error)
             }
             .onEach { list ->
@@ -92,6 +92,7 @@ class MainActivityRepository @Inject constructor(
                                 )
                             projectDAO.insertProject(project)
                         }
+
                         DocumentChange.Type.MODIFIED -> projectDAO.updateProject(project)
                         DocumentChange.Type.REMOVED -> {
                             projectDAO.deleteProject(project.id)
@@ -100,14 +101,16 @@ class MainActivityRepository @Inject constructor(
                 }
             }
             .launchIn(scope)
+    }
 
     private fun checkError(msg: String, error: Throwable) {
         log(msg)
         when (error.cause) {
             is SQLiteConstraintException -> {
                 // Handle SQLiteConstraintException error here
-                log("SQLiteConstraintException error: ${error.message}")
+                log("SQLiteConstraintException error: ${error.message}", error)
             }
+
             else -> {
                 // Handle other errors here
                 log("Error: ${error.message}")
@@ -119,7 +122,7 @@ class MainActivityRepository @Inject constructor(
         remote.getAllTasks(projectIds.toList())
             .catch { error ->
                 checkError("runGetTasks", error)
-                // log(error.cause.toString())
+                //log(error.cause.toString())
             }
             .onEach { list ->
                 list.documentChanges.forEach {
@@ -152,16 +155,20 @@ class MainActivityRepository @Inject constructor(
                                 memberList.add(member)
                             }
                         }
+
                         DocumentChange.Type.MODIFIED -> {}
                         DocumentChange.Type.REMOVED -> {
                             val project = projectDAO.getProjectInfo(member.projectId)
-                            notification.emit(
-                                Notice(
-                                    "You removed from ${project.title}",
-                                    project.description
+                            try {
+                                notification.emit(
+                                    Notice(
+                                        "You removed from ${project.title}",
+                                        project.description
+                                    )
                                 )
-                            )
-                            userDAO.deleteMember(member)
+                                userDAO.deleteMember(member)
+                            } catch (error: NullPointerException) {
+                            }
                         }
                     }
                 }

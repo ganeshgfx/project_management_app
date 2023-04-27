@@ -24,7 +24,7 @@
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="8dp"
-        app:cardElevation="5dp">
+        >
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -35,6 +35,18 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
+
+                <org.eazegraph.lib.charts.PieChart
+                    android:id="@+id/pie_chart"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_gravity="center"
+                    android:layout_margin="5dp"
+                    app:egAnimationTime="500"
+                    app:egInnerPadding="50"
+                    android:visibility="@{data.tasks.empty ? View.GONE:View.VISIBLE}"
+                    app:egInnerPaddingColor="?attr/colorSurface"
+                    app:egInnerPaddingOutline="0" />
 
                 <LinearLayout
                     android:layout_width="wrap_content"
@@ -47,7 +59,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="10dp"
                         android:text="@{data.project.title}"
-                        android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
+                        android:textAppearance="@style/TextAppearance.Material3.TitleLarge"
                         tools:text="Project Name" />
 
                     <TextView
@@ -55,7 +67,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="10dp"
                         android:text="@{data.project.description}"
-                        android:textAppearance="@style/TextAppearance.Material3.BodySmall"
+                        android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
                         tools:text="Project Name" />
                 </LinearLayout>
 
@@ -137,17 +149,6 @@
                         tools:text="Done : 10" />
 
                 </com.google.android.flexbox.FlexboxLayout>
-
-                <org.eazegraph.lib.charts.PieChart
-                    android:id="@+id/pie_chart"
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
-                    android:layout_gravity="center"
-                    android:layout_margin="5dp"
-                    app:egAnimationTime="500"
-                    app:egInnerPadding="50"
-                    app:egInnerPaddingColor="?attr/colorSurface"
-                    app:egInnerPaddingOutline="0" />
             </LinearLayout>
 
             <com.google.android.material.divider.MaterialDivider

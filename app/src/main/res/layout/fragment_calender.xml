@@ -17,7 +17,7 @@
         android:layout_height="match_parent"
         android:paddingTop="20dp"
         android:paddingBottom="10dp"
-        tools:context=".CalenderFragment">
+        tools:context=".views.CalenderFragment">
         <androidx.recyclerview.widget.RecyclerView
             android:visibility="@{vm.loading ? View.GONE : View.VISIBLE}"
             android:id="@+id/calender"

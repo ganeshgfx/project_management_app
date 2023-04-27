@@ -95,7 +95,7 @@
         tools:layout="@layout/fragment_manage_member" />
     <fragment
         android:id="@+id/calenderFragment"
-        android:name="com.ganeshgfx.projectmanagement.CalenderFragment"
+        android:name="com.ganeshgfx.projectmanagement.views.CalenderFragment"
         android:label="Calender"
         tools:layout="@layout/fragment_calender" >
         <action

@@ -38,8 +38,12 @@ class CalenderAdapter(private var list: MutableList<List<Day>> = mutableListOf()
         binding.week.setOnClickListener { day ->
             onClickListener?.let { it -> it(day) }
         }
-
-        onLastItemLoad?.let { it -> it(if (position == list.size - 1) week.last() else null) }
+        onLastItemLoad?.let { day ->
+            val temp = list.size - 1
+            val condition = position == temp
+            //log(position,temp,condition)
+            day(if (condition) week.last() else null)
+        }
     }
 
     private var onClickListener: ((Day?) -> Unit)? = null

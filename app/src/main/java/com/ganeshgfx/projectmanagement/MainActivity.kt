@@ -2,16 +2,17 @@ package com.ganeshgfx.projectmanagement
 
 import android.content.Intent
 import android.graphics.Color
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.TypedValue
 import androidx.activity.viewModels
+import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
 import com.ganeshgfx.projectmanagement.databinding.ActivityMainBinding
-import com.ganeshgfx.projectmanagement.services.MainServices
 import com.ganeshgfx.projectmanagement.viewModels.MainActivityViewModel
 import dagger.hilt.android.AndroidEntryPoint
+
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
@@ -54,23 +55,28 @@ class MainActivity : AppCompatActivity() {
             when (destination.id) {
                 R.id.projectFragment -> {
                     viewModel.hideBottomAppBar(true)
+//                    val typedValue = TypedValue()
+//                    theme.resolveAttribute(androidx.appcompat.R.attr.colorPrimary, typedValue, true)
+//                    typedValue.data
+                    window.navigationBarColor = Color.TRANSPARENT
                 }
+
                 R.id.calenderFragment -> {
                     viewModel.hideBottomAppBar(false)
+                    window.navigationBarColor = Color.TRANSPARENT
                 }
+
                 R.id.projectOverviewFragment -> {
                     viewModel.hideBottomAppBar(false)
+                    window.navigationBarColor = Color.TRANSPARENT
                 }
+
                 R.id.tasksListsFragment -> {
                     viewModel.hideBottomAppBar(false)
+                    window.navigationBarColor = Color.TRANSPARENT
                 }
             }
         }
-        startService(Intent(this, MainServices::class.java))
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
     }
 
 }

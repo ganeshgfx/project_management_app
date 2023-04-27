@@ -3,6 +3,7 @@ package com.ganeshgfx.projectmanagement.viewModels
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.ganeshgfx.projectmanagement.Utils.getLastDay
 import com.ganeshgfx.projectmanagement.Utils.log
 import com.ganeshgfx.projectmanagement.adapters.CalenderAdapter
 import com.ganeshgfx.projectmanagement.models.Day
@@ -44,7 +45,7 @@ class CalenderViewModel @Inject constructor() : ViewModel() {
 
     private fun getCalender(): List<Day> {
         val year = Year.now().value
-        val days = (1..2).map { month ->
+        val days = (1..3).map { month ->
             getMonthDays(month, year)
         }.flatten()
         return days
@@ -54,7 +55,7 @@ class CalenderViewModel @Inject constructor() : ViewModel() {
         month: Int,
         year: Int
     ): List<Day> {
-        val lastDay: Int = YearMonth.of(year, month).atEndOfMonth().dayOfMonth
+        val lastDay: Int = getLastDay(year, month)
         val days = (1..lastDay).map { day ->
             Day(day, month, year)
         }
