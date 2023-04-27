@@ -1,7 +1,6 @@
 package com.ganeshgfx.projectmanagement.repositories
 
 import android.database.sqlite.SQLiteConstraintException
-import androidx.lifecycle.MutableLiveData
 import com.ganeshgfx.projectmanagement.Utils.log
 import com.ganeshgfx.projectmanagement.database.FirestoreHelper
 import com.ganeshgfx.projectmanagement.database.ProjectDAO
@@ -149,23 +148,24 @@ class MainActivityRepository @Inject constructor(
                         projectId = it.document["projectId"].toString(),
                         uid = it.document["userId"].toString()
                     )
+                    //log(member)
+                    //val project = getProject(member.projectId)
                     when (it.type) {
                         DocumentChange.Type.ADDED -> {
                             if (remote.myUid != member.uid) {
                                 memberList.add(member)
+                                notify("New Member Added", "New Member Added to ")
                             }
                         }
 
                         DocumentChange.Type.MODIFIED -> {}
                         DocumentChange.Type.REMOVED -> {
-                            val project = projectDAO.getProjectInfo(member.projectId)
                             try {
-                                notification.emit(
-                                    Notice(
-                                        "You removed from ${project.title}",
-                                        project.description
-                                    )
-                                )
+                                if(member.uid == remote.myUid) {
+                                    notify("You removed from project", "You removed from project ")
+                                }else{
+                                    notify("Member removed from project", "Member removed from project")
+                                }
                                 userDAO.deleteMember(member)
                             } catch (error: NullPointerException) {
                             }
@@ -187,4 +187,11 @@ class MainActivityRepository @Inject constructor(
                 }
             }
             .launchIn(scope)
+
+    private suspend fun notify(title: String, info: String) {
+        notification.emit(Notice(title, info))
+    }
+
+    private fun getProject(id: String) =
+        projectDAO.getProjectInfo(id)
 }

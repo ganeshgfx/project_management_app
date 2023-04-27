@@ -1,6 +1,7 @@
 package com.ganeshgfx.projectmanagement.views.custom
 
 import android.content.Context
+import android.content.res.Resources.Theme
 import android.graphics.Color
 import android.util.AttributeSet
 import android.util.DisplayMetrics
@@ -17,13 +18,15 @@ import com.ganeshgfx.projectmanagement.models.Day
 import com.google.android.material.card.MaterialCardView
 import com.google.android.material.divider.MaterialDivider
 import com.google.android.material.shape.ShapeAppearanceModel
+import kotlin.math.roundToInt
+
 
 class WeekView(
     private val context: Context,
     attrs: AttributeSet
 ) : LinearLayout(context, attrs) {
 
-    class CardShape(private val displayMetrics: DisplayMetrics) {
+    class CardShape(private val displayMetrics: DisplayMetrics, theme: Theme) {
 
         private val SMALL = 0f
         private val LARGE = 25f
@@ -31,7 +34,15 @@ class WeekView(
 //        val str = randomString(10)
 
         @ColorInt
-        val activeColor = Color.argb(100, 225, 217, 102)
+        var activeColor = Color.argb(100, 225, 217, 102)
+
+        init {
+            val typedValue = TypedValue()
+            theme.resolveAttribute(androidx.appcompat.R.attr.colorPrimary, typedValue, true)
+            activeColor = typedValue.data
+            activeColor = adjustAlpha(activeColor,0.25F)
+        }
+
         val taskStart: ShapeAppearanceModel = makeShape(
             cornerValue(SMALL),
             cornerValue(LARGE),
@@ -61,9 +72,9 @@ class WeekView(
         companion object {
             private var instance: CardShape? = null
 
-            fun getInstance(displayMetrics: DisplayMetrics): CardShape {
+            fun getInstance(displayMetrics: DisplayMetrics, theme: Theme): CardShape {
                 if (instance == null) {
-                    instance = CardShape(displayMetrics)
+                    instance = CardShape(displayMetrics, theme)
                 }
                 return instance as CardShape
             }
@@ -74,7 +85,7 @@ class WeekView(
         }
     }
 
-    val shape = CardShape.getInstance(context.resources.displayMetrics)
+    val shape = CardShape.getInstance(context.resources.displayMetrics, context.theme)
 
     fun setWeek(week: List<Day>) {
         removeAllViews()
@@ -152,12 +163,15 @@ class WeekView(
                 range.first -> {
                     cardView.shapeAppearanceModel = shape.taskStart
                 }
+
                 range.last -> {
                     cardView.shapeAppearanceModel = shape.taskEnd
                 }
+
                 in range -> {
                     cardView.shapeAppearanceModel = shape.taskMiddle
                 }
+
                 else -> cardView.setCardBackgroundColor(Color.TRANSPARENT)
             }
         }
@@ -192,4 +206,12 @@ class WeekView(
 
     val Int.dp get() = (this * resources.displayMetrics.density + 0.5f).toInt()
 
+}
+@ColorInt
+fun adjustAlpha(@ColorInt color: Int, factor: Float): Int {
+    val alpha = (Color.alpha(color) * factor).roundToInt()
+    val red = Color.red(color)
+    val green = Color.green(color)
+    val blue = Color.blue(color)
+    return Color.argb(alpha, red, green, blue)
 }

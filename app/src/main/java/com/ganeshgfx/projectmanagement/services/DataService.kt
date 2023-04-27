@@ -19,8 +19,8 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class DataService : JobService() {
     private var jobCanceled = false
-    private val job = SupervisorJob()
-    private val scope = CoroutineScope(Dispatchers.IO + job)
+    //private val job = SupervisorJob()
+    //private val scope = CoroutineScope(Dispatchers.IO + job)
 
     @Inject
     lateinit var repo: MainActivityRepository
@@ -28,20 +28,23 @@ class DataService : JobService() {
     @Inject
     lateinit var notifications: Notifications
 
+    @Inject
+    lateinit var scope: CoroutineScope
+
     override fun onStartJob(jobParameters: JobParameters): Boolean {
-        scope.launch {
+        //scope.launch {
             doBackgroundWork(jobParameters)
             //jobFinished(jobParameters, false)
-        }
-        scope.launch {
-            var time = 0
-            val str = randomString(10)
-            while (true) {
-                delay(1000)
-                log("JOB RUNNING", str, time)
-                time++
-            }
-        }
+        //}
+//        scope.launch {
+//            var time = 0
+//            val str = randomString(10)
+//            while (true) {
+//                delay(1000)
+//                log("JOB RUNNING", str, time)
+//                time++
+//            }
+//        }
         return true
     }
 

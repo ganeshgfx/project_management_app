@@ -52,7 +52,7 @@ class MainServices() : Service() {
             notifications.show(it)
         }.launchIn(scope)
         repo.startJob()
-        var count = 0
+      //var count = 0
 //        scope.launch(Dispatchers.IO) {
 //            while (true) {
 //                delay(1000)
