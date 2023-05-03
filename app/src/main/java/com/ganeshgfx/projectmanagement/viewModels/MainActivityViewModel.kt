@@ -1,9 +1,8 @@
 package com.ganeshgfx.projectmanagement.viewModels
 
 import androidx.lifecycle.*
-import com.ganeshgfx.projectmanagement.Utils.log
 import com.ganeshgfx.projectmanagement.repositories.AuthRepo
-import com.ganeshgfx.projectmanagement.repositories.MainActivityRepository
+import com.ganeshgfx.projectmanagement.repositories.MainRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -12,7 +11,7 @@ import javax.inject.Inject
 @HiltViewModel
 class MainActivityViewModel @Inject constructor(
     authRepo: AuthRepo,
-    repo: MainActivityRepository
+    repo: MainRepository
 ) : ViewModel() {
 
     init {

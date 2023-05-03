@@ -10,7 +10,7 @@ import com.ganeshgfx.projectmanagement.MainActivity
 import com.ganeshgfx.projectmanagement.R
 import com.ganeshgfx.projectmanagement.models.Notice
 
-class Notifications(private val context: Context) {
+class NotificationHelper(private val context: Context) {
 
     private val manager =
         context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager

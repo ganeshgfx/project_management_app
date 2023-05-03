@@ -1,5 +1,6 @@
 package com.ganeshgfx.projectmanagement.Utils
 
+import android.annotation.SuppressLint
 import android.app.job.JobInfo
 import android.app.job.JobScheduler
 import android.content.ComponentName
@@ -29,13 +30,36 @@ fun randomString(length: Int): String {
 fun toDate(start: Long?, end: Long?): String =
     "${
         if (start != null) {
-            SimpleDateFormat("dd/MM/yyyy").format(Date(start)) + " - "
+            dateString(start) + " - "
         } else ""
     } ${
         if (end != null) {
-            SimpleDateFormat("dd/MM/yyyy").format(Date(end))
+            dateString(end)
         } else ""
     }"
+
+private const val DD_MM_YYYY = "dd/MM/yyyy"
+
+fun dateString(start: Long): String? =
+    SimpleDateFormat(DD_MM_YYYY).format(Date(start))
+
+fun epochMillis(date: String): Long {
+    val format = SimpleDateFormat(DD_MM_YYYY)
+    val date = format.parse(date)
+    val calendar = Calendar.getInstance()
+    calendar.time = date
+    val epochMillis: Long = calendar.timeInMillis
+    return epochMillis
+}
+
+
+fun isInRange(dateString: String, startDateString: String, endDateString: String): Boolean {
+    val dateFormat = SimpleDateFormat(DD_MM_YYYY, Locale.getDefault())
+    val date = dateFormat.parse(dateString)
+    val startDate = dateFormat.parse(startDateString)
+    val endDate = dateFormat.parse(endDateString)
+    return date in startDate..endDate
+}
 
 fun hideSoftKeyBord(view: View) {
     val imm = view.context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager

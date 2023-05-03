@@ -50,6 +50,9 @@
             android:name="project_id"
             app:argType="long"
             android:defaultValue="-1L" />
+        <action
+            android:id="@+id/action_tasksListsFragment_to_calenderFragment"
+            app:destination="@id/calenderFragment" />
     </fragment>
     <fragment
         android:id="@+id/projectFragment"
@@ -105,5 +108,8 @@
             app:exitAnim="@anim/nav_default_exit_anim"
             app:popEnterAnim="@anim/nav_default_pop_enter_anim"
             app:popExitAnim="@anim/nav_default_pop_exit_anim" />
+        <action
+            android:id="@+id/action_calenderFragment_to_tasksListsFragment"
+            app:destination="@id/tasksListsFragment" />
     </fragment>
 </navigation>

@@ -22,4 +22,5 @@
     <color name="taskPendingBack">#F0EEED</color>
 
     <color name="appLogoBack">#B6B6B6</color>
+    <color name="text">#1C1C1C</color>
 </resources>

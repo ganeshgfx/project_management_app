@@ -2,8 +2,8 @@ package com.ganeshgfx.projectmanagement.di
 
 import android.content.Context
 import com.ganeshgfx.projectmanagement.database.*
-import com.ganeshgfx.projectmanagement.repositories.MainActivityRepository
-import com.ganeshgfx.projectmanagement.services.Notifications
+import com.ganeshgfx.projectmanagement.repositories.MainRepository
+import com.ganeshgfx.projectmanagement.services.NotificationHelper
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -27,7 +27,7 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideNotification(@ApplicationContext context: Context): Notifications = Notifications(context)
+    fun provideNotification(@ApplicationContext context: Context): NotificationHelper = NotificationHelper(context)
 
     @Provides
     @Singleton
@@ -37,6 +37,6 @@ object AppModule {
         taskDAO: TaskDAO,
         remote: FirestoreHelper,
         scope: CoroutineScope
-    ): MainActivityRepository = MainActivityRepository(userDAO, projectDAO, taskDAO, remote, scope)
+    ): MainRepository = MainRepository(userDAO, projectDAO, taskDAO, remote, scope)
 
 }

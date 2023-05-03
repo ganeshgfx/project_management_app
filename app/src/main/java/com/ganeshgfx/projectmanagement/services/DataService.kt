@@ -3,17 +3,12 @@ package com.ganeshgfx.projectmanagement.services
 import android.app.job.JobParameters
 import android.app.job.JobService
 import com.ganeshgfx.projectmanagement.Utils.log
-import com.ganeshgfx.projectmanagement.Utils.randomString
 import com.ganeshgfx.projectmanagement.models.Notice
-import com.ganeshgfx.projectmanagement.repositories.MainActivityRepository
+import com.ganeshgfx.projectmanagement.repositories.MainRepository
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.SupervisorJob
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -23,10 +18,10 @@ class DataService : JobService() {
     //private val scope = CoroutineScope(Dispatchers.IO + job)
 
     @Inject
-    lateinit var repo: MainActivityRepository
+    lateinit var repo: MainRepository
 
     @Inject
-    lateinit var notifications: Notifications
+    lateinit var notifications: NotificationHelper
 
     @Inject
     lateinit var scope: CoroutineScope
@@ -51,7 +46,7 @@ class DataService : JobService() {
     private fun doBackgroundWork(jobParameters: JobParameters): Boolean {
        // notifications.show(Notice("Project Management", "JOB Started"))
         repo.notification.onEach {
-            log(it)
+            //log(it)
             notifications.show(it)
         }.launchIn(scope)
         repo.startJob()

@@ -7,11 +7,9 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.ganeshgfx.projectmanagement.Utils.TaskListDiffUtil
-import com.ganeshgfx.projectmanagement.Utils.log
 import com.ganeshgfx.projectmanagement.Utils.makeShape
 import com.ganeshgfx.projectmanagement.databinding.TaskListItemBinding
 import com.ganeshgfx.projectmanagement.models.Task
-import com.google.android.material.shape.CornerFamily
 import com.google.android.material.shape.ShapeAppearanceModel
 
 class TaskListRecyclerViewAdapter(private var taskList: MutableList<Task> = mutableListOf()) :
@@ -63,7 +61,10 @@ class TaskListRecyclerViewAdapter(private var taskList: MutableList<Task> = muta
                 if (hasFocus) {
                     clickListener.onClick(position)
                     shapeAppearanceModel = focusCardShape!!
-                } else shapeAppearanceModel = normalCardShape!!
+                } else {
+                    shapeAppearanceModel = normalCardShape!!
+                    clickListener.onClick(null)
+                }
                 toggleTaskEditView(holder, hasFocus)
                 editisible = hasFocus
             }

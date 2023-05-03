@@ -5,15 +5,11 @@ import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.job.JobInfo
 import android.app.job.JobScheduler
-import android.app.job.JobService
 import android.content.ComponentName
 import android.content.Context
-import android.content.Intent
-import android.os.Build
 import com.ganeshgfx.projectmanagement.Utils.log
 import com.ganeshgfx.projectmanagement.services.DataService
-import com.ganeshgfx.projectmanagement.services.MainServices
-import com.ganeshgfx.projectmanagement.services.Notifications
+import com.ganeshgfx.projectmanagement.services.NotificationHelper
 import com.google.android.material.color.DynamicColors.applyToActivitiesIfAvailable
 import dagger.hilt.android.HiltAndroidApp
 
@@ -35,7 +31,7 @@ class MainApplication : Application() {
 
     private fun createNotificationChannel() {
         val channel = NotificationChannel(
-            Notifications.GENERAL,
+            NotificationHelper.GENERAL,
             "General",
             NotificationManager.IMPORTANCE_DEFAULT
         )

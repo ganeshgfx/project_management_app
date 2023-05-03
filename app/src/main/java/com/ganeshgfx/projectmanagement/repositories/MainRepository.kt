@@ -8,13 +8,18 @@ import com.ganeshgfx.projectmanagement.database.TaskDAO
 import com.ganeshgfx.projectmanagement.database.UserDAO
 import com.ganeshgfx.projectmanagement.models.*
 import com.google.firebase.firestore.DocumentChange
+import com.google.firebase.firestore.DocumentChange.Type
+import com.google.firebase.firestore.DocumentChange.Type.ADDED
+import com.google.firebase.firestore.DocumentChange.Type.MODIFIED
+import com.google.firebase.firestore.DocumentChange.Type.REMOVED
 import com.google.firebase.firestore.ktx.toObject
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.job
 import javax.inject.Inject
 
-class MainActivityRepository @Inject constructor(
+class MainRepository @Inject constructor(
     private val userDAO: UserDAO,
     private val projectDAO: ProjectDAO,
     private val taskDAO: TaskDAO,
@@ -47,14 +52,14 @@ class MainActivityRepository @Inject constructor(
                     val uid = it.document.data["userId"].toString()
                     val member = Member(projectId = pid, uid = uid)
                     when (it.type) {
-                        DocumentChange.Type.ADDED -> {
+                        ADDED -> {
                             if (uid != remote.myUid)
                                 userDAO.insertUser(User(uid = member.uid))
                             projectIds.add(pid)
                         }
 
-                        DocumentChange.Type.MODIFIED -> {}
-                        DocumentChange.Type.REMOVED -> projectDAO.deleteProject(member.projectId)
+                        MODIFIED -> {}
+                        REMOVED -> projectDAO.deleteProject(member.projectId)
                     }
                 }
                 if (projectIds.isNotEmpty()) {
@@ -71,6 +76,7 @@ class MainActivityRepository @Inject constructor(
             .launchIn(scope)
     }
 
+    //private var imAddedToProject = false
     private fun runGetProjectInfo(projectIds: Set<String>): Job {
         return remote.getProjectList(projectIds.toList())
             .catch { error ->
@@ -80,20 +86,23 @@ class MainActivityRepository @Inject constructor(
                 list.documentChanges.forEach { change ->
                     val project: Project = change.document.toObject()
                     when (change.type) {
-                        DocumentChange.Type.ADDED -> {
+                        ADDED -> {
                             val result = projectDAO.checkProject(project.id)
-                            if (result == 0)
+                            //imAddedToProject = false
+                            if (result == 0 && project.uid != remote.myUid) {
+                                // imAddedToProject = true
                                 notification.emit(
                                     Notice(
                                         "You added to ${project.title}",
                                         project.description
                                     )
                                 )
+                            }
                             projectDAO.insertProject(project)
                         }
 
-                        DocumentChange.Type.MODIFIED -> projectDAO.updateProject(project)
-                        DocumentChange.Type.REMOVED -> {
+                        MODIFIED -> projectDAO.updateProject(project)
+                        REMOVED -> {
                             projectDAO.deleteProject(project.id)
                         }
                     }
@@ -127,9 +136,21 @@ class MainActivityRepository @Inject constructor(
                 list.documentChanges.forEach {
                     val task = it.document.toObject<Task>()
                     when (it.type) {
-                        DocumentChange.Type.ADDED -> taskDAO.insertTask(task)
-                        DocumentChange.Type.MODIFIED -> taskDAO.updateTask(task)
-                        DocumentChange.Type.REMOVED -> taskDAO.deleteTask(task)
+                        ADDED -> {
+                            val result = taskDAO.insertTask(task)
+                            if (result > 0)
+                                notify("Task Added", "${task.title}")
+                        }
+
+                        MODIFIED -> {
+                            taskDAO.updateTask(task)
+                            notify("Task Updated", "${task.title} : ${task.status}")
+                        }
+
+                        REMOVED -> {
+                            taskDAO.deleteTask(task)
+                            notify("Task Removed", "${task.title}")
+                        }
                     }
                 }
             }
@@ -138,37 +159,36 @@ class MainActivityRepository @Inject constructor(
     private fun runGetMembers(projectIds: Set<String>) =
         remote.getProjectMembersAll(projectIds.toList())
             .catch { error ->
-                // log(error.cause.toString())
                 checkError("runGetMembers", error)
             }
             .onEach { snapshot ->
+                log("hre")
                 val memberList = mutableListOf<Member>()
                 snapshot.documentChanges.forEach {
                     val member = Member(
                         projectId = it.document["projectId"].toString(),
                         uid = it.document["userId"].toString()
                     )
-                    //log(member)
-                    //val project = getProject(member.projectId)
+                    val project = getProject(member.projectId)
                     when (it.type) {
-                        DocumentChange.Type.ADDED -> {
-                            if (remote.myUid != member.uid) {
-                                memberList.add(member)
-                                notify("New Member Added", "New Member Added to ")
-                            }
+                        ADDED -> {
+                            //if (remote.myUid != member.uid) {
+                            memberList.add(member)
+                            //}
                         }
 
-                        DocumentChange.Type.MODIFIED -> {}
-                        DocumentChange.Type.REMOVED -> {
-                            try {
-                                if(member.uid == remote.myUid) {
-                                    notify("You removed from project", "You removed from project ")
-                                }else{
-                                    notify("Member removed from project", "Member removed from project")
-                                }
-                                userDAO.deleteMember(member)
-                            } catch (error: NullPointerException) {
-                            }
+                        MODIFIED -> {}
+                        REMOVED -> {
+                            if (member.uid == remote.myUid)
+                                notify(
+                                    "Member removed",
+                                    "You removed from project ${project.title}"
+                                )
+                            else notify(
+                                "Member removed",
+                                "${getUser(member.uid).displayName} removed from project ${project.title}"
+                            )
+                            userDAO.deleteMember(member)
                         }
                     }
                 }
@@ -179,7 +199,15 @@ class MainActivityRepository @Inject constructor(
                     }
                     memberList.forEach {
                         try {
-                            userDAO.addMember(it)
+                            val result = userDAO.addMember(it)
+                            val user = getUser(it.uid)
+                            val project = getProject(it.projectId)
+                            if (result > 0) {
+                                notify(
+                                    "New Member Added",
+                                    "${user.displayName} Added to  ${project.title} "
+                                )
+                            }
                         } catch (error: Exception) {
                             checkError("memberList.forEach", error)
                         }
@@ -192,6 +220,15 @@ class MainActivityRepository @Inject constructor(
         notification.emit(Notice(title, info))
     }
 
-    private fun getProject(id: String) =
-        projectDAO.getProjectInfo(id)
+    private suspend fun getProject(id: String): Project {
+        val project = projectDAO.getProjectInfo(id)
+        //log(project)
+        return project
+    }
+
+    private suspend fun getUser(id: String): User {
+        val user = userDAO.getUser(id)
+        //log(project)
+        return user
+    }
 }

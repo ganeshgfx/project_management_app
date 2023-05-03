@@ -13,9 +13,10 @@ interface UserDAO {
     suspend fun insertUser(user: User): Long
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    suspend fun addMember(member: Member)
+    suspend fun addMember(member: Member): Long
+
     @Delete
-    suspend fun deleteMember(member: Member):Int
+    suspend fun deleteMember(member: Member): Int
 
     @Query("SELECT user.* from user INNER JOIN member ON user.uid = member.uid WHERE member.projectId = :projectId;")
     fun getMembers(projectId: String): Flow<List<User>>
@@ -25,4 +26,7 @@ interface UserDAO {
 
     @Query("DELETE from member WHERE projectId = :projectId AND uid = :uid")
     suspend fun deleteProjectMember(projectId: String, uid: String)
+
+    @Query("SELECT * from user WHERE uid=:id")
+    suspend fun getUser(id: String): User
 }

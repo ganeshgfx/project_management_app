@@ -39,4 +39,8 @@ class TaskListRepository @Inject constructor(
         remote.updateTask(task)
         return dao.updateTask(task)
     }
+    suspend fun deleteTask(task: Task){
+        remote.deleteTask(task)
+    }
+
 }

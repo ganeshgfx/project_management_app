@@ -36,11 +36,15 @@ class WeekView(
         @ColorInt
         var activeColor = Color.argb(100, 225, 217, 102)
 
+        @ColorInt
+        var activeTextColor = Color.argb(100, 225, 217, 102)
+
         init {
             val typedValue = TypedValue()
             theme.resolveAttribute(androidx.appcompat.R.attr.colorPrimary, typedValue, true)
             activeColor = typedValue.data
-            activeColor = adjustAlpha(activeColor,0.25F)
+            activeColor = adjustAlpha(activeColor, 0.25F)
+
         }
 
         val taskStart: ShapeAppearanceModel = makeShape(
@@ -113,7 +117,7 @@ class WeekView(
         if (showMonthLine || lastWeek) {
 
             val divider = MaterialDivider(context)
-            val width = 2.dp
+            val width = 1.dp
             var dividerParams = FrameLayout.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT,
                 width
@@ -143,6 +147,7 @@ class WeekView(
             divider.layoutParams = dividerParams
             divider.setBackgroundColor(Color.GRAY)
             frameLayout.addView(divider)
+            //log(day.text, day.isTaskDay)
         }
 
         val cardView = MaterialCardView(context)
@@ -156,20 +161,21 @@ class WeekView(
         cardView.layoutParams = layoutParams
         cardView.radius = 0F
         cardView.strokeColor = Color.argb(0, 0, 0, 0)
-        cardView.setCardBackgroundColor(shape.activeColor)
+        //cardView.setCardBackgroundColor(shape.activeColor)
+        cardView.setCardBackgroundColor(Color.TRANSPARENT)
         val range = 5..10
         day?.let {
             when (it.day) {
                 range.first -> {
-                    cardView.shapeAppearanceModel = shape.taskStart
+                    //cardView.shapeAppearanceModel = shape.taskStart
                 }
 
                 range.last -> {
-                    cardView.shapeAppearanceModel = shape.taskEnd
+                    //cardView.shapeAppearanceModel = shape.taskEnd
                 }
 
                 in range -> {
-                    cardView.shapeAppearanceModel = shape.taskMiddle
+                    //cardView.shapeAppearanceModel = shape.taskMiddle
                 }
 
                 else -> cardView.setCardBackgroundColor(Color.TRANSPARENT)
@@ -178,20 +184,36 @@ class WeekView(
 
         cardView.isClickable = true
         cardView.setOnClickListener {
-            onClickListener?.let { it -> it(day) }
+            onClickListener?.let { it -> it(if (day.isTaskDay) day else null) }
         }
-
+        val params =
+            LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.MATCH_PARENT
+            )
+        params.gravity = Gravity.CENTER
+        if (day.isTaskDay) {
+            val params =
+                LayoutParams(
+                    ViewGroup.LayoutParams.WRAP_CONTENT,
+                    ViewGroup.LayoutParams.WRAP_CONTENT
+                )
+            params.gravity = Gravity.START
+            val dot = TextView(context)
+            dot.text = "*"
+            dot.textSize = 50F
+            dot.setTextColor(Color.RED)
+            //button.setBackgroundColor(shape.activeColor)
+            dot.layoutParams = params
+            dot.setPadding(0.dp, 0.dp, 0.dp, 0.dp)
+            frameLayout.addView(dot)
+        }
         val textView = TextView(context)
-        val textViewLayoutParams =
-            LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
-        textViewLayoutParams.gravity = Gravity.CENTER
-        textView.layoutParams = textViewLayoutParams
+        textView.layoutParams = params
         textView.text = day?.text ?: ""
         textView.textAlignment = TEXT_ALIGNMENT_CENTER
-//        cardView.addView(textView)
         //ltrb
         textView.setPadding(0.dp, 25.dp, 0.dp, 25.dp)
-
         frameLayout.addView(textView)
 
         cardView.addView(frameLayout)
@@ -207,6 +229,7 @@ class WeekView(
     val Int.dp get() = (this * resources.displayMetrics.density + 0.5f).toInt()
 
 }
+
 @ColorInt
 fun adjustAlpha(@ColorInt color: Int, factor: Float): Int {
     val alpha = (Color.alpha(color) * factor).roundToInt()

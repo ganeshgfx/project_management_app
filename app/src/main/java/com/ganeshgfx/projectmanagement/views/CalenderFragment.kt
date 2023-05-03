@@ -7,8 +7,10 @@ import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.ganeshgfx.projectmanagement.MainActivity
 import com.ganeshgfx.projectmanagement.R
 import com.ganeshgfx.projectmanagement.Utils.log
 import com.ganeshgfx.projectmanagement.databinding.FragmentCalenderBinding
@@ -25,7 +27,7 @@ class CalenderFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
 
         _binding = DataBindingUtil.inflate(inflater, R.layout.fragment_calender, container, false)
 
@@ -37,6 +39,16 @@ class CalenderFragment : Fragment() {
 
         binding.vm = viewModel
         binding.lifecycleOwner = viewLifecycleOwner
+
+        val activity = requireActivity() as MainActivity
+        viewModel.getTasks(activity.viewModel.currentProjectId)
+
+        viewModel.adapter.setOnClickListener { day ->
+            day?.let {
+                //log(it)
+                findNavController().navigate(CalenderFragmentDirections.actionCalenderFragmentToTasksListsFragment())
+            }
+        }
 
         binding.calender.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {

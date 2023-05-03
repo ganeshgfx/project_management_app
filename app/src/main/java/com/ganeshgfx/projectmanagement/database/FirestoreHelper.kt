@@ -40,8 +40,15 @@ class FirestoreHelper(
     }
 
     // TODO: change to chunk of 10s
-    suspend fun getUsers(ids: List<String>) =
-        db.collection(USERS).whereIn("uid", ids).get().await().documents.map { it.toObject<User>() }
+    suspend fun getUsers(ids: List<String>): List<User?> {
+        return ids.chunked(10).map {
+            db.collection(USERS)
+                .whereIn("uid", it)
+                .get().await()
+                .map { it.toObject<User>() }
+        }.flatten()
+        //db.collection(USERS).whereIn("uid", ids).get().await().documents.map { it.toObject() }
+    }
 
     suspend fun searchUsers(search: String): List<User> {
         val result = db.collection(USERS).get().await().documents
@@ -83,7 +90,8 @@ class FirestoreHelper(
         db.collection(MEMBERS).whereEqualTo(PROJECT_ID, projectID)
 
     fun getProjectMembersAll(projectIds: List<String>) =
-        projectIds.chunked(10).map { db.collection(MEMBERS).whereIn(PROJECT_ID, it).snapshots() }.asFlow().flattenConcat()
+        projectIds.chunked(10).map { db.collection(MEMBERS).whereIn(PROJECT_ID, it).snapshots() }
+            .asFlow().flattenConcat()
 
     //USER RELATED CODE END
 
@@ -131,6 +139,12 @@ class FirestoreHelper(
         )
         ref.document(id).set(data).await()
         return data
+    }
+
+    suspend fun deleteTask(task: Task):Boolean{
+        val ref = db.collection(TASKS)
+        ref.document(task.id).delete().await()
+        return true
     }
 
     fun getTasks(projectId: String) =

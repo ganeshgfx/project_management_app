@@ -4,17 +4,12 @@ import android.app.Service
 import android.content.Intent
 import android.os.IBinder
 import android.widget.Toast
-import com.ganeshgfx.projectmanagement.Utils.log
-import com.ganeshgfx.projectmanagement.Utils.randomString
 import com.ganeshgfx.projectmanagement.models.Notice
-import com.ganeshgfx.projectmanagement.repositories.MainActivityRepository
+import com.ganeshgfx.projectmanagement.repositories.MainRepository
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -24,10 +19,10 @@ class MainServices() : Service() {
     lateinit var scope: CoroutineScope
 
     @Inject
-    lateinit var repo: MainActivityRepository
+    lateinit var repo: MainRepository
 
     @Inject
-    lateinit var notifications: Notifications
+    lateinit var notifications: NotificationHelper
 
     override fun onBind(intent: Intent?): IBinder? {
         return null
