@@ -32,6 +32,9 @@ class ProjectOverviewViewModel @Inject constructor(private val repo: ProjectRepo
     val doingTasks = MutableLiveData(0)
     val doneTasks = MutableLiveData(0)
 
+    private val _membersCount  = MutableLiveData("9")
+    val membersCount get() = _membersCount
+
     private val _project = MutableLiveData<Project>()
     val project: LiveData<Project> get() = _project
 

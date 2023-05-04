@@ -3,15 +3,19 @@ package com.ganeshgfx.projectmanagement
 import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
-import android.util.TypedValue
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
+import com.ganeshgfx.projectmanagement.Utils.log
 import com.ganeshgfx.projectmanagement.databinding.ActivityMainBinding
+import com.ganeshgfx.projectmanagement.models.gpt.GptRequest
 import com.ganeshgfx.projectmanagement.viewModels.MainActivityViewModel
+import com.ganeshgfx.projectmanagement.api.RetrofitHelper
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 
 
 @AndroidEntryPoint
@@ -76,6 +80,31 @@ class MainActivity : AppCompatActivity() {
                     window.navigationBarColor = Color.TRANSPARENT
                 }
             }
+        }
+
+        //GPT TEST
+        lifecycleScope.launch {
+//            val service = RetrofitHelper.gptApiService
+//            val request = GptRequest(
+//                model = "text-davinci-003",
+//                prompt = "Hello there",
+//                temperature = 0.7,
+//                max_tokens = 50,
+//                top_p = 1.0,
+//                frequency_penalty = 0.0,
+//                presence_penalty = 0.0
+//            )
+//
+//            val response = service.getCompletion(request)
+//
+//            if (response.isSuccessful) {
+//                log("Pretty Printed JSON :", response.body()?.choices?.get(0)?.text ?: "NULL")
+//
+//            } else {
+//                log("RETROFIT_ERROR", response.code().toString())
+//                log(response.raw())
+//            }
+
         }
     }
 

@@ -32,6 +32,9 @@
             android:name="project_id"
             app:argType="long"
             android:defaultValue="-1L" />
+        <action
+            android:id="@+id/action_projectOverviewFragment_to_chatFragment"
+            app:destination="@id/chatFragment" />
     </fragment>
     <fragment
         android:id="@+id/tasksListsFragment"
@@ -53,6 +56,9 @@
         <action
             android:id="@+id/action_tasksListsFragment_to_calenderFragment"
             app:destination="@id/calenderFragment" />
+        <action
+            android:id="@+id/action_tasksListsFragment_to_chatFragment"
+            app:destination="@id/chatFragment" />
     </fragment>
     <fragment
         android:id="@+id/projectFragment"
@@ -111,5 +117,13 @@
         <action
             android:id="@+id/action_calenderFragment_to_tasksListsFragment"
             app:destination="@id/tasksListsFragment" />
+        <action
+            android:id="@+id/action_calenderFragment_to_chatFragment"
+            app:destination="@id/chatFragment" />
     </fragment>
+    <fragment
+        android:id="@+id/chatFragment"
+        android:name="com.ganeshgfx.projectmanagement.views.ChatFragment"
+        android:label="fragment_chat"
+        tools:layout="@layout/fragment_chat" />
 </navigation>

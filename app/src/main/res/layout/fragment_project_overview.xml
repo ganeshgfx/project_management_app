@@ -147,6 +147,15 @@
                                     android:text="@{viewModel.project.description}"
                                     android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
                                     tools:text="Project Name" />
+                                <com.google.android.material.chip.Chip
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginEnd="20dp"
+                                    android:layout_marginBottom="10dp"
+                                    android:layout_gravity="end"
+                                    app:chipIcon="@drawable/twotone_tag_faces_24"
+                                    android:text="@{viewModel.membersCount}"
+                                    />
                             </LinearLayout>
                         </com.google.android.material.card.MaterialCardView>
                     </LinearLayout>

@@ -15,4 +15,9 @@
         android:enabled="true"
         android:icon="@drawable/twotone_assignment_turned_in_24"
         android:title="Tasks Lists"/>
+    <item
+        android:id="@+id/chatFragment"
+        android:enabled="true"
+        android:icon="@drawable/twotone_sms_24"
+        android:title="Chat"/>
 </menu>
