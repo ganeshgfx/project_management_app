@@ -17,6 +17,11 @@ interface TaskDAO {
         status: List<Status>
     ): Flow<List<Task>>
 
+    @Query("SELECT * FROM task WHERE projectId = :projectId")
+    suspend fun getTasks(
+        projectId: String
+    ): List<Task>
+
     @Update
     suspend fun updateTask(task: Task): Int
 

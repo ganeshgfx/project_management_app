@@ -10,7 +10,7 @@ import retrofit2.http.POST
 interface AIService {
     @Headers(
         "Content-Type: application/json",
-        "Authorization: Bearer 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"
+        "Authorization: Bearer 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"
     )
     @POST("completions")
     suspend fun getCompletion(@Body request: GptRequest): Response<CompletionResponse>

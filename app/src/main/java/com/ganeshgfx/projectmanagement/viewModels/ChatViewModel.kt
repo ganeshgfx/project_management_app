@@ -8,7 +8,6 @@ import com.ganeshgfx.projectmanagement.adapters.ChatListAdapter
 import com.ganeshgfx.projectmanagement.models.Chat
 import com.ganeshgfx.projectmanagement.repositories.ChatRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -17,16 +16,22 @@ class ChatViewModel @Inject constructor(
     private val repo: ChatRepository
 ) : ViewModel() {
 
-    val chatsAdapter = ChatListAdapter()
+    var currentProjectId = ""
 
-    init {
-        chatsAdapter.setData(listOf(Chat("Hello", true), Chat("Hello?", false)))
-    }
+    val chatsAdapter = ChatListAdapter()
 
     val msg = MutableLiveData("")
 
     fun sendMsg() = viewModelScope.launch {
-
+        val sendText = msg.value!!
+        if (sendText.isNotBlank() && !repo.isBusy) {
+            val chat = repo.chat(sendText,currentProjectId)
+            chat?.let {
+                msg.postValue("")
+                val chats = listOf(Chat(sendText, true), it)
+                chatsAdapter.addData(chats)
+            }
+        }
     }
 
 }

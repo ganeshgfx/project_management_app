@@ -8,11 +8,9 @@ import android.widget.LinearLayout
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.ganeshgfx.projectmanagement.Utils.ChatListDiffUtil
-import com.ganeshgfx.projectmanagement.Utils.ProjectListDiffUtil
 import com.ganeshgfx.projectmanagement.Utils.log
 import com.ganeshgfx.projectmanagement.databinding.ChatListItemBinding
 import com.ganeshgfx.projectmanagement.models.Chat
-import com.ganeshgfx.projectmanagement.models.ProjectWithTasks
 
 class ChatListAdapter : RecyclerView.Adapter<ChatListAdapter.ChatList>() {
 
@@ -54,8 +52,13 @@ class ChatListAdapter : RecyclerView.Adapter<ChatListAdapter.ChatList>() {
         diffResult.dispatchUpdatesTo(this)
     }
 
-    fun addData(chat: Chat){
-        val oldList = list
+    fun addData(chat: List<Chat>) {
+        val newList = mutableListOf<Chat>()
+        newList.addAll(list)
+        newList.addAll(chat)
+//        log("new",newList.size)
+//        log("old",list.size)
+        setData(newList)
     }
 
     fun clearList() {

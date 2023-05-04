@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import com.ganeshgfx.projectmanagement.MainActivity
 import com.ganeshgfx.projectmanagement.R
 import com.ganeshgfx.projectmanagement.Utils.log
 import com.ganeshgfx.projectmanagement.databinding.FragmentChatBinding
@@ -25,12 +26,12 @@ class ChatFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         _binding = DataBindingUtil.inflate(inflater, R.layout.fragment_chat, container, false)
+
+        val activity = requireActivity() as MainActivity
+        viewModel.currentProjectId = activity.viewModel.currentProjectId
+
         binding.lifecycleOwner = viewLifecycleOwner
         binding.vm = viewModel
-
-        viewModel.msg.observe(viewLifecycleOwner){
-            log(it)
-        }
 
         return binding.root
     }

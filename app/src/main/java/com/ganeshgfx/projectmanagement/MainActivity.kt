@@ -81,31 +81,6 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         }
-
-        //GPT TEST
-        lifecycleScope.launch {
-//            val service = RetrofitHelper.gptApiService
-//            val request = GptRequest(
-//                model = "text-davinci-003",
-//                prompt = "Hello there",
-//                temperature = 0.7,
-//                max_tokens = 50,
-//                top_p = 1.0,
-//                frequency_penalty = 0.0,
-//                presence_penalty = 0.0
-//            )
-//
-//            val response = service.getCompletion(request)
-//
-//            if (response.isSuccessful) {
-//                log("Pretty Printed JSON :", response.body()?.choices?.get(0)?.text ?: "NULL")
-//
-//            } else {
-//                log("RETROFIT_ERROR", response.code().toString())
-//                log(response.raw())
-//            }
-
-        }
     }
 
 }

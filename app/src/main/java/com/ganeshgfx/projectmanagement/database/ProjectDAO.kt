@@ -18,6 +18,9 @@ interface ProjectDAO {
     fun getProject(id: String): Flow<Project>
 
     @Query("SELECT * FROM project WHERE id = :id")
+    suspend fun getProjectData(id: String): Project
+
+    @Query("SELECT * FROM project WHERE id = :id")
     suspend fun getProjectInfo(id: String): Project
 
     @Query("SELECT COUNT(*) FROM project WHERE id = :id")

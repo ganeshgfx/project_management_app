@@ -21,6 +21,9 @@ interface UserDAO {
     @Query("SELECT user.* from user INNER JOIN member ON user.uid = member.uid WHERE member.projectId = :projectId;")
     fun getMembers(projectId: String): Flow<List<User>>
 
+    @Query("SELECT user.* from user INNER JOIN member ON user.uid = member.uid WHERE member.projectId = :projectId;")
+    suspend fun getMembersList(projectId: String): List<User>
+
     @Query("SELECT * from member WHERE projectId=:projectId")
     fun getProjectMember(projectId: String): Flow<List<ProjectMember>>
 
