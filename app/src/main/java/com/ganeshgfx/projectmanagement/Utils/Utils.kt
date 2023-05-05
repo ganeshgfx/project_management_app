@@ -9,6 +9,7 @@ import android.graphics.Color
 import android.icu.text.SimpleDateFormat
 import android.view.View
 import android.view.inputmethod.InputMethodManager
+import com.ganeshgfx.projectmanagement.models.Day
 import com.ganeshgfx.projectmanagement.services.MainServices
 import com.google.android.material.shape.CornerFamily
 import com.google.android.material.shape.ShapeAppearanceModel
@@ -50,6 +51,18 @@ fun epochMillis(date: String): Long {
     calendar.time = date
     val epochMillis: Long = calendar.timeInMillis
     return epochMillis
+}
+
+fun dateStringToDay(dateString: String):Day{
+    val format = SimpleDateFormat(DD_MM_YYYY)
+    val date = format.parse(dateString)
+    val calendar = Calendar.getInstance()
+    calendar.time = date
+    return Day(
+        calendar.get(Calendar.DAY_OF_MONTH),
+        calendar.get(Calendar.MONTH),
+        calendar.get(Calendar.YEAR)
+    )
 }
 
 

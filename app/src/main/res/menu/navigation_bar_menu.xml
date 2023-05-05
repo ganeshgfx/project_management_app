@@ -19,5 +19,5 @@
         android:id="@+id/chatFragment"
         android:enabled="true"
         android:icon="@drawable/twotone_sms_24"
-        android:title="Chat"/>
+        android:title="AI Chat"/>
 </menu>

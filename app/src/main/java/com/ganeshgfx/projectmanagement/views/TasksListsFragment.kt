@@ -171,8 +171,8 @@ class TasksListsFragment : Fragment() {
 
     private fun showDateInput(view: View) {
         val constrains = CalendarConstraints.Builder()
-            .setStart(MaterialDatePicker.todayInUtcMilliseconds())
-            .setValidator(DateValidatorPointForward.now())
+            //.setStart(MaterialDatePicker.todayInUtcMilliseconds())
+           // .setValidator(DateValidatorPointForward.now())
             .build()
         val datePicker =
             MaterialDatePicker.Builder.dateRangePicker()
@@ -205,4 +205,5 @@ class TasksListsFragment : Fragment() {
         R.id.filter_pending -> Status.PENDING
         else -> throw IllegalArgumentException("Invalid chip ID: $id")
     }
+
 }

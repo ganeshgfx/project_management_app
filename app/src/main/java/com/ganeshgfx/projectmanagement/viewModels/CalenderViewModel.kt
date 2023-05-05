@@ -1,10 +1,10 @@
 package com.ganeshgfx.projectmanagement.viewModels
 
-import android.icu.text.SimpleDateFormat
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ganeshgfx.projectmanagement.Utils.dateString
+import com.ganeshgfx.projectmanagement.Utils.dateStringToDay
 import com.ganeshgfx.projectmanagement.Utils.epochMillis
 import com.ganeshgfx.projectmanagement.Utils.getLastDay
 import com.ganeshgfx.projectmanagement.Utils.log
@@ -14,12 +14,7 @@ import com.ganeshgfx.projectmanagement.repositories.TaskListRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
-import java.time.LocalDate
 import java.time.Year
-import java.time.ZoneOffset
-import java.time.format.DateTimeFormatter
-import java.util.Calendar
-import java.util.Locale
 import javax.inject.Inject
 
 
@@ -51,6 +46,7 @@ class CalenderViewModel @Inject constructor(private val repo: TaskListRepository
                     }.filterNotNull()
                 //log(dateRange)
                 dates.addAll(lists)
+
                 val weeks = getCalender()
                 adapter.setData(weeks)
             }
@@ -63,16 +59,47 @@ class CalenderViewModel @Inject constructor(private val repo: TaskListRepository
     val loading get() = _loading
 
     var lastItem: Day? = null
+    var firstItem: Day? = null
 
     init {
         adapter.setOnLastItemLoad { day ->
             lastItem = day
         }
+        adapter.setonFirstItemLoad { day ->
+            firstItem = day
+        }
     }
 
     private fun getCalender(): List<Day> {
-        val year = Year.now().value
-        val days = (1..3).map { month ->
+
+        var year = Year.now().value
+        val length = 3
+        var range = 1..1 + length
+
+        if (dates.isNotEmpty()) {
+            val date = dateStringToDay(
+                dates.map {
+                    epochMillis(it)
+                }
+                    .sorted()
+                    .map {
+                        dateString(it)
+                    }.first()
+                    .toString()
+            )
+            year = date.year
+            var month = date.month
+
+            if (month + length > 12) {
+                month = 12 - length
+            }
+
+            range = month..month + length
+
+            log(date.date,year, range)
+        }
+
+        val days = range.map { month ->
             getMonthDays(month, year)
         }.flatten()
         //log(days)
@@ -94,11 +121,11 @@ class CalenderViewModel @Inject constructor(private val repo: TaskListRepository
 
             val isDue = dateRange.map { epochMillis in it }.contains(true)
 
-           // log(isDue)
+            // log(isDue)
 
             //if (isTaskDay) {
-                //log(epochMillis, dates.map { epochMillis(it) })
-           // }
+            //log(epochMillis, dates.map { epochMillis(it) })
+            // }
 
             val day = Day(day, month, year, isDue)
             day
@@ -106,7 +133,7 @@ class CalenderViewModel @Inject constructor(private val repo: TaskListRepository
         return days
     }
 
-    fun newPage(day: Day) {
+    fun newPageLast(day: Day) {
         var month = day.month
         var year = day.year
         if (day.month == 12) {
@@ -117,6 +144,19 @@ class CalenderViewModel @Inject constructor(private val repo: TaskListRepository
         }
         val dayList = getMonthDays(month, year)
         adapter.addData(dayList)
+    }
+
+    fun newPageFirst(day: Day) {
+        var month = day.month
+        var year = day.year
+        if (day.month == 1) {
+            month = 12
+            year--
+        } else {
+            month--
+        }
+        val dayList = getMonthDays(month, year)
+        adapter.addDataOnTop(dayList)
     }
 
 }

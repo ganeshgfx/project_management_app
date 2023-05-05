@@ -7,8 +7,11 @@ import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
+import androidx.navigation.ui.setupWithNavController
 import com.ganeshgfx.projectmanagement.MainActivity
 import com.ganeshgfx.projectmanagement.R
+import com.ganeshgfx.projectmanagement.Utils.hideSoftKeyBord
 import com.ganeshgfx.projectmanagement.Utils.log
 import com.ganeshgfx.projectmanagement.databinding.FragmentChatBinding
 import com.ganeshgfx.projectmanagement.viewModels.CalenderViewModel
@@ -27,8 +30,14 @@ class ChatFragment : Fragment() {
     ): View {
         _binding = DataBindingUtil.inflate(inflater, R.layout.fragment_chat, container, false)
 
+        binding.toolbar.setupWithNavController(findNavController())
+
         val activity = requireActivity() as MainActivity
-        viewModel.currentProjectId = activity.viewModel.currentProjectId
+        viewModel.setCurrentProjectId(activity.viewModel.currentProjectId)
+
+        viewModel.receiving.observe(viewLifecycleOwner){
+            hideSoftKeyBord(binding.root)
+        }
 
         binding.lifecycleOwner = viewLifecycleOwner
         binding.vm = viewModel

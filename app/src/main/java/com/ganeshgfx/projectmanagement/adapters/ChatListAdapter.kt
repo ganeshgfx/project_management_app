@@ -2,6 +2,7 @@ package com.ganeshgfx.projectmanagement.adapters
 
 import android.view.Gravity
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
 import android.widget.LinearLayout
@@ -34,6 +35,12 @@ class ChatListAdapter : RecyclerView.Adapter<ChatListAdapter.ChatList>() {
             LinearLayout.LayoutParams.WRAP_CONTENT
         ).apply {
             gravity = if (item.isMe) Gravity.END else Gravity.START
+        }
+        holder.binding.ai.apply {
+            visibility = if (item.isMe) View.GONE else View.VISIBLE
+        }
+        holder.binding.me.apply {
+            visibility = if (item.isMe) View.VISIBLE else View.GONE
         }
         bubble.layoutParams = params
     }

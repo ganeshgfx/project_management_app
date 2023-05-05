@@ -13,6 +13,7 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.annotation.ColorInt
 import com.ganeshgfx.projectmanagement.Utils.getLastDay
+import com.ganeshgfx.projectmanagement.Utils.log
 import com.ganeshgfx.projectmanagement.Utils.makeShape
 import com.ganeshgfx.projectmanagement.models.Day
 import com.google.android.material.card.MaterialCardView
@@ -113,7 +114,7 @@ class WeekView(
         val frameLayout = FrameLayout(context)
         frameLayout.layoutParams =
             LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
-
+        frameLayout.removeAllViews()
         if (showMonthLine || lastWeek) {
 
             val divider = MaterialDivider(context)
@@ -184,6 +185,7 @@ class WeekView(
 
         cardView.isClickable = true
         cardView.setOnClickListener {
+            //log(day.date)
             onClickListener?.let { it -> it(if (day.isTaskDay) day else null) }
         }
         val params =
@@ -200,10 +202,10 @@ class WeekView(
                 )
             params.gravity = Gravity.START
             val dot = TextView(context)
-            dot.text = "*"
+            dot.text = "."
             dot.textSize = 50F
-            dot.setTextColor(Color.RED)
-            //button.setBackgroundColor(shape.activeColor)
+            dot.setTextColor(Color.GREEN)
+//            frameLayout.setBackgroundColor(shape.activeColor)
             dot.layoutParams = params
             dot.setPadding(0.dp, 0.dp, 0.dp, 0.dp)
             frameLayout.addView(dot)
@@ -216,6 +218,7 @@ class WeekView(
         textView.setPadding(0.dp, 25.dp, 0.dp, 25.dp)
         frameLayout.addView(textView)
 
+        cardView.removeAllViews()
         cardView.addView(frameLayout)
         addView(cardView)
 

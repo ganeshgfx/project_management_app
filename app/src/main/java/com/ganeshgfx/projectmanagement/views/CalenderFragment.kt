@@ -8,6 +8,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.ui.setupWithNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.ganeshgfx.projectmanagement.MainActivity
@@ -30,6 +31,8 @@ class CalenderFragment : Fragment() {
     ): View {
 
         _binding = DataBindingUtil.inflate(inflater, R.layout.fragment_calender, container, false)
+
+        binding.toolbar.setupWithNavController(findNavController())
 
         val layoutManager = LinearLayoutManager(requireContext())
         layoutManager.orientation = LinearLayoutManager.VERTICAL
@@ -55,14 +58,20 @@ class CalenderFragment : Fragment() {
                 super.onScrollStateChanged(recyclerView, newState)
                 viewModel.lastItem?.let {
                     recyclerView.post {
-                        viewModel.newPage(it)
+                        viewModel.newPageLast(it)
+                    }
+                }
+                viewModel.firstItem?.let {
+                    recyclerView.post {
+                        //log("firstItem",it)
+                        viewModel.newPageFirst(it)
                     }
                 }
 //                when (newState) {
 //                    RecyclerView.SCROLL_STATE_IDLE -> {
 //                        viewModel.lastItem?.let {
 //                            log(it)
-//                            viewModel.newPage(it)
+//                            viewModel.newPageLast(it)
 //                        }
 //                    }
 //                    RecyclerView.SCROLL_STATE_DRAGGING -> {

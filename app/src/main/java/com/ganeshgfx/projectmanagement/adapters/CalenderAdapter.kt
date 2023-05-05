@@ -44,6 +44,12 @@ class CalenderAdapter(private var list: MutableList<List<Day>> = mutableListOf()
             //log(position,temp,condition)
             day(if (condition) week.last() else null)
         }
+        onFirstItemLoad?.let { day ->
+            val condition = position == 0
+            //log(position,condition)
+            day(if (condition) week.first() else null)
+        }
+
     }
 
     private var onClickListener: ((Day?) -> Unit)? = null
@@ -54,6 +60,11 @@ class CalenderAdapter(private var list: MutableList<List<Day>> = mutableListOf()
     private var onLastItemLoad: ((Day?) -> Unit)? = null
     fun setOnLastItemLoad(listener: (Day?) -> Unit) {
         onLastItemLoad = listener
+    }
+
+    private var onFirstItemLoad: ((Day?) -> Unit)? = null
+    fun setonFirstItemLoad(listener: (Day?) -> Unit) {
+        onFirstItemLoad = listener
     }
 
     fun setData(newList: List<Day>) {
@@ -70,6 +81,11 @@ class CalenderAdapter(private var list: MutableList<List<Day>> = mutableListOf()
     fun addData(newData: List<Day>) {
         val oldList = list.flatten().toMutableList()
         oldList.addAll(newData)
+        setData(oldList)
+    }
+    fun addDataOnTop(newData: List<Day>) {
+        val oldList = list.flatten().toMutableList()
+        oldList.addAll(0,newData)
         setData(oldList)
     }
 

@@ -12,23 +12,20 @@
             type="com.ganeshgfx.projectmanagement.viewModels.CalenderViewModel" />
     </data>
 
-    <FrameLayout
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:paddingTop="20dp"
         android:paddingBottom="10dp"
+        android:orientation="vertical"
         tools:context=".views.CalenderFragment">
-        <androidx.recyclerview.widget.RecyclerView
-            android:visibility="@{vm.loading ? View.GONE : View.VISIBLE}"
-            android:id="@+id/calender"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_gravity="center"
-            android:adapter="@{vm.adapter}"
-            app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
-            tools:itemCount="20"
-            tools:listitem="@layout/calender_list_item" />
 
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            app:title="Calender"
+            app:titleTextAppearance="@style/TextAppearance.MaterialComponents.Headline6"
+            app:navigationIconTint="?attr/colorControlNormal"
+            android:layout_height="?attr/actionBarSize" />
         <com.google.android.material.progressindicator.LinearProgressIndicator
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -37,5 +34,16 @@
             app:trackCornerRadius="10dp"
             android:visibility="@{vm.loading ? View.VISIBLE : View.GONE}"
             />
-    </FrameLayout>
+        <androidx.recyclerview.widget.RecyclerView
+            android:visibility="@{vm.loading ? View.GONE : View.VISIBLE}"
+            android:id="@+id/calender"
+            android:layout_weight="1"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_gravity="center"
+            android:adapter="@{vm.adapter}"
+            app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+            tools:itemCount="20"
+            tools:listitem="@layout/calender_list_item" />
+    </LinearLayout>
 </layout>

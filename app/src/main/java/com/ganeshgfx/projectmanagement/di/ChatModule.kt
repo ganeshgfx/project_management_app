@@ -2,6 +2,7 @@ package com.ganeshgfx.projectmanagement.di
 
 import com.ganeshgfx.projectmanagement.api.AIService
 import com.ganeshgfx.projectmanagement.api.RetrofitHelper
+import com.ganeshgfx.projectmanagement.database.FirestoreHelper
 import com.ganeshgfx.projectmanagement.database.ProjectDAO
 import com.ganeshgfx.projectmanagement.database.TaskDAO
 import com.ganeshgfx.projectmanagement.database.UserDAO
@@ -24,10 +25,11 @@ object ChatModule {
     @Singleton
     fun provideChatRepo(
         service: AIService,
+        helper: FirestoreHelper,
         usersDAO: UserDAO,
         projectDAO: ProjectDAO,
         taskDAO: TaskDAO,
     )
-    : ChatRepository = ChatRepository(service,usersDAO,projectDAO,taskDAO)
+    : ChatRepository = ChatRepository(service,helper,usersDAO,projectDAO,taskDAO)
 
 }
