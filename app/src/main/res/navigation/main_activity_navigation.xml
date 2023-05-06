@@ -84,6 +84,9 @@
             app:exitAnim="@anim/nav_default_exit_anim"
             app:popEnterAnim="@anim/nav_default_pop_enter_anim"
             app:popExitAnim="@anim/nav_default_pop_exit_anim" />
+        <action
+            android:id="@+id/action_projectFragment_to_profile"
+            app:destination="@id/profile" />
     </fragment>
     <fragment
         android:id="@+id/manageProjectFragment"
@@ -132,5 +135,14 @@
             app:nullable="true"
             android:defaultValue="@null"
             />
+    </fragment>
+    <fragment
+        android:id="@+id/profile"
+        android:name="com.ganeshgfx.projectmanagement.Profile"
+        android:label="Profile"
+        tools:layout="@layout/fragment_profile">
+        <action
+            android:id="@+id/action_profile_to_projectFragment"
+            app:destination="@id/projectFragment" />
     </fragment>
 </navigation>

@@ -34,9 +34,6 @@ class MainRepository @Inject constructor(
     private val _notice = MutableSharedFlow<Notice>(replay = 2)
     val notification get() = _notice
 
-    init {
-        //    startJob()
-    }
 
     fun startJob() {
         getProjects?.cancel()

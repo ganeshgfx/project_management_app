@@ -34,11 +34,6 @@ class ProjectFragment : Fragment() {
 
         val activity = requireActivity() as MainActivity
 
-        binding.addfab.setOnLongClickListener {
-            Firebase.auth.signOut()
-            true
-        }
-
         viewModel.addingProject.observe(viewLifecycleOwner){
             hideSoftKeyBord(binding.root)
         }
@@ -73,6 +68,11 @@ class ProjectFragment : Fragment() {
                     binding.toolbar.menu.findItem(R.id.filter_off).isVisible = true
                     binding.toolbar.menu.findItem(R.id.filter_on).isVisible = false
                     binding.filters.visibility = View.VISIBLE
+                }
+                R.id.user_profile ->{
+                 findNavController().navigate(
+                            ProjectFragmentDirections.actionProjectFragmentToProfile()
+                      )
                 }
             }
             true

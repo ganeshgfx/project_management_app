@@ -11,7 +11,7 @@ import javax.inject.Inject
 @HiltViewModel
 class MainActivityViewModel @Inject constructor(
     authRepo: AuthRepo,
-    repo: MainRepository
+    private val repo: MainRepository
 ) : ViewModel() {
 
     init {
@@ -23,6 +23,10 @@ class MainActivityViewModel @Inject constructor(
           }
         }.launchIn(viewModelScope)
 
+    }
+
+    fun startRepo(){
+        repo.startJob()
     }
 
     val notification = repo.notification

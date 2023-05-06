@@ -30,6 +30,9 @@ class MainActivity : AppCompatActivity() {
                 startActivity(Intent(this, LoginActivity::class.java))
                 finish()
             }
+            else{
+                viewModel.startRepo()
+            }
         }
 
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
