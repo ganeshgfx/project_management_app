@@ -13,4 +13,10 @@
         android:title="Edit"
         app:iconTint="?attr/colorControlNormal"
         app:showAsAction="always" />
+    <item
+        android:id="@+id/ai_help"
+        android:icon="@drawable/baseline_voice_chat_24"
+        android:title="Ai Help"
+        app:iconTint="?attr/colorControlNormal"
+        app:showAsAction="always" />
 </menu>

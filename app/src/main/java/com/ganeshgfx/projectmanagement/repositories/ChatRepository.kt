@@ -2,9 +2,10 @@ package com.ganeshgfx.projectmanagement.repositories
 
 import com.ganeshgfx.projectmanagement.Utils.dateString
 import com.ganeshgfx.projectmanagement.Utils.log
+import com.ganeshgfx.projectmanagement.Utils.randomString
 import com.ganeshgfx.projectmanagement.api.AIService
-import com.ganeshgfx.projectmanagement.api.ChatRequest
-import com.ganeshgfx.projectmanagement.api.Message
+import com.ganeshgfx.projectmanagement.models.gpt.ChatRequest
+import com.ganeshgfx.projectmanagement.models.gpt.Message
 import com.ganeshgfx.projectmanagement.database.FirestoreHelper
 import com.ganeshgfx.projectmanagement.database.ProjectDAO
 import com.ganeshgfx.projectmanagement.database.TaskDAO
@@ -12,12 +13,9 @@ import com.ganeshgfx.projectmanagement.database.UserDAO
 import com.ganeshgfx.projectmanagement.models.Chat
 import com.ganeshgfx.projectmanagement.models.gpt.GptRequest
 import com.ganeshgfx.projectmanagement.models.gpt.Information
+import com.google.gson.Gson
+import kotlinx.coroutines.delay
 import javax.inject.Inject
-
-private const val MODEL =
-    "text-davinci-003"
-private const val TEMP = 0.9
-private const val TOKEN_SIZE = 1000
 
 class ChatRepository @Inject constructor(
     private val service: AIService,
@@ -28,18 +26,60 @@ class ChatRepository @Inject constructor(
 ) {
     private var _isBusy = false
     val isBusy get() = _isBusy
+
+    private var _projectId: String = ""
+
+    var chatHistory = emptyList<Message>()
+
     suspend fun chat(msg: String, projectId: String): Chat? {
         _isBusy = true
 
-        val prompt = "${getProjectContext(projectId)} $msg"
+        if (_projectId != projectId) {
+            _projectId = projectId
+            chatHistory = listOf(
+                Message("system", getProjectContext(projectId)),
+                Message("user", msg)
+            )
+        } else {
+            chatHistory = chatHistory + Message("user", msg)
+        }
+        val chat = requestChat( chatHistory)
 
-        val chat = send(prompt)
-
-//        delay(1000)
-//        val chat = Chat(randomString(900), false)
+//        delay(100)
+//        val chat = Chat(randomString(100), false)
 
         _isBusy = false
         return chat
+    }
+
+    suspend fun requestChat(messages: List<Message>): Chat? {
+        val request = ChatRequest(
+            model = "gpt-3.5-turbo",
+            messages = messages,
+            presence_penalty = 0.6,
+            stream = false,
+            temperature = 0.9
+        )
+        val response = service.getChatCompletion(request)
+        if (response.isSuccessful) {
+
+            chatHistory = chatHistory + response.body()?.choices?.map {
+                it.message
+            }!!
+
+           // val gson = Gson()
+
+           // log(gson.toJson(chatHistory).toString())
+
+            return response.body()?.choices?.last()?.let {
+                Chat(it.message.content, false)
+            }
+        } else {
+            val responseBody = response.errorBody()
+            val responseText = responseBody?.let { String(it.bytes(), Charsets.UTF_8) }
+            log("RETROFIT_ERROR", response.code().toString(), responseText.toString())
+            return null
+        }
     }
 
     private suspend fun getProjectContext(projectId: String): String {
@@ -75,80 +115,4 @@ class ChatRepository @Inject constructor(
         return prompt
     }
 
-    suspend fun send(prompt: String): Chat? {
-        var chat: Chat? = null
-
-       // log(prompt)
-
-        val request = GptRequest(
-            model = MODEL,
-            prompt = prompt,
-            temperature = TEMP,
-            max_tokens = TOKEN_SIZE,
-            top_p = 1.0,
-            frequency_penalty = 0.0,
-            presence_penalty = 0.5
-        )
-
-       // chat = requestCompletion(request)
-
-        return requestChat(
-            listOf(
-                Message("system","You are a helpfully assistant"),
-                Message("user","hello")
-            )
-        )
-    }
-
-    suspend fun requestCompletion(request: GptRequest): Chat? {
-        val response = service.getCompletion(request)
-        if (response.isSuccessful) {
-            log(response.raw())
-            response.body()?.choices?.get(0)?.text?.let {
-                log(it)
-                return Chat(removeSpecialCharactersFromBeginning(it).trim(), false)
-            }
-
-        } else {
-            log("RETROFIT_ERROR", response.code().toString())
-            val responseBody = response.errorBody()
-            val responseBytes = responseBody // get the response body as bytes
-            val responseText = responseBytes?.let { String(it.bytes(), Charsets.UTF_8) }
-            if (responseText != null) {
-                log(responseText)
-            }
-            log(response.raw())
-            return null
-        }
-        return null
-    }
-
-    suspend fun requestChat(messages: List<Message>):Chat? {
-        val request = ChatRequest(
-            model = "gpt-3.5-turbo",
-            messages = messages,
-            presence_penalty = 0.6,
-            stream = false,
-            temperature = 0.9
-        )
-        val response = service.getChatCompletion(request)
-        if (response.isSuccessful) {
-            log(response.raw())
-            return null
-        } else {
-            val responseBody = response.errorBody()
-            val responseText = responseBody?.let { String(it.bytes(), Charsets.UTF_8) }
-            log("RETROFIT_ERROR", response.code().toString(), responseText.toString())
-            return null
-        }
-    }
-
-    fun removeSpecialCharactersFromBeginning(inputString: String): String {
-        var outputString = inputString.trim() // Remove any leading or trailing whitespace
-        var i = 0
-        while (i < outputString.length && !outputString[i].isLetterOrDigit()) {
-            i++
-        }
-        return outputString.substring(i)
-    }
 }

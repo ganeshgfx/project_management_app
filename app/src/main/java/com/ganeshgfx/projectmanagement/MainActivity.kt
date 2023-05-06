@@ -6,29 +6,13 @@ import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
-import androidx.lifecycle.lifecycleScope
+import androidx.navigation.NavBackStackEntry
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
 import com.ganeshgfx.projectmanagement.Utils.log
-import com.ganeshgfx.projectmanagement.api.KEY
 import com.ganeshgfx.projectmanagement.databinding.ActivityMainBinding
-import com.ganeshgfx.projectmanagement.models.gpt.GptRequest
 import com.ganeshgfx.projectmanagement.viewModels.MainActivityViewModel
-import com.ganeshgfx.projectmanagement.api.RetrofitHelper
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.launch
-import okhttp3.Call
-import okhttp3.Callback
-import okhttp3.MediaType
-import okhttp3.MediaType.Companion.toMediaType
-import okhttp3.OkHttpClient
-import okhttp3.Request
-import okhttp3.RequestBody
-import okhttp3.RequestBody.Companion.toRequestBody
-import okhttp3.Response
-import okio.IOException
-import org.json.JSONArray
-import org.json.JSONObject
 
 
 @AndroidEntryPoint
@@ -68,7 +52,32 @@ class MainActivity : AppCompatActivity() {
         binding.bottomNavigation.setupWithNavController(navController)
         //binding.toolbar.setupWithNavController(navController, appBarConfiguration)
         //setupActionBarWithNavController(navController,appBarConfiguration)
-        navController.addOnDestinationChangedListener { _, destination, _ ->
+        navController.addOnDestinationChangedListener {  controller, destination, _ ->
+
+            val backQueue = controller.backQueue.map {
+                when(it.destination.id){
+                    R.id.projectFragment -> "Project"
+                    R.id.calenderFragment -> "Calender"
+                    R.id.projectOverviewFragment -> "Overview"
+                    R.id.tasksListsFragment -> "Tasks"
+                    R.id.chatFragment -> "Chat"
+                    R.id.manageProjectFragment -> "Manage"
+                    R.id.addMemberFragment -> "Add Member"
+                    else -> "Unknown"
+                }
+            }
+
+
+            if(backQueue.size > 3 ){
+                viewModel.hideBottomAppBar(true)
+            }else{
+                viewModel.hideBottomAppBar(false)
+            }
+
+            log("BackQueue: $backQueue")
+
+
+
             when (destination.id) {
                 R.id.projectFragment -> {
                     viewModel.hideBottomAppBar(true)
@@ -79,17 +88,17 @@ class MainActivity : AppCompatActivity() {
                 }
 
                 R.id.calenderFragment -> {
-                    viewModel.hideBottomAppBar(false)
+                    //viewModel.hideBottomAppBar(false)
                     window.navigationBarColor = Color.TRANSPARENT
                 }
 
                 R.id.projectOverviewFragment -> {
-                    viewModel.hideBottomAppBar(false)
+                   // viewModel.hideBottomAppBar(false)
                     window.navigationBarColor = Color.TRANSPARENT
                 }
 
                 R.id.tasksListsFragment -> {
-                    viewModel.hideBottomAppBar(false)
+                   // viewModel.hideBottomAppBar(false)
                     window.navigationBarColor = Color.TRANSPARENT
                 }
             }

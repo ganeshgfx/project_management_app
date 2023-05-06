@@ -159,6 +159,17 @@ class TasksListsFragment : Fragment() {
                     true
                 }
 
+                R.id.ai_help -> {
+                    findNavController().navigate(
+                        viewModel.selectedTask.let {
+                            TasksListsFragmentDirections.actionTasksListsFragmentToChatFragment(
+                                "give steps for this task : ${it?.title} - ${it?.description}"
+                            )
+                        }
+                    )
+                    true
+                }
+
                 else -> false
             }
         }

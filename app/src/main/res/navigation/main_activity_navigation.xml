@@ -125,5 +125,12 @@
         android:id="@+id/chatFragment"
         android:name="com.ganeshgfx.projectmanagement.views.ChatFragment"
         android:label="Assistent [ Experimental ]"
-        tools:layout="@layout/fragment_chat" />
+        tools:layout="@layout/fragment_chat" >
+        <argument
+            android:name="chat"
+            app:argType="string"
+            app:nullable="true"
+            android:defaultValue="@null"
+            />
+    </fragment>
 </navigation>

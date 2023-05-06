@@ -5,6 +5,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.ganeshgfx.projectmanagement.Utils.log
 import com.ganeshgfx.projectmanagement.adapters.ChatListAdapter
 import com.ganeshgfx.projectmanagement.models.Chat
 import com.ganeshgfx.projectmanagement.repositories.ChatRepository
@@ -25,18 +26,20 @@ class ChatViewModel @Inject constructor(
 
     private var greeted = false
 
-    fun setCurrentProjectId(id: String) = viewModelScope.launch {
+    fun setCurrentProjectId(id: String, help: String) = viewModelScope.launch {
         _receiving.postValue(true)
         _currentProjectId = id
         if (!greeted) {
             greeted = true
-            val msg = "greet me and give list of questions that can i ask regarding this project"
+
+            val msg = if(help.isNotBlank()) help else  "greet me and give list of questions that can i ask regarding this project"
+
 
             var chat: Chat? = Chat("Error", false)
             try {
-                chat = repo.chat(msg, currentProjectId)
+               // chat = repo.chat(msg, currentProjectId)
             } catch (e: Exception) {
-                Log.e("project_app", "sendMsg: $e",e )
+                Log.e("project_app", "sendMsg: $e", e)
             }
             chat?.let {
                 val chats = listOf(it)
@@ -58,11 +61,11 @@ class ChatViewModel @Inject constructor(
         if (sendText.isNotBlank() && !repo.isBusy) {
             _receiving.postValue(true)
             msg.postValue("")
-            var chat: Chat = Chat("Error", false)
+            var chat = Chat("Error", false)
             try {
                 chat = repo.chat(sendText, currentProjectId)!!
             } catch (e: Exception) {
-                Log.e("project_app", "sendMsg: $e",e )
+                Log.e("project_app", "sendMsg: $e", e)
             }
             chatsAdapter.addData(listOf(Chat(sendText, true)))
             chat?.let {

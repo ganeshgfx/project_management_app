@@ -4,7 +4,9 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-        <import type="android.view.View"/>
+
+        <import type="android.view.View" />
+
         <variable
             name="data"
             type="com.ganeshgfx.projectmanagement.models.Task" />
@@ -14,25 +16,25 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
+        android:orientation="vertical"
         android:paddingStart="16dp"
-        android:paddingEnd="16dp"
-        android:orientation="vertical">
+        android:paddingEnd="16dp">
 
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/main_card"
             style="@style/Widget.Material3.CardView.Filled"
-            app:cardBackgroundColor="@android:color/transparent"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_margin="5dp"
-            app:cardCornerRadius="10dp"
-            android:defaultFocusHighlightEnabled="false"
-            android:focusableInTouchMode="true"
-            android:focusable="true"
             android:checkable="true"
             android:clickable="true"
-            >
+            android:defaultFocusHighlightEnabled="false"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            app:cardBackgroundColor="@android:color/transparent"
+            app:cardCornerRadius="10dp">
+
             <LinearLayout
                 android:id="@+id/task_view"
                 android:layout_width="match_parent"
@@ -40,52 +42,53 @@
                 android:orientation="horizontal"
                 android:padding="4dp">
 
-              <LinearLayout
-                  android:layout_width="0dp"
-                  android:layout_weight="1"
-                  android:orientation="vertical"
-                  android:layout_marginStart="7dp"
-                  android:layout_gravity="center"
-                  android:layout_height="wrap_content">
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginStart="7dp"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
 
-                 <LinearLayout
-                     android:layout_width="match_parent"
-                     android:layout_height="wrap_content"
-                     android:orientation="vertical"
-                     >
-                     <TextView
-                         android:layout_width="wrap_content"
-                         android:layout_height="wrap_content"
-                         android:textAppearance="?attr/textAppearanceBodySmall"
-                         android:textStyle="italic"
-                         android:visibility="@{data.endDate!=null ? View.VISIBLE:View.GONE}"
-                         android:text='@{"Due : "+data.toDate()}'
-                         tools:text="⌚ : Loading" />
-                     <TextView
-                         android:layout_width="wrap_content"
-                         android:layout_height="wrap_content"
-                         android:textAppearance="?attr/textAppearanceHeadline6"
-                         android:text="@{data.title}"
-                         tools:text="⌚ : Loading" />
-                     <TextView
-                         android:layout_width="wrap_content"
-                         android:layout_height="wrap_content"
-                         android:textAppearance="?attr/textAppearanceBodySmall"
-                         android:text="@{data.description}"
-                         tools:text="⌚ : Loading" />
-                 </LinearLayout>
-              </LinearLayout>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text='@{"Due : "+data.toDate()}'
+                            android:textAppearance="?attr/textAppearanceBodySmall"
+                            android:textStyle="italic"
+                            android:visibility="@{data.endDate!=null ? View.VISIBLE:View.GONE}"
+                            tools:text="⌚ : Loading" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@{data.title}"
+                            android:textAppearance="?attr/textAppearanceHeadline6"
+                            tools:text="⌚ : Loading" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@{data.description}"
+                            android:textAppearance="?attr/textAppearanceBodySmall"
+                            tools:text="⌚ : Loading" />
+                    </LinearLayout>
+                </LinearLayout>
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/task_status_icon"
                     style="@style/Widget.Material3.Button.IconButton.Filled"
+                    setDynamicStatusIcon="@{data.status}"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:clickable="false"
                     android:layout_gravity="center"
-                    tools:icon="@drawable/outline_circle_24"
-                    setDynamicStatusIcon="@{data.status}"
-                     />
+                    android:clickable="false"
+                    tools:icon="@drawable/outline_circle_24" />
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
 
@@ -94,51 +97,57 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            tools:visibility="gone"
             android:layout_marginStart="5dp"
             android:layout_marginEnd="5dp"
             android:layout_marginBottom="5dp"
             android:visibility="gone"
-            >
+            tools:visibility="gone">
+
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/pending_task"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:background="@drawable/update_status_shape_start"
-                app:backgroundTint="@color/control"
                 android:padding="20dp"
                 android:text="Pending"
+                android:textColor="@color/taskDone"
+                app:backgroundTint="@color/control"
                 app:icon="@drawable/outline_circle_24"
                 app:iconTint="@color/taskDone" />
+
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/doing_task"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
                 android:layout_marginStart="5dp"
                 android:layout_marginEnd="5dp"
+                android:layout_weight="1"
                 android:background="@drawable/update_status_shape_middle"
-                app:backgroundTint="@color/taskInBack"
                 android:padding="20dp"
                 android:text="Doing"
-                app:shapeAppearance="@style/ShapeAppearance.Material3.Corner.Small"
+                android:textColor="@color/taskDone"
+                app:backgroundTint="@color/taskInBack"
                 app:icon="@drawable/twotone_draw_24"
-                app:iconTint="@color/taskIn" />
+                app:iconTint="@color/taskIn"
+                app:shapeAppearance="@style/ShapeAppearance.Material3.Corner.Small" />
+
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/done_task"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                app:backgroundTint="@color/taskDoneBack"
-                android:padding="20dp"
                 android:background="@drawable/update_status_shape_end"
+                android:padding="20dp"
                 android:text="Done"
+                android:textColor="@color/taskDone"
+                app:backgroundTint="@color/taskDoneBack"
                 app:icon="@drawable/round_done_outline_24"
                 app:iconTint="@color/taskDone" />
         </LinearLayout>
+
         <com.google.android.material.divider.MaterialDivider
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content" />
     </LinearLayout>
 </layout>

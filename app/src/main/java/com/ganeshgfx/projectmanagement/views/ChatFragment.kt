@@ -9,6 +9,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import androidx.navigation.ui.setupWithNavController
 import com.ganeshgfx.projectmanagement.MainActivity
 import com.ganeshgfx.projectmanagement.R
@@ -27,6 +28,9 @@ class ChatFragment : Fragment() {
     private var _binding: FragmentChatBinding? = null
     private val binding get() = _binding!!
     private val viewModel: ChatViewModel by viewModels()
+
+    val args: ChatFragmentArgs by navArgs()
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -36,7 +40,7 @@ class ChatFragment : Fragment() {
         binding.toolbar.setupWithNavController(findNavController())
 
         val activity = requireActivity() as MainActivity
-        viewModel.setCurrentProjectId(activity.viewModel.currentProjectId)
+        viewModel.setCurrentProjectId(activity.viewModel.currentProjectId,args.chat ?: "")
 
         viewModel.receiving.observe(viewLifecycleOwner) {
             hideSoftKeyBord(binding.root)

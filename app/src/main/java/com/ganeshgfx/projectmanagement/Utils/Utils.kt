@@ -22,6 +22,7 @@ fun randomString(length: Int): String {
     set.addAll('0'..'9')
     set.addAll('a'..'z')
     set.addAll('A'..'Z')
+    set.add(' ')
     for (i in 0..length) {
         str += set.random()
     }
