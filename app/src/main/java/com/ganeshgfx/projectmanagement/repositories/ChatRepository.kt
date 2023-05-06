@@ -2,8 +2,9 @@ package com.ganeshgfx.projectmanagement.repositories
 
 import com.ganeshgfx.projectmanagement.Utils.dateString
 import com.ganeshgfx.projectmanagement.Utils.log
-import com.ganeshgfx.projectmanagement.Utils.randomString
 import com.ganeshgfx.projectmanagement.api.AIService
+import com.ganeshgfx.projectmanagement.api.ChatRequest
+import com.ganeshgfx.projectmanagement.api.Message
 import com.ganeshgfx.projectmanagement.database.FirestoreHelper
 import com.ganeshgfx.projectmanagement.database.ProjectDAO
 import com.ganeshgfx.projectmanagement.database.TaskDAO
@@ -11,7 +12,6 @@ import com.ganeshgfx.projectmanagement.database.UserDAO
 import com.ganeshgfx.projectmanagement.models.Chat
 import com.ganeshgfx.projectmanagement.models.gpt.GptRequest
 import com.ganeshgfx.projectmanagement.models.gpt.Information
-import kotlinx.coroutines.delay
 import javax.inject.Inject
 
 private const val MODEL =
@@ -78,7 +78,7 @@ class ChatRepository @Inject constructor(
     suspend fun send(prompt: String): Chat? {
         var chat: Chat? = null
 
-        log(prompt)
+       // log(prompt)
 
         val request = GptRequest(
             model = MODEL,
@@ -90,12 +90,23 @@ class ChatRepository @Inject constructor(
             presence_penalty = 0.5
         )
 
+       // chat = requestCompletion(request)
+
+        return requestChat(
+            listOf(
+                Message("system","You are a helpfully assistant"),
+                Message("user","hello")
+            )
+        )
+    }
+
+    suspend fun requestCompletion(request: GptRequest): Chat? {
         val response = service.getCompletion(request)
         if (response.isSuccessful) {
             log(response.raw())
             response.body()?.choices?.get(0)?.text?.let {
                 log(it)
-                chat = Chat(removeSpecialCharactersFromBeginning(it).trim(), false)
+                return Chat(removeSpecialCharactersFromBeginning(it).trim(), false)
             }
 
         } else {
@@ -107,8 +118,29 @@ class ChatRepository @Inject constructor(
                 log(responseText)
             }
             log(response.raw())
+            return null
         }
-        return chat
+        return null
+    }
+
+    suspend fun requestChat(messages: List<Message>):Chat? {
+        val request = ChatRequest(
+            model = "gpt-3.5-turbo",
+            messages = messages,
+            presence_penalty = 0.6,
+            stream = false,
+            temperature = 0.9
+        )
+        val response = service.getChatCompletion(request)
+        if (response.isSuccessful) {
+            log(response.raw())
+            return null
+        } else {
+            val responseBody = response.errorBody()
+            val responseText = responseBody?.let { String(it.bytes(), Charsets.UTF_8) }
+            log("RETROFIT_ERROR", response.code().toString(), responseText.toString())
+            return null
+        }
     }
 
     fun removeSpecialCharactersFromBeginning(inputString: String): String {

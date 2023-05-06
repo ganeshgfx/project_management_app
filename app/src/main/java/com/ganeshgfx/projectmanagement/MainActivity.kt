@@ -10,12 +10,25 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
 import com.ganeshgfx.projectmanagement.Utils.log
+import com.ganeshgfx.projectmanagement.api.KEY
 import com.ganeshgfx.projectmanagement.databinding.ActivityMainBinding
 import com.ganeshgfx.projectmanagement.models.gpt.GptRequest
 import com.ganeshgfx.projectmanagement.viewModels.MainActivityViewModel
 import com.ganeshgfx.projectmanagement.api.RetrofitHelper
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
+import okhttp3.Call
+import okhttp3.Callback
+import okhttp3.MediaType
+import okhttp3.MediaType.Companion.toMediaType
+import okhttp3.OkHttpClient
+import okhttp3.Request
+import okhttp3.RequestBody
+import okhttp3.RequestBody.Companion.toRequestBody
+import okhttp3.Response
+import okio.IOException
+import org.json.JSONArray
+import org.json.JSONObject
 
 
 @AndroidEntryPoint
@@ -82,5 +95,4 @@ class MainActivity : AppCompatActivity() {
             }
         }
     }
-
 }

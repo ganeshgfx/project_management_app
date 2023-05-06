@@ -1,16 +1,18 @@
 package com.ganeshgfx.projectmanagement.viewModels
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.ganeshgfx.projectmanagement.Utils.log
 import com.ganeshgfx.projectmanagement.adapters.ChatListAdapter
 import com.ganeshgfx.projectmanagement.models.Chat
 import com.ganeshgfx.projectmanagement.repositories.ChatRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import okhttp3.logging.HttpLoggingInterceptor
 import javax.inject.Inject
+
 
 @HiltViewModel
 class ChatViewModel @Inject constructor(
@@ -29,11 +31,12 @@ class ChatViewModel @Inject constructor(
         if (!greeted) {
             greeted = true
             val msg = "greet me and give list of questions that can i ask regarding this project"
+
             var chat: Chat? = Chat("Error", false)
             try {
                 chat = repo.chat(msg, currentProjectId)
             } catch (e: Exception) {
-                log(e.toString(), "ChatViewModel")
+                Log.e("project_app", "sendMsg: $e",e )
             }
             chat?.let {
                 val chats = listOf(it)
@@ -59,7 +62,7 @@ class ChatViewModel @Inject constructor(
             try {
                 chat = repo.chat(sendText, currentProjectId)!!
             } catch (e: Exception) {
-                log(e.toString(), "ChatViewModel")
+                Log.e("project_app", "sendMsg: $e",e )
             }
             chatsAdapter.addData(listOf(Chat(sendText, true)))
             chat?.let {
