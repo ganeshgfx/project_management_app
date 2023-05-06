@@ -39,14 +39,25 @@ class ProjectOverviewFragment : Fragment() {
         binding.lifecycleOwner = this
 
         binding.toolbar.setupWithNavController(findNavController())
-        binding.toolbar.setOnMenuItemClickListener {
-            when (it.itemId) {
-                R.id.project_settings -> {
-                    findNavController().navigate(R.id.action_taskProjectFragment_to_manageFragment)
-                    true
-                }
-                else -> false
-            }
+//        binding.toolbar.setOnMenuItemClickListener {
+//            when (it.itemId) {
+//                R.id.project_settings -> {
+//                    findNavController().navigate(R.id.action_taskProjectFragment_to_manageFragment)
+//                    true
+//                }
+//                else -> false
+//            }
+//        }
+
+        binding.editProjectButton.setOnClickListener {
+            findNavController().navigate(R.id.action_taskProjectFragment_to_manageFragment)
+        }
+
+        binding.membersCount.setOnClickListener {
+            viewModel.toggleViewMemberList(true)
+        }
+        binding.viewMemberCloseButton.setOnClickListener {
+            viewModel.toggleViewMemberList(false)
         }
 
         viewModel.taskStatusCount.observe(viewLifecycleOwner) {

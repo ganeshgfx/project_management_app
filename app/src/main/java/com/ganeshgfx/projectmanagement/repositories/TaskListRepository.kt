@@ -31,13 +31,19 @@ class TaskListRepository @Inject constructor(
     }
 
     suspend fun addTask(task: Task): Long {
+        if(task.id.isNotBlank()){
+            updateTask(task)
+            return 1
+        }
         val result = remote.addTask(task)
         return dao.insertTask(result)
     }
 
-    suspend fun updateTask(task: Task): Int {
+    suspend fun updateTask(task: Task): Long {
         remote.updateTask(task)
-        return dao.updateTask(task)
+        val updateTask = dao.updateTask(task)
+        log("updateTask",updateTask)
+        return updateTask.toLong()
     }
     suspend fun deleteTask(task: Task){
         remote.deleteTask(task)

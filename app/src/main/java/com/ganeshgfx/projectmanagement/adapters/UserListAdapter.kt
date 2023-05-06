@@ -1,6 +1,7 @@
 package com.ganeshgfx.projectmanagement.adapters
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
@@ -14,7 +15,7 @@ import com.ganeshgfx.projectmanagement.models.ProjectWithTasks
 import com.ganeshgfx.projectmanagement.models.Status
 import com.ganeshgfx.projectmanagement.models.User
 
-class UserListAdapter() :
+class UserListAdapter(val viewControls : Boolean = true) :
     RecyclerView.Adapter<UserListAdapter.UserListViewHolder>() {
 
     private var users = emptyList<ProjectMember>()
@@ -31,6 +32,18 @@ class UserListAdapter() :
         with(holder.binding) {
             //log(users[position])
             val item = users[position]
+            if (!viewControls){
+                removeButton.visibility = View.GONE
+                addButton.visibility = View.GONE
+            }else{
+                if(item.member!=null){
+                    addButton.visibility = View.GONE
+                    removeButton.visibility = View.VISIBLE
+                }else{
+                    addButton.visibility = View.VISIBLE
+                    removeButton.visibility = View.GONE
+                }
+            }
             data = item
             addButton.setOnClickListener {
                 onClickListener?.let { it(item.user, Event.ADD) }

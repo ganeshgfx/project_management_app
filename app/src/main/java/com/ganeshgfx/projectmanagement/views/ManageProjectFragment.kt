@@ -11,6 +11,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.setupWithNavController
 import com.ganeshgfx.projectmanagement.MainActivity
 import com.ganeshgfx.projectmanagement.R
+import com.ganeshgfx.projectmanagement.Utils.hideSoftKeyBord
 import com.ganeshgfx.projectmanagement.Utils.log
 import com.ganeshgfx.projectmanagement.databinding.FragmentProjectManageBinding
 import com.ganeshgfx.projectmanagement.viewModels.ProjectOverviewViewModel
@@ -56,6 +57,21 @@ class ManageProjectFragment : Fragment() {
                     }
                     .show()
             }
+            binding.editProject.setOnClickListener {
+                viewModel.toggleEdit()
+            }
+            binding.discardUpdates.setOnClickListener {
+                viewModel.toggleEdit()
+            }
+            binding.saveUpdates.setOnClickListener {
+                viewModel.updateProject()
+            }
+        }
+        viewModel.updateProject.observe(viewLifecycleOwner) {
+           hideSoftKeyBord(binding.root)
+        }
+        viewModel.isMyProject.observe(viewLifecycleOwner) {
+            log("My Project",it)
         }
         return binding.root
     }

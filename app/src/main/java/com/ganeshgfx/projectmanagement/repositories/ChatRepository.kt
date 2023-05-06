@@ -2,6 +2,7 @@ package com.ganeshgfx.projectmanagement.repositories
 
 import com.ganeshgfx.projectmanagement.Utils.dateString
 import com.ganeshgfx.projectmanagement.Utils.log
+import com.ganeshgfx.projectmanagement.Utils.randomString
 import com.ganeshgfx.projectmanagement.api.AIService
 import com.ganeshgfx.projectmanagement.database.FirestoreHelper
 import com.ganeshgfx.projectmanagement.database.ProjectDAO
@@ -10,12 +11,13 @@ import com.ganeshgfx.projectmanagement.database.UserDAO
 import com.ganeshgfx.projectmanagement.models.Chat
 import com.ganeshgfx.projectmanagement.models.gpt.GptRequest
 import com.ganeshgfx.projectmanagement.models.gpt.Information
+import kotlinx.coroutines.delay
 import javax.inject.Inject
 
 private const val MODEL =
     "text-davinci-003"
 private const val TEMP = 0.9
-private const val TOKEN_SIZE = 150
+private const val TOKEN_SIZE = 1000
 
 class ChatRepository @Inject constructor(
     private val service: AIService,
@@ -33,6 +35,9 @@ class ChatRepository @Inject constructor(
 
         val chat = send(prompt)
 
+//        delay(1000)
+//        val chat = Chat(randomString(900), false)
+
         _isBusy = false
         return chat
     }
@@ -47,7 +52,7 @@ class ChatRepository @Inject constructor(
             val taskInfo = mutableListOf<String>()
             taskInfo.add("title : ${it.title}")
             taskInfo.add("description : ${it.description}")
-    //            taskInfo.add("assignedTo : ${it.assignedTo}")
+            //            taskInfo.add("assignedTo : ${it.assignedTo}")
             taskInfo.add("startDate : ${it.startDate?.let { it1 -> dateString(it1) }}")
             taskInfo.add("endDate : ${it.endDate?.let { it1 -> dateString(it1) }}")
             taskInfo.add("status : ${it.status}")
@@ -66,12 +71,14 @@ class ChatRepository @Inject constructor(
         )
 
         val prompt =
-            "Pretend that you are a assistant you know following information, give short replies,If there too much information reduce it to only most relevant information, Only replies based on provided information, don't show special character at the beginning of reply. project information : $projectInfo"
+            "The following is a conversation with an AI assistant. The assistant is helpful, creative, clever, and very friendly ,you know following information, give short replies,If there too much information reduce it to only most relevant information, Only replies based on provided information, don't show special character at the beginning of reply. project information : $projectInfo"
         return prompt
     }
 
     suspend fun send(prompt: String): Chat? {
         var chat: Chat? = null
+
+        log(prompt)
 
         val request = GptRequest(
             model = MODEL,

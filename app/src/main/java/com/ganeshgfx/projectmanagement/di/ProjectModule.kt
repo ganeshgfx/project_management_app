@@ -5,12 +5,10 @@ import com.ganeshgfx.projectmanagement.database.ProjectDAO
 import com.ganeshgfx.projectmanagement.database.ProjectDatabase
 import com.ganeshgfx.projectmanagement.database.UserDAO
 import com.ganeshgfx.projectmanagement.repositories.ProjectRepository
-import com.google.firebase.firestore.FirebaseFirestore
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import kotlinx.coroutines.CoroutineScope
 import javax.inject.Singleton
 
 @Module
@@ -27,8 +25,9 @@ object ProjectModule {
     fun provideProjectRepo(
         dao: ProjectDAO,
         helper: FirestoreHelper,
+        userDao:UserDAO
     ): ProjectRepository {
-        return ProjectRepository(dao, helper)
+        return ProjectRepository(dao, userDao, helper)
     }
 
 //    @Singleton

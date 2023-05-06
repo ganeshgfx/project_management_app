@@ -2,26 +2,18 @@ package com.ganeshgfx.projectmanagement.repositories
 
 import androidx.lifecycle.MutableLiveData
 import com.ganeshgfx.projectmanagement.Utils.log
-import com.ganeshgfx.projectmanagement.Utils.randomString
 import com.ganeshgfx.projectmanagement.database.FirestoreHelper
 import com.ganeshgfx.projectmanagement.database.ProjectDAO
 import com.ganeshgfx.projectmanagement.database.UserDAO
-import com.ganeshgfx.projectmanagement.models.Member
 import com.ganeshgfx.projectmanagement.models.Project
 import com.ganeshgfx.projectmanagement.models.ProjectWithTasks
-import com.ganeshgfx.projectmanagement.models.User
 import com.google.firebase.FirebaseException
-import com.google.firebase.firestore.DocumentChange.Type.*
-import com.google.firebase.firestore.ktx.toObject
-import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
 import javax.inject.Inject
 
 class ProjectRepository @Inject constructor(
     private val projectDAO: ProjectDAO,
+    private val userDAO: UserDAO,
     private val remote: FirestoreHelper
 ) {
     fun projectWithTasksFlow(): Flow<List<ProjectWithTasks>> {
@@ -48,6 +40,27 @@ class ProjectRepository @Inject constructor(
     }
 
     fun getProject(id: String) = projectDAO.getProject(id)
+
+    fun getMemberCount(id: String) : Flow<Int> = userDAO.getMemberCount(id)
+
+    suspend fun getProjectInfo(id: String) = projectDAO.getProjectInfo(id)
+
+    suspend fun updateProject(id: String, title: String, description: String) {
+        try {
+            myUid?.let {
+                remote.updateProject(
+                    project = Project(
+                        id = id,
+                        title = title,
+                        description = description,
+                        uid = myUid
+                    )
+                )
+            }
+        } catch (e: FirebaseException) {
+            log("at updateProject", "Error updating project : ", e)
+        }
+    }
 
     suspend fun deleteProject(id: String): Int {
         return try {

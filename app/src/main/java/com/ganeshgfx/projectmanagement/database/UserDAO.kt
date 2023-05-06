@@ -1,5 +1,6 @@
 package com.ganeshgfx.projectmanagement.database
 
+import androidx.lifecycle.LiveData
 import androidx.room.*
 import com.ganeshgfx.projectmanagement.models.Member
 import com.ganeshgfx.projectmanagement.models.ProjectMember
@@ -20,6 +21,10 @@ interface UserDAO {
 
     @Query("SELECT user.* from user INNER JOIN member ON user.uid = member.uid WHERE member.projectId = :projectId;")
     fun getMembers(projectId: String): Flow<List<User>>
+
+    @Query("SELECT COUNT(*) FROM member WHERE projectId = :projectId")
+    fun getMemberCount(projectId: String): Flow<Int>
+
 
     @Query("SELECT user.* from user INNER JOIN member ON user.uid = member.uid WHERE member.projectId = :projectId;")
     suspend fun getMembersList(projectId: String): List<User>

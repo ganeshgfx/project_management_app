@@ -5,6 +5,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.ganeshgfx.projectmanagement.Utils.log
 import com.ganeshgfx.projectmanagement.adapters.TaskListRecyclerViewAdapter
 import com.ganeshgfx.projectmanagement.models.Status
 import com.ganeshgfx.projectmanagement.models.Task
@@ -34,6 +35,9 @@ class TaskListViewModel @Inject constructor(private val repository: TaskListRepo
     var startDate : Long? = null
     var endDate : Long? = null
     val dateString = MutableLiveData("")
+    var taskId = ""
+
+    var selectedTask: Task? = null
 
     val filterOptionsVisibility = MutableLiveData(true)
     val menuListener = Toolbar.OnMenuItemClickListener {
@@ -68,48 +72,62 @@ class TaskListViewModel @Inject constructor(private val repository: TaskListRepo
         showForm.postValue(!showForm.value!!)
     }
 
-    fun addTasks() = viewModelScope.launch(Dispatchers.IO) {
+
+
+    fun sendTasks() = viewModelScope.launch(Dispatchers.IO) {
         val _title: String = title.value!!
         val _description: String = description.value!!
         when {
             _title.isBlank() -> titleError.postValue(true)
             _description.isBlank() -> descriptionError.postValue(true)
             else -> {
+                val status = selectedTask?.status ?: Status.PENDING
+                log(status,selectedTask.toString())
                 val result = repository.addTask(
                     Task(
+                        id = taskId,
                         projectId = _currentProjectId,
                         title = _title,
                         description = _description,
-                        status = Status.PENDING,
+                        status = status,
                         startDate = startDate,
                         endDate = endDate
                     )
                 )
                 viewForm()
                 if(result!=null){
-                    title.postValue("")
-                    description.postValue("")
-                    titleError.postValue(false)
-                    descriptionError.postValue(false)
-                    clearDate()
+                    clearInputs()
                 }
             }
         }
     }
 
-    suspend fun updateTask(task: Task):Int{
+    fun clearInputs() {
+        taskId = ""
+        title.postValue("")
+        description.postValue("")
+        titleError.postValue(false)
+        descriptionError.postValue(false)
+        selectedTask = null
+        clearDate()
+    }
+
+    suspend fun updateTask(task: Task):Long{
         val result = repository.updateTask(task)
         updateTask = task
+        selectedTask = null
         return result
     }
 
     fun deleteTask(task: Task) = viewModelScope.launch {
         repository.deleteTask(task)
+        selectedTask = null
     }
 
     fun clearDate(){
         startDate = null
         endDate = null
         dateString.postValue("")
+        //selectedTask = null
     }
 }

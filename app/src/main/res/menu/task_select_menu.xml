@@ -4,7 +4,13 @@
     <item
         android:id="@+id/delete_task"
         android:icon="@drawable/twotone_delete_forever_24"
-        android:title="Filter"
+        android:title="Delete"
+        app:iconTint="?attr/colorControlNormal"
+        app:showAsAction="always" />
+    <item
+        android:id="@+id/edit_task"
+        android:icon="@drawable/twotone_mode_edit_outline_24"
+        android:title="Edit"
         app:iconTint="?attr/colorControlNormal"
         app:showAsAction="always" />
 </menu>

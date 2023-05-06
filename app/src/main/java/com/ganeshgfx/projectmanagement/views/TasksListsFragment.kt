@@ -8,6 +8,7 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.util.Pair
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -16,6 +17,7 @@ import androidx.navigation.ui.setupWithNavController
 import com.ganeshgfx.projectmanagement.MainActivity
 import com.ganeshgfx.projectmanagement.R
 import com.ganeshgfx.projectmanagement.Utils.hideSoftKeyBord
+import com.ganeshgfx.projectmanagement.Utils.log
 import com.ganeshgfx.projectmanagement.Utils.toDate
 import com.ganeshgfx.projectmanagement.adapters.TaskListRecyclerViewAdapter
 import com.ganeshgfx.projectmanagement.adapters.OnClickListener
@@ -38,12 +40,9 @@ class TasksListsFragment : Fragment() {
 
     private var actionMode: ActionMode? = null
 
-    private var selectedTask: Task? = null
-
 
     override fun onPause() {
-        actionMode?.finish()
-        actionMode = null
+        //hideSelectContext()
         super.onPause()
     }
 
@@ -67,6 +66,11 @@ class TasksListsFragment : Fragment() {
         binding.viewModel = viewModel
         binding.lifecycleOwner = viewLifecycleOwner
 
+        binding.addTaskButton.setOnClickListener {
+            viewModel.viewForm()
+            viewModel.clearInputs()
+        }
+
         binding.filters.setOnCheckedStateChangeListener { group, checkedIds ->
             val checked = binding.filters.checkedChipIds
             val filters = checked.map { chipIdToStatus(it) }
@@ -82,7 +86,7 @@ class TasksListsFragment : Fragment() {
                     val holder =
                         _holder as TaskListRecyclerViewAdapter.TaskListViewHolder
                     val task = taskListAdapter.getItem(pos)
-                    selectedTask = task
+                    viewModel.selectedTask = task
 
                     actionMode = binding.toolbar.startActionMode(callback)
                     actionMode?.title = task.title
@@ -107,6 +111,8 @@ class TasksListsFragment : Fragment() {
                 }
             } else {
                 binding.toolbar.collapseActionView()
+                hideSelectContext()
+                //viewModel.selectedTask = null
             }
         })
         viewModel.tasks.observe(viewLifecycleOwner) {
@@ -139,7 +145,17 @@ class TasksListsFragment : Fragment() {
             return when (item?.itemId) {
                 R.id.delete_task -> {
                     binding.toolbar.visibility = View.VISIBLE
-                    selectedTask?.let { deleteTask(it) }
+                    viewModel.selectedTask?.let { deleteTask(it) }
+                    true
+                }
+
+                R.id.edit_task -> {
+                    binding.toolbar.visibility = View.VISIBLE
+                    binding.cancelFab.setOnClickListener {
+                        viewModel.viewForm()
+                        hideSelectContext()
+                    }
+                    viewModel.selectedTask?.let { editTask(it) }
                     true
                 }
 
@@ -152,16 +168,28 @@ class TasksListsFragment : Fragment() {
         }
     }
 
+    private fun editTask(task: Task) {
+        viewModel.selectedTask = task
+        viewModel.viewForm()
+        viewModel.title.postValue(task.title)
+        viewModel.description.postValue(task.description)
+        viewModel.startDate = task.startDate
+        viewModel.endDate = task.endDate
+        viewModel.dateString.postValue(toDate(task.startDate, task.startDate))
+        viewModel.taskId = task.id
+//        binding.okFab.setOnClickListener {
+//            log("Edit Task")
+//        }
+    }
+
     private fun deleteTask(task: Task) {
-        actionMode?.finish()
-        actionMode = null
+        hideSelectContext()
         MaterialAlertDialogBuilder(requireContext())
             .setIcon(R.drawable.twotone_delete_forever_24)
             .setTitle("Are you sure about that ?")
             .setMessage("If you delete the task all the progress and tasks will be lost")
             .setPositiveButton("Yes") { dialog, which ->
                 viewModel.deleteTask(task)
-                selectedTask = null
             }
             .setNegativeButton("Cancel") { dialog, which ->
                 dialog.dismiss()
@@ -169,16 +197,27 @@ class TasksListsFragment : Fragment() {
             .show()
     }
 
+    private fun hideSelectContext() {
+        actionMode?.finish()
+        actionMode = null
+    }
+
     private fun showDateInput(view: View) {
-        val constrains = CalendarConstraints.Builder()
-            //.setStart(MaterialDatePicker.todayInUtcMilliseconds())
-           // .setValidator(DateValidatorPointForward.now())
-            .build()
-        val datePicker =
-            MaterialDatePicker.Builder.dateRangePicker()
-                .setTitleText("Select Task Due Date Range")
-                .setCalendarConstraints(constrains)
-                .build()
+        val constrainsBuilder = CalendarConstraints.Builder()
+        //.setStart(MaterialDatePicker.todayInUtcMilliseconds())
+        // .setValidator(DateValidatorPointForward.now())
+
+        val constrains = constrainsBuilder.build()
+        val builder = MaterialDatePicker.Builder.dateRangePicker()
+            .setTitleText("Select Task Due Date Range")
+            .setCalendarConstraints(constrains)
+
+        viewModel.startDate?.let {
+            builder.setSelection(Pair(it, viewModel.endDate))
+        }
+
+        val datePicker = builder.build()
+
         datePicker.addOnPositiveButtonClickListener {
             //log(Date(it))
             viewModel.startDate = it.first
@@ -193,7 +232,7 @@ class TasksListsFragment : Fragment() {
         val task = taskListAdapter.getItem(pos)
         task.status = status
         val result = viewModel.updateTask(task)
-        if (result == 1) {
+        if (result == 1L) {
             //taskListAdapter.updateData(pos, task)
             view.clearFocus()
         }

@@ -22,6 +22,12 @@ interface TaskDAO {
         projectId: String
     ): List<Task>
 
+    @Query("SELECT * FROM task WHERE projectId = :projectId AND id = :taskId")
+    suspend fun getTask(
+        projectId: String,
+        taskId: String
+    ): Task
+
     @Update
     suspend fun updateTask(task: Task): Int
 

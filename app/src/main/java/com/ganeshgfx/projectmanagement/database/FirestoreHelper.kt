@@ -121,6 +121,18 @@ class FirestoreHelper(
     fun getProjectList(ids: List<String>): Flow<QuerySnapshot> =
         ids.chunked(10).map { db.collection(PROJECTS).whereIn(ID, it).snapshots() }.asFlow()
             .flattenConcat()
+
+    suspend fun updateProject(project: Project) {
+        db.runTransaction { transaction ->
+            transaction.update(db.collection(PROJECTS).document(project.id), "title", project.title)
+            transaction.update(
+                db.collection(PROJECTS).document(project.id),
+                "description",
+                project.description
+            )
+        }.await()
+    }
+
 //PROJECT RELATED CODE END
 
     //TASK RELATED CODE START
@@ -141,7 +153,7 @@ class FirestoreHelper(
         return data
     }
 
-    suspend fun deleteTask(task: Task):Boolean{
+    suspend fun deleteTask(task: Task): Boolean {
         val ref = db.collection(TASKS)
         ref.document(task.id).delete().await()
         return true
@@ -162,7 +174,7 @@ class FirestoreHelper(
 
 
     suspend fun updateTask(task: Task) {
-        db.collection(TASKS).document(task.id).update("status", task.status).await()
+        db.collection(TASKS).document(task.id).set(task).await()
     }
 //TASK RELATED CODE END
 }

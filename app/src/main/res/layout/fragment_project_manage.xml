@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-
+<import type="android.view.View"/>
         <variable
             name="vm"
             type="com.ganeshgfx.projectmanagement.viewModels.ProjectOverviewViewModel" />
@@ -29,6 +29,7 @@
             android:layout_height="match_parent"
             android:layout_marginStart="8dp"
             android:layout_marginEnd="8dp"
+            android:visibility="@{vm.updateProject ? View.GONE : View.VISIBLE}"
             android:orientation="vertical"
             tools:visibility="gone">
 
@@ -86,7 +87,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:visibility="gone"
+            android:visibility="@{vm.updateProject ? View.VISIBLE : View.GONE}"
             tools:visibility="visible"
             android:padding="8dp"
             android:orientation="vertical">
@@ -103,6 +104,7 @@
                 <com.google.android.material.textfield.TextInputEditText
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:text="@={vm.formProjectTitle}"
                     android:inputType="text"
                     android:maxLines="1" />
             </com.google.android.material.textfield.TextInputLayout>
@@ -118,9 +120,27 @@
                 <com.google.android.material.textfield.TextInputEditText
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:text="@={vm.formProjectDescription}"
                     android:inputType="text"
                     android:maxLines="1" />
             </com.google.android.material.textfield.TextInputLayout>
+           <LinearLayout
+               android:layout_width="match_parent"
+               android:layout_height="wrap_content"
+               android:orientation="vertical">
+               <com.google.android.material.button.MaterialButton
+                   style="@style/Widget.Material3.FloatingActionButton.Large.Secondary"
+                   android:id="@+id/discardUpdates"
+                   android:layout_width="match_parent"
+                   android:layout_height="wrap_content"
+                   android:text="Cancel" />
+               <com.google.android.material.button.MaterialButton
+                   style="@style/Widget.Material3.FloatingActionButton.Large.Primary"
+                   android:id="@+id/saveUpdates"
+                   android:layout_width="match_parent"
+                   android:layout_height="wrap_content"
+                   android:text="Save" />
+           </LinearLayout>
         </LinearLayout>
 
     </LinearLayout>

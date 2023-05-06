@@ -101,7 +101,21 @@ class MainRepository @Inject constructor(
                             projectDAO.insertProject(project)
                         }
 
-                        MODIFIED -> projectDAO.updateProject(project)
+                        MODIFIED -> {
+
+                            val oldProject = projectDAO.getProjectInfo(project.id)
+                            val result = projectDAO.updateProject(project)
+
+                            if (result > 0) {
+                                notify(
+                                    "Project Updated",
+                                    "Title : ${oldProject.title} → ${project.title} \n Description : ${oldProject.description} → ${project.description}"
+                                )
+                            }
+
+                            log("Project Updated: $result")
+                        }
+
                         REMOVED -> {
                             projectDAO.deleteProject(project.id)
                         }
@@ -109,6 +123,27 @@ class MainRepository @Inject constructor(
                 }
             }
             .launchIn(scope)
+    }
+
+    private fun getTaskChanges(oldTask: Task, newTask: Task): String {
+        //log(oldTask,newTask)
+        var changes = ""
+        if (oldTask.title != newTask.title) {
+            changes += "Title : ${oldTask.title} → ${newTask.title} \n"
+        }
+        if (oldTask.description != newTask.description) {
+            changes += "Description : ${oldTask.description} → ${newTask.description} \n"
+        }
+        if (oldTask.status != newTask.status) {
+            changes += "Status : ${oldTask.status} → ${newTask.status} \n"
+        }
+        if (oldTask.startDate != newTask.startDate) {
+            changes += "Start Date : ${oldTask.startDate} → ${newTask.startDate} \n"
+        }
+        if (oldTask.endDate != newTask.endDate) {
+            changes += "End Date : ${oldTask.endDate} → ${newTask.endDate} \n"
+        }
+        return changes
     }
 
     private fun checkError(msg: String, error: Throwable) {
@@ -143,8 +178,9 @@ class MainRepository @Inject constructor(
                         }
 
                         MODIFIED -> {
+                            val oldTask = taskDAO.getTask(task.projectId,task.id)
                             taskDAO.updateTask(task)
-                            notify("Task Updated", "${task.title} : ${task.status}")
+                            notify("Task Updated", getTaskChanges(oldTask, task))
                         }
 
                         REMOVED -> {

@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.setupWithNavController
 import com.ganeshgfx.projectmanagement.MainActivity
@@ -17,11 +18,13 @@ import com.ganeshgfx.projectmanagement.databinding.FragmentChatBinding
 import com.ganeshgfx.projectmanagement.viewModels.CalenderViewModel
 import com.ganeshgfx.projectmanagement.viewModels.ChatViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class ChatFragment : Fragment() {
 
-    private var _binding:FragmentChatBinding? = null
+    private var _binding: FragmentChatBinding? = null
     private val binding get() = _binding!!
     private val viewModel: ChatViewModel by viewModels()
     override fun onCreateView(
@@ -35,14 +38,28 @@ class ChatFragment : Fragment() {
         val activity = requireActivity() as MainActivity
         viewModel.setCurrentProjectId(activity.viewModel.currentProjectId)
 
-        viewModel.receiving.observe(viewLifecycleOwner){
+        viewModel.receiving.observe(viewLifecycleOwner) {
             hideSoftKeyBord(binding.root)
+            if (!it) {
+                smoothScrollChatList()
+                lifecycleScope.launch {
+                    delay(500)
+                    smoothScrollChatList()
+                }
+
+            }
         }
 
         binding.lifecycleOwner = viewLifecycleOwner
         binding.vm = viewModel
 
         return binding.root
+    }
+
+    fun smoothScrollChatList() {
+        binding.chatsList.post {
+            binding.chatsList.smoothScrollToPosition(viewModel.chatsAdapter.itemCount)
+        }
     }
 
 }
