@@ -101,6 +101,7 @@ class WeekView(
         val days = week.map { it.day }
         var lastWeek = days.contains(lastDay)
         for (day in week) {
+
             if (day.day == 1) {
                 newMonth = true
                 lastWeek = false

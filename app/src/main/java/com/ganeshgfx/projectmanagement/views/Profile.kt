@@ -1,4 +1,4 @@
-package com.ganeshgfx.projectmanagement
+package com.ganeshgfx.projectmanagement.views
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -8,9 +8,8 @@ import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.setupWithNavController
+import com.ganeshgfx.projectmanagement.R
 import com.ganeshgfx.projectmanagement.databinding.FragmentProfileBinding
-import com.ganeshgfx.projectmanagement.databinding.FragmentProjectManageBinding
-import com.ganeshgfx.projectmanagement.views.ManageProjectFragmentDirections
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase

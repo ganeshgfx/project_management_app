@@ -34,6 +34,8 @@ class CalenderAdapter(private var list: MutableList<List<Day>> = mutableListOf()
     override fun onBindViewHolder(holder: CalenderViewHolder, position: Int) {
         val binding = holder.binding
         val week = list[position]
+        val last = week.last()
+        binding.month.text = "${last.monthText} | ${last.year.toString()[2]}${last.year.toString()[3]}"
         binding.week.setWeek(week)
         binding.week.setOnClickListener { day ->
             onClickListener?.let { it -> it(day) }
@@ -42,11 +44,11 @@ class CalenderAdapter(private var list: MutableList<List<Day>> = mutableListOf()
             val temp = list.size - 1
             val condition = position == temp
             //log(position,temp,condition)
-            day(if (condition) week.last() else null)
+            day(if (condition) last else null)
         }
+       // log(position)
         onFirstItemLoad?.let { day ->
             val condition = position == 0
-            //log(position,condition)
             day(if (condition) week.first() else null)
         }
 
@@ -87,6 +89,9 @@ class CalenderAdapter(private var list: MutableList<List<Day>> = mutableListOf()
         val oldList = list.flatten().toMutableList()
         oldList.addAll(0,newData)
         setData(oldList)
+    }
+    fun addDataTop(newData: List<Day>) {
+        list.addAll(0,newData.chunked(7))
     }
 
 }

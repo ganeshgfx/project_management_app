@@ -9,6 +9,7 @@ import com.ganeshgfx.projectmanagement.Utils.epochMillis
 import com.ganeshgfx.projectmanagement.Utils.getLastDay
 import com.ganeshgfx.projectmanagement.Utils.log
 import com.ganeshgfx.projectmanagement.adapters.CalenderAdapter
+import com.ganeshgfx.projectmanagement.adapters.DatesNavListAdapter
 import com.ganeshgfx.projectmanagement.models.Day
 import com.ganeshgfx.projectmanagement.repositories.TaskListRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -28,6 +29,9 @@ class CalenderViewModel @Inject constructor(private val repo: TaskListRepository
 
     private val dateRange = mutableListOf<ClosedRange<Long>>()
 
+    private var _days = listOf<Day>()
+    val days get() = _days
+
     private var tasksFlowJob: Job? = null
     fun getTasks(projectId: String) {
         _currentProjectId = projectId
@@ -38,22 +42,31 @@ class CalenderViewModel @Inject constructor(private val repo: TaskListRepository
                 dateRange.clear()
                 dates.clear()
                 val lists =
-                    taskList.map { date ->
+                    taskList.mapNotNull { date ->
                         date.endDate?.let {
                             dateRange.add(date.startDate!!.toLong()..date.endDate!!.toLong())
                             dateString(it)
                         }
-                    }.filterNotNull()
-                //log(dateRange)
+                    }
                 dates.addAll(lists)
 
-                val weeks = getCalender()
-                adapter.setData(weeks)
+                _days = getCalender()
+                adapter.setData(days)
+
+                val x = dates.map { epochMillis(it) }.sorted()
+                val y = x.map { dateString(it)!! }
+
+                datesAdapter.setData(y)
+                datesAdapter.setOnPressListener { date ->
+                    val day = dateStringToDay(date)
+                    adapter.setData(getCalender(day))
+                }
             }
         }
     }
 
     val adapter = CalenderAdapter()
+    val datesAdapter = DatesNavListAdapter()
 
     private val _loading = MutableLiveData(false)
     val loading get() = _loading
@@ -70,13 +83,25 @@ class CalenderViewModel @Inject constructor(private val repo: TaskListRepository
         }
     }
 
-    private fun getCalender(): List<Day> {
+    private fun getCalender(day: Day? = null): List<Day> {
 
         var year = Year.now().value
         val length = 3
         var range = 1..1 + length
 
-        if (dates.isNotEmpty()) {
+        if (day != null) {
+            year = day.year
+            var month = day.month
+
+            if (month + length > 12) {
+                month = 12 - length
+            }
+
+            range = month..month + length
+
+            //log(day.date, year, range)
+
+        } else if (dates.isNotEmpty()) {
             val date = dateStringToDay(
                 dates.map {
                     epochMillis(it)
@@ -92,17 +117,17 @@ class CalenderViewModel @Inject constructor(private val repo: TaskListRepository
 
             if (month + length > 12) {
                 month = 12 - length
+                //log(month)
             }
 
             range = month..month + length
 
-            log(date.date,year, range)
+            //log(date.date, year, range)
         }
 
         val days = range.map { month ->
             getMonthDays(month, year)
         }.flatten()
-        //log(days)
         return days
     }
 
@@ -112,24 +137,11 @@ class CalenderViewModel @Inject constructor(private val repo: TaskListRepository
     ): List<Day> {
         val lastDay: Int = getLastDay(year, month)
         val days = (1..lastDay).map { day ->
-
             val epochMillis: Long = epochMillis("${day}/${month}/${year}")
-
-            val dateString = dateString(epochMillis).toString()
-
-            //val isTaskDay = dates.contains(dateString)
-
             val isDue = dateRange.map { epochMillis in it }.contains(true)
-
-            // log(isDue)
-
-            //if (isTaskDay) {
-            //log(epochMillis, dates.map { epochMillis(it) })
-            // }
-
-            val day = Day(day, month, year, isDue)
-            day
+            Day(day, month, year, isDue)
         }
+       // log(days.map { it.date })
         return days
     }
 
@@ -146,7 +158,8 @@ class CalenderViewModel @Inject constructor(private val repo: TaskListRepository
         adapter.addData(dayList)
     }
 
-    fun newPageFirst(day: Day) {
+    fun newPageFirst() {
+        val day = days.first()
         var month = day.month
         var year = day.year
         if (day.month == 1) {
@@ -155,8 +168,14 @@ class CalenderViewModel @Inject constructor(private val repo: TaskListRepository
         } else {
             month--
         }
-        val dayList = getMonthDays(month, year)
-        adapter.addDataOnTop(dayList)
+        val nextList = getMonthDays(month, year)
+
+        val list = _days.toMutableList()
+        list.addAll(0, nextList)
+
+        _days = list
+
+        adapter.setData(days)
     }
 
 }

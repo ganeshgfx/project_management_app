@@ -4,14 +4,27 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-        <variable
-            name="data"
-            type="com.ganeshgfx.projectmanagement.models.Day" />
+
     </data>
 
-    <com.ganeshgfx.projectmanagement.views.custom.WeekView
-        android:id="@+id/week"
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content">
 
+        <com.ganeshgfx.projectmanagement.views.custom.WeekView
+            android:id="@+id/week"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="@style/TextAppearance.Material3.LabelSmall"
+            android:textStyle="italic"
+            android:textColor="?attr/colorAccent"
+            android:layout_marginEnd="10dp"
+            android:layout_gravity="end"
+            android:id="@+id/month"
+            android:text="month" />
+    </FrameLayout>
 </layout>

@@ -12,11 +12,11 @@ import com.ganeshgfx.projectmanagement.Utils.ChatListDiffUtil
 import com.ganeshgfx.projectmanagement.Utils.log
 import com.ganeshgfx.projectmanagement.databinding.ChatListItemBinding
 import com.ganeshgfx.projectmanagement.models.Chat
+import com.ganeshgfx.projectmanagement.models.User
 
 class ChatListAdapter : RecyclerView.Adapter<ChatListAdapter.ChatList>() {
 
     private var list = mutableListOf<Chat>()
-    private lateinit var projectOnClickListener: ProjectOnClickListener
 
     class ChatList(val binding: ChatListItemBinding) :
         RecyclerView.ViewHolder(binding.root)
@@ -43,13 +43,18 @@ class ChatListAdapter : RecyclerView.Adapter<ChatListAdapter.ChatList>() {
             visibility = if (item.isMe) View.VISIBLE else View.GONE
         }
         bubble.layoutParams = params
+        bubble.setOnLongClickListener{
+            onPressListener?.invoke(item.message)
+            true
+        }
+    }
+
+    private var onPressListener: ((String) -> Unit)? = null
+    fun setOnPressListener(listener: (String) -> Unit) {
+        onPressListener = listener
     }
 
     override fun getItemCount(): Int = list.size
-
-    fun setListener(projectOnClickListener: ProjectOnClickListener) {
-        this.projectOnClickListener = projectOnClickListener
-    }
 
     fun setData(newList: List<Chat>) {
         val diffUtil = ChatListDiffUtil(list, newList)

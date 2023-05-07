@@ -37,7 +37,7 @@ class ChatViewModel @Inject constructor(
 
             var chat: Chat? = Chat("Error", false)
             try {
-               // chat = repo.chat(msg, currentProjectId)
+               //chat = repo.chat(msg, currentProjectId)
             } catch (e: Exception) {
                 Log.e("project_app", "sendMsg: $e", e)
             }

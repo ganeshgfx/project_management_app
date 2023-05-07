@@ -26,6 +26,18 @@
             app:titleTextAppearance="@style/TextAppearance.MaterialComponents.Headline6"
             app:navigationIconTint="?attr/colorControlNormal"
             android:layout_height="?attr/actionBarSize" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:visibility="@{vm.loading ? View.GONE : View.VISIBLE}"
+            android:id="@+id/calender_navigation"
+            android:adapter="@{vm.datesAdapter}"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:orientation="horizontal"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            tools:itemCount="20"
+            tools:listitem="@layout/calender_nav_chip_list_item" />
         <com.google.android.material.progressindicator.LinearProgressIndicator
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -34,6 +46,10 @@
             app:trackCornerRadius="10dp"
             android:visibility="@{vm.loading ? View.VISIBLE : View.GONE}"
             />
+        <com.google.android.material.divider.MaterialDivider
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
         <androidx.recyclerview.widget.RecyclerView
             android:visibility="@{vm.loading ? View.GONE : View.VISIBLE}"
             android:id="@+id/calender"

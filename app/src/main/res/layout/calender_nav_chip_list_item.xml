@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+    </data>
+
+    <FrameLayout
+        android:layout_width="wrap_content"
+        android:layout_gravity="center"
+        android:layout_height="wrap_content">
+
+        <com.google.android.material.button.MaterialButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="27/10/1998"
+            android:id="@+id/date"
+            android:layout_margin="3dp"
+            app:icon="@drawable/twotone_calendar_month_24"
+            style="@style/Widget.Material3.Button.ElevatedButton.Icon"
+            android:layout_gravity="center" />
+    </FrameLayout>
+</layout>

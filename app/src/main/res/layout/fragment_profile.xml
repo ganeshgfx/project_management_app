@@ -11,7 +11,7 @@
         android:layout_width="match_parent"
         android:orientation="vertical"
         android:layout_height="match_parent"
-        tools:context=".Profile">
+        tools:context=".views.Profile">
 
         <com.google.android.material.appbar.MaterialToolbar
             android:id="@+id/toolbar"

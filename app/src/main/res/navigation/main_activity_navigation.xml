@@ -138,7 +138,7 @@
     </fragment>
     <fragment
         android:id="@+id/profile"
-        android:name="com.ganeshgfx.projectmanagement.Profile"
+        android:name="com.ganeshgfx.projectmanagement.views.Profile"
         android:label="Profile"
         tools:layout="@layout/fragment_profile">
         <action

@@ -54,7 +54,7 @@ fun epochMillis(date: String): Long {
     return epochMillis
 }
 
-fun dateStringToDay(dateString: String):Day{
+fun dateStringToDay(dateString: String): Day {
     val format = SimpleDateFormat(DD_MM_YYYY)
     val date = format.parse(dateString)
     val calendar = Calendar.getInstance()
@@ -64,6 +64,13 @@ fun dateStringToDay(dateString: String):Day{
         calendar.get(Calendar.MONTH),
         calendar.get(Calendar.YEAR)
     )
+}
+
+fun getMonthNameShort(month: Int): String {
+    val format = SimpleDateFormat("MMM")
+    val calendar = Calendar.getInstance()
+    calendar.set(Calendar.MONTH, month-1)
+    return format.format(calendar.time)
 }
 
 

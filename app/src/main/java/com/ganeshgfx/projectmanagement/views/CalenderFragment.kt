@@ -14,9 +14,11 @@ import androidx.recyclerview.widget.RecyclerView
 import com.ganeshgfx.projectmanagement.MainActivity
 import com.ganeshgfx.projectmanagement.R
 import com.ganeshgfx.projectmanagement.Utils.log
+import com.ganeshgfx.projectmanagement.adapters.CalenderAdapter
 import com.ganeshgfx.projectmanagement.databinding.FragmentCalenderBinding
 import com.ganeshgfx.projectmanagement.viewModels.CalenderViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.delay
 
 @AndroidEntryPoint
 class CalenderFragment : Fragment() {
@@ -53,34 +55,49 @@ class CalenderFragment : Fragment() {
             }
         }
 
+
         binding.calender.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
                 super.onScrollStateChanged(recyclerView, newState)
                 viewModel.lastItem?.let {
-                    recyclerView.post {
-                        viewModel.newPageLast(it)
-                    }
+                    viewModel.newPageLast(it)
                 }
                 viewModel.firstItem?.let {
                     recyclerView.post {
                         //log("firstItem",it)
-                        viewModel.newPageFirst(it)
+                        //viewModel.newPageFirst(it)
                     }
                 }
-//                when (newState) {
-//                    RecyclerView.SCROLL_STATE_IDLE -> {
-//                        viewModel.lastItem?.let {
-//                            log(it)
-//                            viewModel.newPageLast(it)
+                when (newState) {
+                    RecyclerView.SCROLL_STATE_IDLE -> {
+
+                        val first = layoutManager.findFirstVisibleItemPosition()
+                        val last = layoutManager.findLastVisibleItemPosition()
+                        if (0 in first..last) {
+                            recyclerView.post {
+                                with(viewModel) {
+                                    newPageFirst()
+                                }
+                            }
+                        }
+//                        if (firstVisibleItemPosition == 3) {
+//                            recyclerView.post {
+//                                with(viewModel) {
+//                                    newPageFirst()
+//                                }
+//                            }
 //                        }
-//                    }
-//                    RecyclerView.SCROLL_STATE_DRAGGING -> {
-//
-//                    }
-//                    RecyclerView.SCROLL_STATE_SETTLING -> {
-//
-//                    }
-//                }
+
+                    }
+
+                    RecyclerView.SCROLL_STATE_DRAGGING -> {
+                        //log("SCROLL_STATE_DRAGGING")
+                    }
+
+                    RecyclerView.SCROLL_STATE_SETTLING -> {
+                        //log("SCROLL_STATE_SETTLING")
+                    }
+                }
             }
         })
 
