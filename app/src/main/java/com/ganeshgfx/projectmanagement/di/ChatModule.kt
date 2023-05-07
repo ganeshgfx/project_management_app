@@ -1,7 +1,6 @@
 package com.ganeshgfx.projectmanagement.di
 
-import com.ganeshgfx.projectmanagement.api.AIService
-import com.ganeshgfx.projectmanagement.api.RetrofitHelper
+import com.ganeshgfx.projectmanagement.api.OpenAiHelper
 import com.ganeshgfx.projectmanagement.database.FirestoreHelper
 import com.ganeshgfx.projectmanagement.database.ProjectDAO
 import com.ganeshgfx.projectmanagement.database.TaskDAO
@@ -19,12 +18,12 @@ object ChatModule {
 
     @Provides
     @Singleton
-    fun provideAIService() = RetrofitHelper.gptApiService
+    fun provideAIService() = OpenAiHelper
 
     @Provides
     @Singleton
     fun provideChatRepo(
-        service: AIService,
+        service: OpenAiHelper,
         helper: FirestoreHelper,
         usersDAO: UserDAO,
         projectDAO: ProjectDAO,
