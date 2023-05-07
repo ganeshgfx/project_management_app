@@ -9,7 +9,8 @@ import retrofit2.http.Body
 import retrofit2.http.Headers
 import retrofit2.http.POST
 
-interface AIService {
+interface AIService{
+
     @Headers(
         "Content-Type: application/json",
         "Authorization: Bearer $KEY"
